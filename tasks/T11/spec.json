@@ -1,0 +1,29 @@
+{
+ "id": "T11",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the small boy in the striped shirt tilt his head side to side.",
+ "parts": [
+  "A3_head"
+ ],
+ "kind": "rotate",
+ "amp": 10,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   695,
+   246
+  ]
+ ],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

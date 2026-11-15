@@ -1,0 +1,170 @@
+{
+ "A1_body": {
+  "image": "lineup",
+  "pivot": null,
+  "area": 76585
+ },
+ "A2_body": {
+  "image": "lineup",
+  "pivot": null,
+  "area": 77082
+ },
+ "A3_body": {
+  "image": "lineup",
+  "pivot": null,
+  "area": 62840
+ },
+ "A4_body": {
+  "image": "lineup",
+  "pivot": null,
+  "area": 113890
+ },
+ "A1_hand": {
+  "image": "lineup",
+  "pivot": [
+   232,
+   192
+  ],
+  "area": 2965
+ },
+ "A1_head": {
+  "image": "lineup",
+  "pivot": [
+   145,
+   148
+  ],
+  "area": 15323
+ },
+ "A2_forearm": {
+  "image": "lineup",
+  "pivot": [
+   538,
+   256
+  ],
+  "area": 4161
+ },
+ "A2_pigtailL": {
+  "image": "lineup",
+  "pivot": [
+   352,
+   112
+  ],
+  "area": 4457
+ },
+ "A2_pigtailR": {
+  "image": "lineup",
+  "pivot": [
+   480,
+   108
+  ],
+  "area": 3975
+ },
+ "A3_hand": {
+  "image": "lineup",
+  "pivot": [
+   781,
+   256
+  ],
+  "area": 2301
+ },
+ "A3_head": {
+  "image": "lineup",
+  "pivot": [
+   695,
+   246
+  ],
+  "area": 13393
+ },
+ "A4_forearm": {
+  "image": "lineup",
+  "pivot": [
+   1099,
+   296
+  ],
+  "area": 5294
+ },
+ "A4_earringL": {
+  "image": "lineup",
+  "pivot": [
+   967,
+   197
+  ],
+  "area": 180
+ },
+ "A4_earringR": {
+  "image": "lineup",
+  "pivot": [
+   1062,
+   187
+  ],
+  "area": 165
+ },
+ "A4_veil": {
+  "image": "lineup",
+  "pivot": [
+   925,
+   95
+  ],
+  "area": 26735
+ },
+ "B1_body": {
+  "image": "toddlers",
+  "pivot": null,
+  "area": 168764
+ },
+ "B2_body": {
+  "image": "toddlers",
+  "pivot": null,
+  "area": 162741
+ },
+ "B1_hand": {
+  "image": "toddlers",
+  "pivot": [
+   122,
+   198
+  ],
+  "area": 5551
+ },
+ "B1_hat": {
+  "image": "toddlers",
+  "pivot": [
+   305,
+   175
+  ],
+  "area": 27779
+ },
+ "B1_skull": {
+  "image": "toddlers",
+  "pivot": null,
+  "area": 1899
+ },
+ "B2_arm": {
+  "image": "toddlers",
+  "pivot": [
+   808,
+   262
+  ],
+  "area": 14834
+ },
+ "B2_head": {
+  "image": "toddlers",
+  "pivot": [
+   690,
+   238
+  ],
+  "area": 47196
+ },
+ "B2_hat": {
+  "image": "toddlers",
+  "pivot": [
+   640,
+   140
+  ],
+  "area": 23296
+ },
+ "B2_skull": {
+  "image": "toddlers",
+  "pivot": null,
+  "area": 4571
+ }
+}

@@ -1,0 +1,29 @@
+{
+ "id": "T04",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the girl in the white dress (far right) wave her raised forearm from the elbow.",
+ "parts": [
+  "A4_forearm"
+ ],
+ "kind": "rotate",
+ "amp": 20,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   1099,
+   296
+  ]
+ ],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

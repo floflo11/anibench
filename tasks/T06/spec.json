@@ -1,0 +1,29 @@
+{
+ "id": "T06",
+ "tier": 1,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the navy jacket swing his whole raised arm from the shoulder.",
+ "parts": [
+  "B2_arm"
+ ],
+ "kind": "rotate",
+ "amp": 15,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   808,
+   262
+  ]
+ ],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

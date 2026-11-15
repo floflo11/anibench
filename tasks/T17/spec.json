@@ -1,0 +1,23 @@
+{
+ "id": "T17",
+ "tier": 2,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the girl with pigtails squat down and stand back up.",
+ "parts": [
+  "A2_body"
+ ],
+ "kind": "body",
+ "amp": 60,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "pivots": [],
+ "area_tol": 0.12,
+ "blob_allow": 0
+}

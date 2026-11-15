@@ -1,0 +1,657 @@
+[
+ {
+  "id": "T01",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.",
+  "parts": [
+   "A1_hand"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    232,
+    192
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T02",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the girl with pigtails wave her raised forearm from the elbow.",
+  "parts": [
+   "A2_forearm"
+  ],
+  "kind": "rotate",
+  "amp": 20,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    538,
+    256
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T03",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the small boy in the striped shirt wave his raised hand from the wrist.",
+  "parts": [
+   "A3_hand"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    781,
+    256
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T04",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the girl in the white dress (far right) wave her raised forearm from the elbow.",
+  "parts": [
+   "A4_forearm"
+  ],
+  "kind": "rotate",
+  "amp": 20,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    1099,
+    296
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T05",
+  "tier": 1,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the red jacket wave her raised hand from the wrist.",
+  "parts": [
+   "B1_hand"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    122,
+    198
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T06",
+  "tier": 1,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the navy jacket swing his whole raised arm from the shoulder.",
+  "parts": [
+   "B2_arm"
+  ],
+  "kind": "rotate",
+  "amp": 15,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    808,
+    262
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T07",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the red earrings of the girl in the white dress (far right) swing gently, as if in a breeze.",
+  "parts": [
+   "A4_earringL",
+   "A4_earringR"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    967,
+    197
+   ],
+   [
+    1062,
+    187
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T08",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the pigtails of the girl with pigtails swing side to side.",
+  "parts": [
+   "A2_pigtailL",
+   "A2_pigtailR"
+  ],
+  "kind": "rotate",
+  "amp": 12,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    352,
+    112
+   ],
+   [
+    480,
+    108
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T09",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the boy on the far left nod his head.",
+  "parts": [
+   "A1_head"
+  ],
+  "kind": "rotate",
+  "amp": 8,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    145,
+    148
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T10",
+  "tier": 1,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the navy jacket nod his head; his hat stays on his head.",
+  "parts": [
+   "B2_head"
+  ],
+  "kind": "rotate",
+  "amp": 8,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    690,
+    238
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T11",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the small boy in the striped shirt tilt his head side to side.",
+  "parts": [
+   "A3_head"
+  ],
+  "kind": "rotate",
+  "amp": 10,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    695,
+    246
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T12",
+  "tier": 1,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make all four children wave their raised hands at the same time.",
+  "parts": [
+   "A1_hand",
+   "A2_forearm",
+   "A3_hand",
+   "A4_forearm"
+  ],
+  "kind": "rotate",
+  "amp": 22,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    232,
+    192
+   ],
+   [
+    538,
+    256
+   ],
+   [
+    781,
+    256
+   ],
+   [
+    1099,
+    296
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T13",
+  "tier": 2,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the red jacket lift her hat off her head and settle it back down.",
+  "parts": [
+   "B1_hat"
+  ],
+  "kind": "translate_up",
+  "amp": 70,
+  "graders": [
+   "G1",
+   "G3",
+   "G4",
+   "G6"
+  ],
+  "pivots": [],
+  "area_tol": 0.35,
+  "blob_allow": 3,
+  "skull": true
+ },
+ {
+  "id": "T14",
+  "tier": 2,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the navy jacket tilt his hat up and back in greeting, pivoting on the left end of the brim (viewer's left).",
+  "parts": [
+   "B2_hat"
+  ],
+  "kind": "rotate_hat",
+  "amp": 15,
+  "graders": [
+   "G1",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    560,
+    160
+   ]
+  ],
+  "area_tol": 0.35,
+  "blob_allow": 3,
+  "skull": true
+ },
+ {
+  "id": "T15",
+  "tier": 2,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the small boy in the striped shirt jump once; the other three children stay perfectly still.",
+  "parts": [
+   "A3_body"
+  ],
+  "kind": "jump",
+  "amp": 80,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G6"
+  ],
+  "pivots": [],
+  "area_tol": 0.12,
+  "blob_allow": 0
+ },
+ {
+  "id": "T16",
+  "tier": 2,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the red jacket jump; the other toddler stays perfectly still.",
+  "parts": [
+   "B1_body"
+  ],
+  "kind": "jump",
+  "amp": 80,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G6"
+  ],
+  "pivots": [],
+  "area_tol": 0.12,
+  "blob_allow": 0
+ },
+ {
+  "id": "T17",
+  "tier": 2,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the girl with pigtails squat down and stand back up.",
+  "parts": [
+   "A2_body"
+  ],
+  "kind": "body",
+  "amp": 60,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G6"
+  ],
+  "pivots": [],
+  "area_tol": 0.12,
+  "blob_allow": 0
+ },
+ {
+  "id": "T18",
+  "tier": 2,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the navy jacket bounce at the knees.",
+  "parts": [
+   "B2_body"
+  ],
+  "kind": "body",
+  "amp": 40,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G6"
+  ],
+  "pivots": [],
+  "area_tol": 0.12,
+  "blob_allow": 0
+ },
+ {
+  "id": "T19",
+  "tier": 2,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the lace veil of the girl in the white dress (far right) flutter in the wind.",
+  "parts": [
+   "A4_veil"
+  ],
+  "kind": "flutter",
+  "amp": 35,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    925,
+    95
+   ]
+  ],
+  "area_tol": 0.12,
+  "blob_allow": 0
+ },
+ {
+  "id": "T20",
+  "tier": 2,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the boy on the far left wave with his left hand.",
+  "parts": [
+   "A1_hand"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    232,
+    192
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T21",
+  "tier": 2,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the red jacket wave with her right hand.",
+  "parts": [
+   "B1_hand"
+  ],
+  "kind": "rotate",
+  "amp": 25,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    122,
+    198
+   ]
+  ],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T22",
+  "tier": 3,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the navy jacket give a thumbs up with his raised hand.",
+  "parts": [
+   "B2_arm"
+  ],
+  "kind": "human",
+  "amp": 0,
+  "graders": [],
+  "pivots": [],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T23",
+  "tier": 3,
+  "image": "lineup",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the small boy in the striped shirt walk in place.",
+  "parts": [
+   "A3_body"
+  ],
+  "kind": "human",
+  "amp": 0,
+  "graders": [],
+  "pivots": [],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ },
+ {
+  "id": "T24",
+  "tier": 3,
+  "image": "toddlers",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the toddler in the red jacket clap her hands.",
+  "parts": [
+   "B1_body"
+  ],
+  "kind": "human",
+  "amp": 0,
+  "graders": [],
+  "pivots": [],
+  "area_tol": 0.08,
+  "blob_allow": 0
+ }
+]

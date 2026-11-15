@@ -1,0 +1,23 @@
+{
+ "id": "T13",
+ "tier": 2,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the red jacket lift her hat off her head and settle it back down.",
+ "parts": [
+  "B1_hat"
+ ],
+ "kind": "translate_up",
+ "amp": 70,
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "pivots": [],
+ "area_tol": 0.35,
+ "blob_allow": 3,
+ "skull": true
+}

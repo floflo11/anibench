@@ -1,0 +1,17 @@
+{
+ "id": "T22",
+ "tier": 3,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the navy jacket give a thumbs up with his raised hand.",
+ "parts": [
+  "B2_arm"
+ ],
+ "kind": "human",
+ "amp": 0,
+ "graders": [],
+ "pivots": [],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

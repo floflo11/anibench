@@ -1,0 +1,34 @@
+{
+ "id": "T08",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the pigtails of the girl with pigtails swing side to side.",
+ "parts": [
+  "A2_pigtailL",
+  "A2_pigtailR"
+ ],
+ "kind": "rotate",
+ "amp": 12,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   352,
+   112
+  ],
+  [
+   480,
+   108
+  ]
+ ],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

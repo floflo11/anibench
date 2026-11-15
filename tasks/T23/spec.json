@@ -1,0 +1,17 @@
+{
+ "id": "T23",
+ "tier": 3,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the small boy in the striped shirt walk in place.",
+ "parts": [
+  "A3_body"
+ ],
+ "kind": "human",
+ "amp": 0,
+ "graders": [],
+ "pivots": [],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}

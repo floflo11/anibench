@@ -4,4 +4,7 @@ env
 node_modules/
 .venv/
 __pycache__/
+scratch/
+validation/*/*/*.png
+validation/log.txt
 runs/raw/

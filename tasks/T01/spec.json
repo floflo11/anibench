@@ -1,0 +1,29 @@
+{
+ "id": "T01",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.",
+ "parts": [
+  "A1_hand"
+ ],
+ "kind": "rotate",
+ "amp": 25,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   232,
+   192
+  ]
+ ],
+ "area_tol": 0.08,
+ "blob_allow": 0
+}
