@@ -24,6 +24,12 @@ else:
     else:
         g = grade(frames, tests)
         res.update(status="PASS" if g["pass"] else "FAIL", grades=g)
-(out / "reward.json").write_text(json.dumps(res, indent=1))
+# Valkyrie reads reward.json as numbers only: overall reward plus 1/0 per applicable check
+nums = {"reward": 1.0 if res.get("status") == "PASS" else 0.0}
+for k, v in (res.get("grades") or {}).items():
+    if k != "pass":
+        nums[k] = 1.0 if v.get("ok") else 0.0
+(out / "reward.json").write_text(json.dumps(nums))
+(out / "details.json").write_text(json.dumps(res, indent=1))
 (out / "reward.txt").write_text("1" if res.get("status") == "PASS" else "0")
 print(json.dumps(res, indent=1))
