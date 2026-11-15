@@ -35,7 +35,13 @@ valkyrie agent install https://github.com/vals-ai/public-agent-registry/tree/mai
 valkyrie agent install https://github.com/vals-ai/public-agent-registry/tree/main/examples/codex-v1.0.0
 scripts/run.sh checks     # push + oracle (must be all 1s) + Sonnet smoke on T01
 scripts/run.sh full       # Sonnet 5.5 + GPT-6.1 Sol, 21 tasks x 3 tries
+# optional: other models through OpenRouter, same agent for all of them
+valkyrie agent install https://github.com/vals-ai/public-agent-registry/tree/main/agents/terminus2
+valkyrie secret set openrouter-api-key
+scripts/run.sh others
 ```
+Note: Claude Code can open the image; Terminus 2 sees only terminal text, so those models must inspect the
+image with code. Report the two setups separately.
 Secrets `anthropic-api-key` and `openai-api-key` are the ones already saved in Valkyrie for Please Hold.
 If a model name is rejected, rerun with e.g. `CLAUDE_MODEL=anthropic/claude-sonnet-5-5 OPENAI_MODEL=gpt-6.1-sol`.
 Results land in `out/`; send them to Claude to merge into the write-up, deck and video.

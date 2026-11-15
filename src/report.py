@@ -19,7 +19,8 @@ GRADERS = ["G1", "G2", "G3", "G4", "G5", "G6"]
 GNAME = {"G1": "Isolation", "G2": "Integrity", "G3": "Area", "G4": "Motion", "G5": "Pivot", "G6": "Loop/fidelity"}
 STAGE = {"G1": "isolation", "G2": "cut-out", "G3": "cut-out", "G4": "motion", "G5": "pivot", "G6": "motion"}
 LABEL = {"sonnet": "Claude Sonnet 5.5", "sol": "GPT-6.1 Sol", "qwen": "Qwen 3.8 27B",
-         "nemotron": "Nemotron 3.5 Super VL", "gemma": "Gemma 4 31B"}
+         "nemotron": "Nemotron 3.5 Super VL", "gemma": "Gemma 4 31B",
+         "gemini4": "Gemini 4 Carbon", "grok": "Grok 4.7", "kimi": "Kimi K3.1 Pro", "deepseek": "DeepSeek V4 Flash Vision"}
 
 
 def final_grade(d):
@@ -107,10 +108,10 @@ def main():
     # chart 2: failure rate per grader per model
     fig, ax = plt.subplots(figsize=(7, 3.6), dpi=150)
     w = 0.8 / len(models)
-    cols = ["#3b6fd8", "#e07b39", "#4a9d5b", "#8e5cc4"]
+    cols = ["#3b6fd8", "#e07b39", "#4a9d5b", "#8e5cc4", "#c4a23a", "#5aa3b8", "#b85a7a"]
     for i, m in enumerate(models):
         vals = [summ[m]["grader_fail"][k]["failed"] / max(1, summ[m]["grader_fail"][k]["n"]) * 100 for k in GRADERS]
-        ax.bar([j + (i - (len(models) - 1) / 2) * w for j in range(len(GRADERS))], vals, w, label=LABEL.get(m, m), color=cols[i % 4])
+        ax.bar([j + (i - (len(models) - 1) / 2) * w for j in range(len(GRADERS))], vals, w, label=LABEL.get(m, m), color=cols[i % len(cols)])
     ax.set_xticks(range(len(GRADERS)), [f"{k}\n{GNAME[k]}" for k in GRADERS], fontsize=8)
     ax.set_ylabel("Runs failing this check (%)")
     ax.spines[["top", "right"]].set_visible(False)

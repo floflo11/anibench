@@ -15,6 +15,10 @@ MODELS = {
     "qwen": "qwen/qwen3.8-27b",
     "nemotron": "nvidia/nemotron-3.5-super-vl:free",
     "gemma": "google/gemma-4-31b-it:free",
+    "gemini4": "google/gemini-4-carbon",
+    "grok": "x-ai/grok-4.7",
+    "kimi": "moonshotai/kimi-k3.1-pro",
+    "deepseek": "deepseek/deepseek-v4-flash-vision-exp",
 }
 
 

@@ -6,6 +6,7 @@
 #   scripts/run.sh smoke     Sonnet on T01 only (checks the image builds and the verifier runs)
 #   scripts/run.sh checks    push + oracle + smoke, one after another
 #   scripts/run.sh full      Sonnet 5.5 and GPT-6.1 Sol on all 21 scored tasks, $TRIES times each
+#   scripts/run.sh others    OpenRouter models via the Terminus 2 agent (needs secret openrouter-api-key)
 #
 # Every run waits for completion (--connect) and saves results + outputs under out/<label>-<time>/.
 # Model names: check with `valkyrie run start --help` or staff; override CLAUDE_MODEL / OPENAI_MODEL.
@@ -20,6 +21,8 @@ CLAUDE_MODEL="${CLAUDE_MODEL:-anthropic/claude-sonnet-5-5}"
 OPENAI_MODEL="${OPENAI_MODEL:-gpt-6.1-sol}"
 CLAUDE_AGENT="${CLAUDE_AGENT:-claude_code-v1.0.0}"
 OPENAI_AGENT="${OPENAI_AGENT:-codex-v1.0.0}"
+OTHER_AGENT="${OTHER_AGENT:-terminus2}"
+OTHER_MODELS="${OTHER_MODELS:-openrouter/google/gemini-4-carbon openrouter/x-ai/grok-4.7 openrouter/moonshotai/kimi-k3.1-pro openrouter/qwen/qwen3.8-27b}"
 LOG="${LOG:-runs.log}"
 
 start() {  # start <label> <agent> <model|-> <task-ids|all> <secret flags...>
@@ -58,5 +61,9 @@ case "${1:-}" in
             openai "full-sol-try$i" all
           done
           echo "full finished" ;;
-  *)      sed -n '2,13p' "$0"; exit 1 ;;
+  others) for m in $OTHER_MODELS; do
+            start "other-$(basename "$m")" "$OTHER_AGENT" "$m" all -s OPENROUTER_API_KEY openrouter-api-key -k max_turns 40
+          done
+          echo "others finished" ;;
+  *)      sed -n '2,14p' "$0"; exit 1 ;;
 esac
