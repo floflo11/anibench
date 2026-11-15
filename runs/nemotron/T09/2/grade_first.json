@@ -1,0 +1,61 @@
+{
+ "stage": "first",
+ "task": "T09",
+ "model": "nemotron",
+ "try_": "2",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1184,
+  "completion_tokens": 11305,
+  "total_tokens": 12489,
+  "cost": 0,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0,
+   "upstream_inference_prompt_cost": 0,
+   "upstream_inference_completions_cost": 0
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 10212,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 98.832,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": false,
+   "value": 0.99969
+  },
+  "G2": {
+   "ok": true,
+   "value": 1,
+   "base": 2
+  },
+  "G3": {
+   "ok": false,
+   "value": 0.5903
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.998
+  },
+  "G5": {
+   "ok": false,
+   "value": 1.0
+  },
+  "G6": {
+   "ok": false,
+   "loop": 0.0,
+   "first_vs_orig": 0.99966
+  },
+  "pass": false
+ }
+}

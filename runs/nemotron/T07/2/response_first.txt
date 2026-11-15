@@ -1,0 +1,157 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earring Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="animCanvas" width="1200" height="600"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const canvas = document.getElementById('animCanvas');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false });
+        renderer.setSize(1200, 600);
+        renderer.setPixelRatio(1);
+        renderer.toneMapping = THREE.NoToneMapping;
+
+        const camera = new THREE.OrthographicCamera(0, 1200, 0, 600, -1, 1);
+        const scene = new THREE.Scene();
+
+        let textureLoader = new THREE.TextureLoader();
+        let originalImage = null;
+        let bgMesh = null;
+        let earringMeshes = [];
+        let ready = false;
+
+        // Estimated coordinates for the red earrings on the girl in the white dress (far right).
+        // Image dimensions: 1200x600.
+        // The girl occupies the rightmost quarter. Earrings are near her ears.
+        const earringRegions = [
+            { x: 875, y: 205, w: 18, h: 32 }, // Left earring (viewer's left side of her head)
+            { x: 1095, y: 205, w: 18, h: 32 } // Right earring (viewer's right side of her head)
+        ];
+
+        function averageColor(ctx, x, y, w, h) {
+            const imageData = ctx.getImageData(x, y, w, h);
+            const data = imageData.data;
+            let r = 0, g = 0, b = 0, count = 0;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i + 3] > 0) {
+                    r += data[i];
+                    g += data[i + 1];
+                    b += data[i + 2];
+                    count++;
+                }
+            }
+            if (count === 0) return 'rgba(255, 255, 255, 1)';
+            return `rgba(${Math.floor(r / count)}, ${Math.floor(g / count)}, ${Math.floor(b / count)}, 1)`;
+        }
+
+        function init() {
+            textureLoader.load('./image.png', (tex) => {
+                tex.colorSpace = THREE.SRGBColorSpace;
+                originalImage = tex.image;
+
+                // Create background texture with earrings erased (filled with surrounding color)
+                const oc = document.createElement('canvas');
+                oc.width = originalImage.width;
+                oc.height = originalImage.height;
+                const octx = oc.getContext('2d');
+                octx.drawImage(originalImage, 0, 0);
+
+                // Erase earrings from background by filling with sampled color
+                earringRegions.forEach(region => {
+                    // Sample color from just above the earring
+                    const fillColor = averageColor(octx, region.x, Math.max(0, region.y - 4), region.w, 4);
+                    octx.fillStyle = fillColor;
+                    octx.fillRect(region.x, region.y, region.w, region.h);
+                });
+
+                const bgTexture = new THREE.CanvasTexture(oc);
+                bgTexture.colorSpace = THREE.SRGBColorSpace;
+
+                const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
+                const bgGeometry = new THREE.PlaneGeometry(1200, 600);
+                bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
+                // PlaneGeometry is centered at 0,0. Camera is 0..1200, 0..600 (y down).
+                // So position at 600, 300.
+                bgMesh.position.set(600, 300, 0);
+                scene.add(bgMesh);
+
+                // Create moving earring meshes
+                earringRegions.forEach((region, index) => {
+                    // Create cropped texture for the earring
+                    const ec = document.createElement('canvas');
+                    ec.width = region.w;
+                    ec.height = region.h;
+                    const ectx = ec.getContext('2d');
+                    ectx.drawImage(
+                        originalImage,
+                        region.x, region.y, region.w, region.h,
+                        0, 0, region.w, region.h
+                    );
+
+                    const eTexture = new THREE.CanvasTexture(ec);
+                    eTexture.colorSpace = THREE.SRGBColorSpace;
+                    const eMaterial = new THREE.MeshBasicMaterial({ 
+                        map: eTexture, 
+                        transparent: true 
+                    });
+                    const eGeometry = new THREE.PlaneGeometry(region.w, region.h);
+                    
+                    // Translate geometry so (0,0) is top-center for pivot rotation
+                    // PlaneGeometry is centered. Vertices: x +/- w/2, y +/- h/2.
+                    // We want top edge at y=0. Translate y by -h/2.
+                    eGeometry.translate(0, -region.h / 2, 0);
+
+                    const eMesh = new THREE.Mesh(eGeometry, eMaterial);
+                    // Position mesh at top-left corner of the earring box
+                    eMesh.position.set(region.x + region.w / 2, region.y, 1);
+                    eMesh.userData = { index: index };
+                    earringMeshes.push(eMesh);
+                    scene.add(eMesh);
+                });
+
+                ready = true;
+                window.ANIM_READY = true;
+                window.setTime(0);
+            });
+        }
+
+        window.setTime = function(t) {
+            if (!ready) return;
+
+            // t is in [0, 2]
+            // Swing angle: 0 at t=0, max at t=1, 0 at t=2
+            const phase = Math.PI * t;
+            const swing = Math.sin(phase);
+            const maxAngle = 0.12; // radians (~7 degrees)
+
+            earringMeshes.forEach(mesh => {
+                mesh.rotation.z = swing * maxAngle;
+            });
+
+            renderer.render(scene, camera);
+        };
+
+        init();
+    </script>
+</body>
+</html>
+```

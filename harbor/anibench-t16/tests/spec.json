@@ -1,0 +1,30 @@
+{
+ "id": "T16",
+ "tier": 2,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the red jacket jump; the other toddler stays perfectly still.",
+ "parts": [
+  "B1_body"
+ ],
+ "kind": "jump",
+ "amp": 80,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "pivots": [],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G6"
+ ]
+}

@@ -6,9 +6,13 @@ Submissions are due **2:00 PM** at hackathon.vals.ai. Target: submit by 1:45 PM.
 - 24 tasks (21 scored automatically, 3 human-labeled), part masks, renderer, six checks.
 - Checks validated with a reference animation and 7 deliberately broken copies per task
   (`validation/admission.md`).
-- Real model runs: **Nemotron 3.5 Super VL** (free on OpenRouter), all 24 tasks. Results in `results/`.
+- Real model runs: **Nemotron 3.5 Super VL** (free on OpenRouter): 24 tasks + a 2nd try on the 12 Tier 1 tasks.
+  **0/33 scored runs passed** (17 flipped/shifted the image, 6 blank canvas, 10 image right but animation wrong).
+- Smoke test: **Qwen 3.8 27B passed T01** (correct wrist wave), so the tasks are solvable.
 - Failure library (GIF per run) in `results/library/`, charts in `results/charts/`, demo video `results/demo.mp4`.
 - Write-up: `WRITEUP.md`. Harbor tasks for Valkyrie: `harbor/` (21 tasks).
+- Presentation deck (10 slides, with animated failure GIFs): https://claude.ai/artifact/KRASwPWRAWUyXjYzcaQ3Yg
+- Design doc: https://claude.ai/artifact/Cv7BuksqSPRVYJRgUz98Qe
 
 ## Why Sonnet 5.5 and GPT-6.1 Sol are not in the results yet
 Your OpenRouter account has **$0 credits** (free tier), so OpenRouter refused paid models.

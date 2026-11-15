@@ -1,0 +1,35 @@
+{
+ "id": "T14",
+ "tier": 2,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the navy jacket tilt his hat up and back in greeting, pivoting on the left end of the brim (viewer's left).",
+ "parts": [
+  "B2_hat"
+ ],
+ "kind": "rotate_hat",
+ "amp": 15,
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "pivots": [
+  [
+   560,
+   160
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 3,
+ "skull": true,
+ "graders_all": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

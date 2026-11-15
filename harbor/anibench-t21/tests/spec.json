@@ -1,0 +1,36 @@
+{
+ "id": "T21",
+ "tier": 2,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the red jacket wave with her right hand.",
+ "parts": [
+  "B1_hand"
+ ],
+ "kind": "rotate",
+ "amp": 25,
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   122,
+   198
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

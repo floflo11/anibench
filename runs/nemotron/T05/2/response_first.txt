@@ -1,0 +1,147 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toddler Wave Loop</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; }
+  #c { display: block; width: 1024px; height: 683px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: false });
+renderer.setSize(W, H);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, 0, H, -1, 1);
+camera.position.z = 1;
+
+let ready = false;
+let handMesh, pivot;
+
+// Estimated region for the left toddler's raised hand (red jacket)
+const X0 = 55, Y0 = 135, X1 = 170, Y1 = 300;
+const HW = X1 - X0, HH = Y1 - Y0;
+const PIVOT_X = 115, PIVOT_Y = 285; // wrist joint
+const MAX_ANGLE = 0.4; // radians
+
+function makeTexture(canvasEl) {
+  const t = new THREE.CanvasTexture(canvasEl);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.magFilter = THREE.NearestFilter;
+  t.minFilter = THREE.NearestFilter;
+  t.wrapS = THREE.ClampToEdgeWrapping;
+  t.wrapT = THREE.ClampToEdgeWrapping;
+  t.flipY = false;
+  return t;
+}
+
+const loader = new THREE.TextureLoader();
+loader.load('./image.png', function(tex) {
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.flipY = false;
+  tex.magFilter = THREE.NearestFilter;
+  tex.minFilter = THREE.NearestFilter;
+
+  // Work on an offscreen copy
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const octx = off.getContext('2d');
+  octx.drawImage(tex.image, 0, 0);
+  const imgData = octx.getImageData(0, 0, W, H);
+  const data = imgData.data;
+
+  const bgData = new Uint8ClampedArray(data);
+
+  const handCanvas = document.createElement('canvas');
+  handCanvas.width = HW; handCanvas.height = HH;
+  const hctx = handCanvas.getContext('2d');
+  const handData = hctx.createImageData(HW, HH);
+
+  // Separate hand pixels (skin) from sleeve/background inside the box.
+  // Everything that is not pure white background and not red sleeve is treated as hand.
+  for (let y = Y0; y < Y1; y++) {
+    for (let x = X0; x < X1; x++) {
+      const i = (y * W + x) * 4;
+      const r = data[i], g = data[i + 1], b = data[i + 2];
+      const isWhite = (r > 245 && g > 245 && b > 245);
+      const isRedSleeve = (r > 150 && g < 130 && b < 130);
+      const isHand = !isWhite && !isRedSleeve;
+
+      if (isHand) {
+        const hx = x - X0, hy = y - Y0;
+        const hi = (hy * HW + hx) * 4;
+        handData.data[hi] = r;
+        handData.data[hi + 1] = g;
+        handData.data[hi + 2] = b;
+        handData.data[hi + 3] = 255;
+        // Blank out the hole in the background (white matches the page)
+        bgData[i] = 255; bgData[i + 1] = 255; bgData[i + 2] = 255; bgData[i + 3] = 255;
+      }
+    }
+  }
+
+  octx.putImageData(new ImageData(bgData, W, H), 0, 0);
+  const bgCanvas = off;
+
+  hctx.putImageData(handData, 0, 0);
+
+  const bgTex = makeTexture(bgCanvas);
+  const handTex = makeTexture(handCanvas);
+
+  // Background plane: covers the full image, with the hand area erased to white.
+  const bgGeo = new THREE.PlaneGeometry(W, H);
+  bgGeo.translate(W / 2, H / 2, 0); // local (0,0) is top-left corner
+  const bgMat = new THREE.MeshBasicMaterial({ map: bgTex });
+  const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+  bgMesh.position.set(0, 0, 0);
+  scene.add(bgMesh);
+
+  // Hand plane: only the extracted hand, rest transparent.
+  const handGeo = new THREE.PlaneGeometry(HW, HH);
+  handGeo.translate(HW / 2, HH / 2, 0); // local (0,0) is top-left of hand box
+  const handMat = new THREE.MeshBasicMaterial({ map: handTex, transparent: true });
+  handMesh = new THREE.Mesh(handGeo, handMat);
+
+  // Pivot at the wrist. handMesh is offset so its local box top-left sits at (X0,Y0)
+  // when the pivot is at (PIVOT_X, PIVOT_Y).
+  pivot = new THREE.Object3D();
+  pivot.position.set(PIVOT_X, PIVOT_Y, 0);
+  handMesh.position.set(X0 - PIVOT_X, Y0 - PIVOT_Y, 0);
+  pivot.add(handMesh);
+  scene.add(pivot);
+
+  ready = true;
+  window.ANIM_READY = true;
+
+  // Frame 0 must look identical to the original image.
+  setTime(0);
+});
+
+window.setTime = function(t) {
+  if (!ready) return;
+  const tt = ((t % 2) + 2) % 2; // force into [0,2)
+  const angle = MAX_ANGLE * Math.sin(Math.PI * tt); // 0 at t=0 and t=2
+  pivot.rotation.z = angle;
+  renderer.render(scene, camera);
+};
+
+// Optional smooth playback (not required for correctness)
+(function loop() {
+  requestAnimationFrame(loop);
+})();
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Three.js Hand Wave</title>
+<style>
+  body { margin: 0; background: white; overflow: hidden; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: false });
+renderer.setPixelRatio(1);
+renderer.setSize(1200, 600);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+// Orthographic camera: (0,0) is top-left, matches image pixel space
+const camera = new THREE.OrthographicCamera(0, 1200, 0, 600, -1, 1);
+camera.position.z = 1;
+
+let texBase, texHand;
+let meshBase, handGroup, meshHand;
+let animReady = false;
+
+// Isolation box for the raised hand of the boy on the far left.
+// Estimated from image: hand region roughly x=170-270, y=140-260.
+const BOX = { x: 170, y: 140, w: 100, h: 120 };
+// Pivot point at the wrist inside that box.
+const WRIST = { x: 190, y: 230 };
+
+function init() {
+  const img = new Image();
+  img.src = './image.png';
+  img.onload = () => {
+    const ow = 1200, oh = 600;
+
+    // Base texture: original image with the hand area painted white (background).
+    const cBase = document.createElement('canvas');
+    cBase.width = ow; cBase.height = oh;
+    const ctxBase = cBase.getContext('2d');
+    ctxBase.drawImage(img, 0, 0);
+    ctxBase.fillStyle = 'white';
+    ctxBase.fillRect(BOX.x, BOX.y, BOX.w, BOX.h);
+
+    // Hand texture: only the hand region on transparent background.
+    const cHand = document.createElement('canvas');
+    cHand.width = BOX.w; cHand.height = BOX.h;
+    const ctxHand = cHand.getContext('2d');
+    ctxHand.drawImage(img, BOX.x, BOX.y, BOX.w, BOX.h, 0, 0, BOX.w, BOX.h);
+
+    texBase = new THREE.CanvasTexture(cBase);
+    texBase.colorSpace = THREE.SRGBColorSpace;
+    texHand = new THREE.CanvasTexture(cHand);
+    texHand.colorSpace = THREE.SRGBColorSpace;
+
+    // Full-screen base mesh.
+    const geoBase = new THREE.PlaneGeometry(ow, oh);
+    const matBase = new THREE.MeshBasicMaterial({ map: texBase });
+    meshBase = new THREE.Mesh(geoBase, matBase);
+    meshBase.position.set(ow / 2, oh / 2, 0);
+    scene.add(meshBase);
+
+    // Hand mesh pivoted at the wrist.
+    const geoHand = new THREE.PlaneGeometry(BOX.w, BOX.h);
+    const matHand = new THREE.MeshBasicMaterial({ map: texHand, transparent: true });
+    meshHand = new THREE.Mesh(geoHand, matHand);
+
+    handGroup = new THREE.Group();
+    handGroup.position.set(WRIST.x, WRIST.y, 0);
+    scene.add(handGroup);
+
+    // Offset mesh center so it aligns with the box location relative to the wrist.
+    meshHand.position.set(
+      BOX.x + BOX.w / 2 - WRIST.x,
+      BOX.y + BOX.h / 2 - WRIST.y,
+      0
+    );
+    handGroup.add(meshHand);
+
+    animReady = true;
+    window.ANIM_READY = true;
+    window.setTime(0); // render frame 0
+  };
+}
+
+// Synchronous frame render at time t seconds (0 <= t <= 2).
+window.setTime = function(t) {
+  if (!animReady) return;
+  const tt = t < 0 ? 0 : (t > 2 ? 2 : t);
+  // Wave: starts flat, bends, returns flat at t=2.
+  const angle = 0.6 * Math.sin(Math.PI * tt);
+  handGroup.rotation.z = angle;
+  renderer.render(scene, camera);
+};
+
+// Optional live playback loop (does not affect setTime contract).
+let start = performance.now();
+function loop() {
+  const t = ((performance.now() - start) / 1000) % 2;
+  window.setTime(t);
+  requestAnimationFrame(loop);
+}
+loop();
+
+init();
+</script>
+</body>
+</html>

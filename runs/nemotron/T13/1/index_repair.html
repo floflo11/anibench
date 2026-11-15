@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hat Animation</title>
+    <style>
+        body {
+            margin: 0;
+            background: white;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            width: 1024px;
+            height: 683px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="glcanvas" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1024;
+const HEIGHT = 683;
+const HAT_X = 145;
+const HAT_Y = 15;
+const HAT_W = 320;
+const HAT_H = 245;
+
+const glCanvas = document.getElementById('glcanvas');
+
+// Offscreen canvases used only for 2D image preparation.
+// They never receive a WebGL context, avoiding "existing context" errors.
+const baseOff = document.createElement('canvas');
+baseOff.width = WIDTH;
+baseOff.height = HEIGHT;
+const baseCtx = baseOff.getContext('2d');
+
+const hatOff = document.createElement('canvas');
+hatOff.width = HAT_W;
+hatOff.height = HAT_H;
+const hatCtx = hatOff.getContext('2d');
+
+let scene, camera, renderer, baseMesh, hatMesh, hatOriginalY;
+let animReady = false;
+
+function init() {
+    scene = new THREE.Scene();
+
+    // Orthographic camera: Y increases downward (0 at top), matching image pixel coords.
+    camera = new THREE.OrthographicCamera(0, WIDTH, 0, HEIGHT, -1, 1);
+    camera.position.z = 1;
+
+    renderer = new THREE.WebGLRenderer({ canvas: glCanvas, antialias: false });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+
+    const img = new Image();
+    img.src = './image.png';
+    img.onload = () => {
+        // Base texture: full image with hat region filled with white.
+        baseCtx.drawImage(img, 0, 0);
+        baseCtx.fillStyle = 'white';
+        baseCtx.fillRect(HAT_X, HAT_Y, HAT_W, HAT_H);
+
+        // Hat texture: cropped hat only.
+        hatCtx.drawImage(img, HAT_X, HAT_Y, HAT_W, HAT_H, 0, 0, HAT_W, HAT_H);
+
+        const baseTex = new THREE.CanvasTexture(baseOff);
+        baseTex.colorSpace = THREE.SRGBColorSpace;
+
+        const hatTex = new THREE.CanvasTexture(hatOff);
+        hatTex.colorSpace = THREE.SRGBColorSpace;
+
+        // Base plane covers the whole view.
+        const baseGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+        const baseMat = new THREE.MeshBasicMaterial({ map: baseTex });
+        baseMesh = new THREE.Mesh(baseGeo, baseMat);
+        baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+        scene.add(baseMesh);
+
+        // Hat plane sits slightly in front of the base.
+        const hatGeo = new THREE.PlaneGeometry(HAT_W, HAT_H);
+        const hatMat = new THREE.MeshBasicMaterial({ map: hatTex });
+        hatMesh = new THREE.Mesh(hatGeo, hatMat);
+        hatMesh.position.set(HAT_X + HAT_W / 2, HAT_Y + HAT_H / 2, 1);
+        hatOriginalY = hatMesh.position.y;
+        scene.add(hatMesh);
+
+        animReady = true;
+        window.ANIM_READY = true;
+        setTime(0);
+    };
+}
+
+window.setTime = function (t) {
+    if (!animReady) return;
+    const tt = Math.max(0, Math.min(2, t));
+    // Lift up then settle back down over 2 seconds.
+    const offset = 50 * Math.sin(Math.PI * tt / 2);
+    hatMesh.position.y = hatOriginalY - offset;
+    renderer.render(scene, camera);
+};
+
+init();
+
+// Optional live playback loop (deterministic, uses performance.now).
+function animate() {
+    if (animReady) {
+        const time = (performance.now() / 1000) % 2;
+        setTime(time);
+    }
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

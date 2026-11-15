@@ -83,6 +83,8 @@ def main():
                        cost=round(sum(r["cost"] or 0 for r in rows if r["model"] == m), 3))
     (OUT / "summary.json").write_text(json.dumps(summ, indent=1))
 
+    full_models = [m for m in models if summ[m]["n"] >= 10]  # charts only for models that ran the full set
+    models = full_models or models
     # chart 1: pass rate per model and tier
     fig, ax = plt.subplots(figsize=(7, 3.6), dpi=150)
     xs = range(len(models))

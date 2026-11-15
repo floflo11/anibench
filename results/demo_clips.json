@@ -1,0 +1,14 @@
+{"clips": [
+  {"run": "nemotron/T01/1", "caption": "“Wave his raised hand” → the hand waves at his knee", "seconds": 7},
+  {"run": "nemotron/T09/1", "caption": "“Nod his head” → the head disappears", "seconds": 6},
+  {"run": "nemotron/T14/1", "caption": "“Tilt his hat” → a white bar cuts through his face", "seconds": 6},
+  {"run": "nemotron/T21/1", "caption": "“Wave with her right hand” → the hand comes off at the wrist", "seconds": 6},
+  {"run": "nemotron/T03/1", "caption": "“Wave from the wrist” → fingertips left behind", "seconds": 6},
+  {"run": "qwen/T01/1", "caption": "It is solvable: Qwen 3.8 27B gets the wave right", "seconds": 6}
+ ],
+ "stills": [
+  {"path": "results/charts/failures_by_check.png", "title": "Where animations break", "seconds": 6}
+ ],
+ "end_title": "No model judge. Just pixels.",
+ "end_sub": "Six checks, each proven on a correct animation and 7 broken copies.",
+ "end_sub2": "github.com/floflo11/anibench"}

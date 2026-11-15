@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Nod Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: white; }
+        canvas { display: block; width: 1200px; height: 600px; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1200" height="600"></canvas>
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const canvas = document.getElementById('canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+        renderer.setSize(1200, 600);
+        renderer.setPixelRatio(1);
+        renderer.toneMappingEnabled = false;
+
+        const camera = new THREE.OrthographicCamera(0, 1200, 0, 600, -1, 1);
+        const scene = new THREE.Scene();
+
+        let headMesh = null;
+        let ready = false;
+
+        // Coordinates for the boy on the far left (estimated from image)
+        const headX = 50;
+        const headY = 15;
+        const headW = 160;
+        const headH = 220;
+        const pivotX = 130; // Center of head width
+        const pivotY = 235; // Base of neck
+
+        function init(image) {
+            // 1. Create Body Texture: Full image with head area painted white (background color)
+            const bodyCanvas = document.createElement('canvas');
+            bodyCanvas.width = 1200;
+            bodyCanvas.height = 600;
+            const bCtx = bodyCanvas.getContext('2d');
+            bCtx.drawImage(image, 0, 0);
+            bCtx.fillStyle = '#ffffff';
+            bCtx.fillRect(headX, headY, headW, headH);
+
+            const bodyTex = new THREE.CanvasTexture(bodyCanvas);
+            bodyTex.colorSpace = THREE.SRGBColorSpace;
+
+            // 2. Create Head Texture: Cropped head region
+            const headCanvas = document.createElement('canvas');
+            headCanvas.width = headW;
+            headCanvas.height = headH;
+            const hCtx = headCanvas.getContext('2d');
+            hCtx.drawImage(image, headX, headY, headW, headH, 0, 0, headW, headH);
+
+            const headTex = new THREE.CanvasTexture(headCanvas);
+            headTex.colorSpace = THREE.SRGBColorSpace;
+
+            // 3. Body Mesh (Static)
+            const bodyGeo = new THREE.PlaneGeometry(1200, 600);
+            const bodyMat = new THREE.MeshBasicMaterial({ map: bodyTex });
+            const bodyMesh = new THREE.Mesh(bodyGeo, bodyMat);
+            bodyMesh.position.set(600, 300, 0);
+            scene.add(bodyMesh);
+
+            // 4. Head Mesh (Animated)
+            const headGeo = new THREE.PlaneGeometry(headW, headH);
+            // Shift geometry so local (0,0) is the pivot point (neck base, center width)
+            // PlaneGeometry is centered at 0,0. Top-left is (-W/2, -H/2).
+            // We want local (0,0) to be at (pivotX_rel, pivotY_rel) relative to crop.
+            // Pivot is at center X (W/2) and bottom Y (H).
+            // So we translate geometry by (0, -H/2) to move origin to bottom center.
+            headGeo.translate(0, -headH / 2);
+
+            const headMat = new THREE.MeshBasicMaterial({ map: headTex });
+            headMesh = new THREE.Mesh(headGeo, headMat);
+            headMesh.position.set(pivotX, pivotY, 0);
+            scene.add(headMesh);
+
+            ready = true;
+            window.ANIM_READY = true;
+            setTime(0);
+        }
+
+        const img = new Image();
+        img.onload = () => init(img);
+        img.src = './image.png';
+
+        window.setTime = function(t) {
+            if (!ready || !headMesh) return;
+            // t in [0, 2]. sin(PI * t) creates a 0 -> max -> 0 -> min -> 0 loop over 4 seconds?
+            // We need 0 -> max -> 0 over 2 seconds.
+            // sin(PI * t): t=0 -> 0. t=1 -> 0. t=2 -> 0.
+            // Peak at t=0.5 (1) and t=1.5 (-1).
+            const angle = 0.15 * Math.sin(Math.PI * t);
+            headMesh.rotation.x = angle;
+            renderer.render(scene, camera);
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,187 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Toddler Nod Loop</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #fff; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+renderer.setSize(1024, 683, false);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const camera = new THREE.OrthographicCamera(-512, 512, 341.5, -341.5, -1, 1);
+camera.position.set(0, 0, 1);
+camera.lookAt(0, 0, 0);
+
+const scene = new THREE.Scene();
+
+let baseTex, headTex, pivot, headMesh;
+let ready = false;
+
+const img = new Image();
+img.src = './image.png';
+img.onload = init;
+
+function init() {
+  const w = 1024, h = 683;
+
+  // --- Build masks from the source image ---
+  const fullCanvas = document.createElement('canvas');
+  fullCanvas.width = w;
+  fullCanvas.height = h;
+  const fctx = fullCanvas.getContext('2d');
+  fctx.drawImage(img, 0, 0);
+  const fdata = fctx.getImageData(0, 0, w, h).data;
+
+  // Bounding box around the navy-jacket toddler's head + hat (image pixels)
+  const x0 = 530, x1 = 840, y0 = 0, y1 = 290;
+
+  const mask = new Uint8Array(w * h);   // 255 = keep (head), 0 = transparent/background
+  const visited = new Uint8Array(w * h);
+  const queue = [];
+
+  function idx(x, y) { return (y * w + x) * 4; }
+  function midx(x, y) { return y * w + x; }
+  function isWhite(x, y) {
+    const i = idx(x, y);
+    return fdata[i] > 240 && fdata[i + 1] > 240 && fdata[i + 2] > 240;
+  }
+
+  function seed(x, y) {
+    if (x < x0 || x > x1 || y < y0 || y > y1) return;
+    const m = midx(x, y);
+    if (visited[m]) return;
+    if (!isWhite(x, y)) return;
+    visited[m] = 1;
+    mask[m] = 0;
+    queue.push([x, y]);
+  }
+
+  // Seed from the bbox border so background inside the box is found
+  for (let x = x0; x <= x1; x++) { seed(x, y0); seed(x, y1); }
+  for (let y = y0; y <= y1; y++) { seed(x0, y); seed(x1, y); }
+
+  const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+  while (queue.length) {
+    const [x, y] = queue.shift();
+    for (const [dx, dy] of dirs) seed(x + dx, y + dy);
+  }
+
+  // Everything inside the bbox not reached by the background flood-fill is part of the head
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      if (!visited[midx(x, y)]) mask[midx(x, y)] = 255;
+    }
+  }
+
+  // Base texture: original image with head pixels painted white (a shaped hole)
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = w;
+  baseCanvas.height = h;
+  const bctx = baseCanvas.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  const bdata = bctx.getImageData(0, 0, w, h).data;
+  for (let y = y0; y <= y1; y++) {
+    for (let x = x0; x <= x1; x++) {
+      if (mask[midx(x, y)] === 255) {
+        const i = idx(x, y);
+        bdata[i] = 255;
+        bdata[i + 1] = 255;
+        bdata[i + 2] = 255;
+      }
+    }
+  }
+  bctx.putImageData(new ImageData(bdata, w, h), 0, 0);
+
+  // Head texture: original head pixels, transparent elsewhere
+  const headCanvas = document.createElement('canvas');
+  headCanvas.width = w;
+  headCanvas.height = h;
+  const hctx = headCanvas.getContext('2d');
+  hctx.drawImage(img, 0, 0);
+  const hdata = hctx.getImageData(0, 0, w, h).data;
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      if (mask[midx(x, y)] !== 255) {
+        const i = idx(x, y);
+        hdata[i + 3] = 0;
+      }
+    }
+  }
+  hctx.putImageData(new ImageData(hdata, w, h), 0, 0);
+
+  baseTex = new THREE.CanvasTexture(baseCanvas);
+  headTex = new THREE.CanvasTexture(headCanvas);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  headTex.colorSpace = THREE.SRGBColorSpace;
+
+  // --- Meshes ---
+  const baseGeo = new THREE.PlaneGeometry(1024, 683);
+  const baseMat = new THREE.MeshBasicMaterial({ map: baseTex });
+  const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+  baseMesh.position.set(0, 0, 0);
+  scene.add(baseMesh);
+
+  const cropW = x1 - x0; // 310
+  const cropH = y1 - y0; // 290
+  const headGeo = new THREE.PlaneGeometry(cropW, cropH);
+  const headMat = new THREE.MeshBasicMaterial({ map: headTex, transparent: true });
+  headMesh = new THREE.Mesh(headGeo, headMat);
+
+  // Center of head crop in world coords (camera: x[-512,512], y[341.5,-341.5])
+  const centerImgX = (x0 + x1) / 2; // 685
+  const centerImgY = (y0 + y1) / 2; // 145
+  headMesh.position.set(centerImgX - 512, 341.5 - centerImgY, 0); // (173, 196.5)
+
+  // Neck pivot estimated in image pixels
+  const neckImgX = 690;
+  const neckImgY = 275;
+  const neckWorldX = neckImgX - 512;          // 178
+  const neckWorldY = 341.5 - neckImgY;        // 66.5
+
+  // Local offset from head-center to neck inside headMesh local space
+  const localNeckX = neckImgX - centerImgX;   //  5
+  const localNeckY = -(neckImgY - centerImgY); // -130 (y is up in local space)
+
+  pivot = new THREE.Object3D();
+  pivot.position.set(neckWorldX, neckWorldY, 0);
+  scene.add(pivot);
+  pivot.add(headMesh);
+  // Position headMesh so that its local neck point sits at the pivot origin
+  headMesh.position.set(-localNeckX, -localNeckY, 0); // (-5, 130)
+
+  ready = true;
+  window.ANIM_READY = true;
+  setTime(0);
+}
+
+window.setTime = function (t) {
+  if (!ready) return;
+  // Smooth nod: 0 at t=0, max at t=0.5, 0 at t=1, -max at t=1.5, 0 at t=2
+  const maxAngle = 0.2;
+  const angle = maxAngle * Math.sin(Math.PI * t);
+  pivot.rotation.x = angle;
+  renderer.render(scene, camera);
+};
+
+// Optional live playback loop
+function loop() {
+  requestAnimationFrame(loop);
+}
+loop();
+</script>
+</body>
+</html>
+```

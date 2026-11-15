@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hand Wave Animation</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; display: block; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="glcanvas" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('glcanvas');
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false });
+renderer.setSize(1200, 600);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+// Orthographic camera: (0,0) is top-left, matches image pixel coordinates
+const camera = new THREE.OrthographicCamera(0, 1200, 0, 600, -1, 1);
+camera.position.z = 1;
+
+let handGroups = [];
+let animReady = false;
+
+window.ANIM_READY = false;
+
+function init() {
+  const img = new Image();
+  img.src = './image.png';
+  img.onload = () => {
+    // --- Base layer: full image ---
+    const baseTex = new THREE.Texture(img);
+    baseTex.colorSpace = THREE.SRGBColorSpace;
+    baseTex.needsUpdate = true;
+
+    const baseGeo = new THREE.PlaneGeometry(1200, 600);
+    const baseMat = new THREE.MeshBasicMaterial({ map: baseTex });
+    const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+    baseMesh.position.set(600, 300, 0);
+    scene.add(baseMesh);
+
+    // --- Hand definitions ---
+    // [x, y, w, h, wristX, wristY]
+    const handDefs = [
+      [210, 210, 60, 100, 225, 260],   // Child 1 (left boy)
+      [430, 290, 50, 100, 445, 340],   // Child 2 (girl yellow)
+      [630, 340, 60, 100, 645, 390],   // Child 3 (boy stripes)
+      [900, 310, 60, 100, 915, 350]    // Child 4 (girl white dress)
+    ];
+
+    handDefs.forEach(def => {
+      const [x, y, w, h, wx, wy] = def;
+
+      // 1. Eraser: white quad covering the original hand position
+      const eraserGeo = new THREE.PlaneGeometry(w, h);
+      const eraserMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+      const eraser = new THREE.Mesh(eraserGeo, eraserMat);
+      eraser.position.set(x + w / 2, y + h / 2, 1);
+      scene.add(eraser);
+
+      // 2. Hand mesh: cropped from original image
+      const c = document.createElement('canvas');
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext('2d');
+      ctx.drawImage(img, x, y, w, h, 0, 0, w, h);
+
+      const handTex = new THREE.CanvasTexture(c);
+      handTex.colorSpace = THREE.SRGBColorSpace;
+
+      const handGeo = new THREE.PlaneGeometry(w, h);
+      const handMat = new THREE.MeshBasicMaterial({ map: handTex, transparent: true });
+      const handMesh = new THREE.Mesh(handGeo, handMat);
+
+      // Pivot logic: rotate around wrist (wx, wy)
+      // Group sits at wrist position
+      const group = new THREE.Group();
+      group.position.set(wx, wy, 2);
+
+      // Mesh is offset so its local center aligns with group origin (wrist)
+      const cx = x + w / 2;
+      const cy = y + h / 2;
+      const dx = wx - cx;
+      const dy = wy - cy;
+      handMesh.position.set(-dx, -dy, 0);
+
+      group.add(handMesh);
+      scene.add(group);
+      handGroups.push(group);
+    });
+
+    animReady = true;
+    window.ANIM_READY = true;
+    render(0);
+  };
+}
+
+function render(t) {
+  // t in [0, 2], loop every 2 seconds
+  // sin(PI * t) goes 0 -> 1 -> 0 -> -1 -> 0 over 2 seconds
+  const angle = Math.sin(t * Math.PI) * 0.35;
+
+  handGroups.forEach(group => {
+    group.rotation.z = angle;
+  });
+
+  renderer.render(scene, camera);
+}
+
+window.setTime = function(t) {
+  if (!animReady) return;
+  // Normalize t to [0, 2)
+  const tt = ((t % 2) + 2) % 2;
+  render(tt);
+};
+
+init();
+</script>
+</body>
+</html>

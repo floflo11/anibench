@@ -1,0 +1,37 @@
+{
+ "id": "T09",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the boy on the far left nod his head.",
+ "parts": [
+  "A1_head"
+ ],
+ "kind": "rotate",
+ "amp": 8,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   145,
+   148
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

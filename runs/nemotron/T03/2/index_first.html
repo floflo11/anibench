@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hand Wave Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1200" height="600"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const IMAGE_W = 1200;
+        const IMAGE_H = 600;
+
+        // --- Configuration: Target Region ---
+        // Target: Small boy in striped shirt (3rd child from left).
+        // We isolate his raised hand (viewer's right side).
+        // These coordinates are estimated from the image layout.
+        const HAND_X = 660;
+        const HAND_Y = 180;
+        const HAND_W = 90;
+        const HAND_H = 100;
+        
+        // Wrist pivot point (approximate center of wrist joint)
+        const WRIST_X = 700;
+        const WRIST_Y = 270;
+
+        // Max rotation angle in radians (approx 25 degrees)
+        const MAX_ANGLE = 0.45;
+
+        // --- Globals ---
+        let scene, camera, renderer, bgMesh, handPivot, handMesh;
+        let ready = false;
+
+        // --- Offscreen Canvas Helpers ---
+        function createCanvas(w, h) {
+            const c = document.createElement('canvas');
+            c.width = w;
+            c.height = h;
+            return c;
+        }
+
+        function loadImage(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = url;
+            });
+        }
+
+        function makeTexture(canvas) {
+            const tex = new THREE.CanvasTexture(canvas);
+            tex.colorSpace = THREE.SRGBColorSpace;
+            tex.needsUpdate = true;
+            return tex;
+        }
+
+        // --- Initialization ---
+        async function init() {
+            // 1. Setup Renderer
+            const canvas = document.getElementById('canvas');
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+            renderer.setSize(IMAGE_W, IMAGE_H);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // 2. Setup Camera (Orthographic, 1px = 1 unit)
+            // Y axis: top is positive in image, so we flip for Three.js (Y up)
+            camera = new THREE.OrthographicCamera(-IMAGE_W / 2, IMAGE_W / 2, IMAGE_H / 2, -IMAGE_H / 2, -1, 1);
+            camera.position.z = 1;
+
+            // 3. Setup Scene
+            scene = new THREE.Scene();
+
+            // 4. Load Image
+            const img = await loadImage('./image.png');
+
+            // 5. Prepare Background Texture (Inpainted: hand area filled with white)
+            const bgCanvas = createCanvas(IMAGE_W, IMAGE_H);
+            const bgCtx = bgCanvas.getContext('2d');
+            bgCtx.drawImage(img, 0, 0);
+
+            // Fill hand area with white to hide original hand
+            // We sample a few pixels above the hand to check if background is white, 
+            // but simply filling with white is safe for this white-background image.
+            bgCtx.fillStyle = '#ffffff';
+            bgCtx.fillRect(HAND_X, HAND_Y, HAND_W, HAND_H);
+
+            const bgTexture = makeTexture(bgCanvas);
+
+            // 6. Prepare Hand Cutout Texture (Alpha mask: only hand visible)
+            const handCanvas = createCanvas(IMAGE_W, IMAGE_H);
+            const handCtx = handCanvas.getContext('2d');
+            handCtx.drawImage(img, 0, 0);
+
+            const imageData = handCtx.getImageData(0, 0, IMAGE_W, IMAGE_H);
+            const data = imageData.data;
+
+            for (let y = 0; y < IMAGE_H; y++) {
+                for (let x = 0; x < IMAGE_W; x++) {
+                    const idx = (y * IMAGE_W + x) * 4;
+                    // Check if inside hand bounding box
+                    if (x >= HAND_X && x < HAND_X + HAND_W && y >= HAND_Y && y < HAND_Y + HAND_H) {
+                        // Keep original pixels (alpha preserved from image)
+                    } else {
+                        // Set alpha to 0 for everything else
+                        data[idx + 3] = 0;
+                    }
+                }
+            }
+            handCtx.putImageData(imageData, 0, 0);
+            const handTexture = makeTexture(handCanvas);
+
+            // 7. Create Meshes
+            // Background Mesh (covers whole screen, has hole where hand was)
+            const bgGeo = new THREE.PlaneGeometry(IMAGE_W, IMAGE_H);
+            const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+            bgMesh = new THREE.Mesh(bgGeo, bgMat);
+            // Position so image (0,0) top-left maps to camera (-600, 300)
+            bgMesh.position.set(-IMAGE_W / 2, IMAGE_H / 2, 0);
+            scene.add(bgMesh);
+
+            // Hand Pivot (rotates around wrist)
+            handPivot = new THREE.Object3D();
+            // World position of wrist
+            // Image (x, y) -> World (-600 + x, 300 - y)
+            handPivot.position.set(-IMAGE_W / 2 + WRIST_X, IMAGE_H / 2 - WRIST_Y, 0);
+            scene.add(handPivot);
+
+            // Hand Mesh (full size texture, transparent except hand)
+            const handGeo = new THREE.PlaneGeometry(IMAGE_W, IMAGE_H);
+            const handMat = new THREE.MeshBasicMaterial({ 
+                map: handTexture, 
+                transparent: true, 
+                depthWrite: false 
+            });
+            handMesh = new THREE.Mesh(handGeo, handMat);
+            // Position offset so that local (0,0) aligns with world (-600, 300)
+            // When parented to pivot, we shift it back by wrist coords
+            handMesh.position.set(-WRIST_X, WRIST_Y, 0);
+            handPivot.add(handMesh);
+
+            // 8. Expose API
+            window.setTime = function(t) {
+                if (!ready) return;
+                // Clamp t
+                const tt = Math.max(0, Math.min(2, t));
+                // Smooth wave: 0 at start, max at mid, 0 at end
+                const angle = Math.sin(tt * Math.PI) * MAX_ANGLE;
+                handPivot.rotation.z = angle;
+                renderer.render(scene, camera);
+            };
+
+            // Optional: Live playback loop
+            function animate() {
+                // Not required by contract, but good for preview
+                // requestAnimationFrame(animate);
+            }
+
+            ready = true;
+            window.ANIM_READY = true;
+
+            // Render frame 0 (original image)
+            window.setTime(0);
+        }
+
+        init().catch(err => {
+            console.error('Failed to initialize', err);
+        });
+    </script>
+</body>
+</html>

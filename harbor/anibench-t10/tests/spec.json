@@ -1,0 +1,37 @@
+{
+ "id": "T10",
+ "tier": 1,
+ "image": "toddlers",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the toddler in the navy jacket nod his head; his hat stays on his head.",
+ "parts": [
+  "B2_head"
+ ],
+ "kind": "rotate",
+ "amp": 8,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   690,
+   238
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

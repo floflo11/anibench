@@ -1,0 +1,206 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigtail Swing Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        #canvas-container {
+            width: 1200px;
+            height: 600px;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div id="canvas-container">
+        <canvas id="glcanvas" width="1200" height="600"></canvas>
+    </div>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const WIDTH = 1200;
+        const HEIGHT = 600;
+
+        let scene, camera, renderer, texture;
+        let baseMesh, pigtailMesh;
+        let baseUniforms, pigtailUniforms;
+        let ready = false;
+
+        // Vertex shader: simple pass-through
+        const vertexShader = `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+            }
+        `;
+
+        // Fragment shader for the base layer (everything except pigtails)
+        const baseFragmentShader = `
+            uniform sampler2D u_map;
+            uniform vec2 u_resolution;
+            varying vec2 vUv;
+
+            // Coordinate space: (0,0) top-left, Y increases downwards
+            bool isPigtailRegion(vec2 p) {
+                // Left pigtail area
+                if (p.x > 260.0 && p.x < 380.0 && p.y > 130.0 && p.y < 390.0) return true;
+                // Right pigtail area
+                if (p.x > 420.0 && p.x < 540.0 && p.y > 130.0 && p.y < 390.0) return true;
+                return false;
+            }
+
+            void main() {
+                vec2 pix = vUv * u_resolution;
+                // Flip Y because Three.js UVs are bottom-up, image is top-down
+                pix.y = u_resolution.y - pix.y;
+
+                if (isPigtailRegion(pix)) {
+                    discard;
+                }
+
+                gl_FragColor = texture2D(u_map, vUv);
+            }
+        `;
+
+        // Fragment shader for the pigtail layer (displaced pigtails)
+        const pigtailFragmentShader = `
+            uniform sampler2D u_map;
+            uniform float u_time;
+            uniform vec2 u_resolution;
+            varying vec2 vUv;
+
+            bool isPigtailRegion(vec2 p) {
+                if (p.x > 260.0 && p.x < 380.0 && p.y > 130.0 && p.y < 390.0) return true;
+                if (p.x > 420.0 && p.x < 540.0 && p.y > 130.0 && p.y < 390.0) return true;
+                return false;
+            }
+
+            void main() {
+                vec2 pix = vUv * u_resolution;
+                pix.y = u_resolution.y - pix.y;
+
+                if (!isPigtailRegion(pix)) {
+                    discard;
+                }
+
+                // Swing side to side: sin wave from 0 to 2 seconds
+                // Amplitude: 25 pixels
+                float offsetX = sin(u_time * 3.14159265) * 25.0;
+                
+                // Sample texture at shifted UV
+                vec2 shiftedUv = vUv + vec2(offsetX, 0.0) / u_resolution;
+                
+                gl_FragColor = texture2D(u_map, shiftedUv);
+            }
+        `;
+
+        function init() {
+            const canvas = document.getElementById('glcanvas');
+
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // Orthographic camera: 0,0 at top-left
+            camera = new THREE.OrthographicCamera(0, WIDTH, HEIGHT, 0, -1, 1);
+
+            scene = new THREE.Scene();
+
+            // Load texture
+            const loader = new THREE.TextureLoader();
+            loader.load('./image.png', (tex) => {
+                tex.colorSpace = THREE.SRGBColorSpace;
+                tex.wrapS = THREE.ClampToEdgeWrapping;
+                tex.wrapT = THREE.ClampToEdgeWrapping;
+                texture = tex;
+
+                createMeshes();
+                ready = true;
+                window.ANIM_READY = true;
+                
+                // Initial render
+                window.setTime(0);
+            });
+        }
+
+        function createMeshes() {
+            const geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+            // Base layer uniforms
+            baseUniforms = {
+                u_map: { value: texture },
+                u_resolution: { value: new THREE.Vector2(WIDTH, HEIGHT) }
+            };
+            const baseMaterial = new THREE.ShaderMaterial({
+                uniforms: baseUniforms,
+                vertexShader: vertexShader,
+                fragmentShader: baseFragmentShader,
+                depthTest: false,
+                depthWrite: false
+            });
+            baseMesh = new THREE.Mesh(geometry, baseMaterial);
+            baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+            scene.add(baseMesh);
+
+            // Pigtail layer uniforms
+            pigtailUniforms = {
+                u_map: { value: texture },
+                u_time: { value: 0 },
+                u_resolution: { value: new THREE.Vector2(WIDTH, HEIGHT) }
+            };
+            const pigtailMaterial = new THREE.ShaderMaterial({
+                uniforms: pigtailUniforms,
+                vertexShader: vertexShader,
+                fragmentShader: pigtailFragmentShader,
+                depthTest: false,
+                depthWrite: false,
+                transparent: true
+            });
+            pigtailMesh = new THREE.Mesh(geometry, pigtailMaterial);
+            pigtailMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+            scene.add(pigtailMesh);
+        }
+
+        window.setTime = function(t) {
+            if (!ready) return;
+            // Clamp t to [0, 2] just in case, though contract says 0 <= t <= 2
+            const clampedT = Math.max(0, Math.min(2, t));
+            pigtailUniforms.u_time.value = clampedT;
+            renderer.render(scene, camera);
+        };
+
+        // Optional live loop
+        function animate() {
+            if (ready) {
+                // Use performance.now for live playback if desired, but setTime is the contract
+                // We'll just render once on init, setTime handles external calls.
+                // To keep it alive if needed:
+                // const time = (performance.now() % 2000) / 1000;
+                // window.setTime(time);
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        init();
+    </script>
+</body>
+</html>
+```

@@ -1,0 +1,240 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Image Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #ffffff; }
+        canvas { display: block; width: 1200px; height: 600px; }
+    </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 600;
+const IMAGE_PATH = './image.png';
+
+// Coordinates for the girl in the white dress (far right) raised forearm.
+// These are estimated pixel coordinates from the provided image.
+// Box: [x, y, width, height]
+const ARM_BOX = { x: 980, y: 160, w: 170, h: 220 };
+// Elbow pivot point relative to image top-left
+const ELBOW = { x: 1020, y: 340 };
+// Max rotation angle in radians for the wave
+const MAX_ANGLE = 0.6;
+
+// --- Globals ---
+let scene, camera, renderer, texture;
+let armMesh, fillMesh;
+let pivot;
+let ready = false;
+
+window.ANIM_READY = false;
+window.setTime = null;
+
+function createCroppedPlaneMesh(srcX, srcY, srcW, srcH, imgW, imgH, colorMap = null) {
+    // Geometry: plane of size srcW x srcH
+    const geometry = new THREE.PlaneGeometry(srcW, srcH, 1, 1);
+    const positionAttribute = geometry.attributes.position;
+    const uvAttribute = geometry.attributes.uv;
+
+    // Recenter geometry to (0,0) top-left corner for easier placement
+    // PlaneGeometry is centered at 0,0 by default. We shift vertices.
+    for (let i = 0; i < positionAttribute.count; i++) {
+        let x = positionAttribute.getX(i);
+        let y = positionAttribute.getY(i);
+        // Shift so top-left of plane is (0,0)
+        positionAttribute.setXYZ(i, x + srcW / 2, -y + srcH / 2, 0);
+    }
+
+    // Generate UVs based on source image coordinates
+    // Three.js UV: (0,0) bottom-left, (1,1) top-right.
+    // Image: (0,0) top-left.
+    const uvs = [];
+    // Vertices order in PlaneGeometry (1x1): 
+    // 0: bottom-left, 1: bottom-right, 2: top-left, 3: top-right (approx, depends on version)
+    // Safer to just set based on position logic.
+    
+    // Let's just define the 4 corners manually for a 1x1 plane.
+    // BufferGeometry attributes are interleaved or separate. 
+    // PlaneGeometry(1,1) creates 4 vertices.
+    
+    // We need to map the plane's local coords (0..srcW, 0..srcH) to Image UVs.
+    // Local (0,0) is top-left after our vertex shift.
+    // Local (srcW, srcH) is bottom-right.
+    
+    const uvsArray = new Float32Array([
+        srcX / imgW, 1 - (srcY + srcH) / imgH, // bottom-left (local 0, srcH) -> wait.
+    ]);
+    
+    // Easier approach: Use BufferGeometry directly.
+    const geo = new THREE.BufferGeometry();
+    const vertices = new Float32Array([
+        0, srcH, 0,  // top-left
+        srcW, srcH, 0, // top-right
+        srcW, 0, 0,  // bottom-right
+        0, 0, 0,     // bottom-left
+    ]);
+    // Order for draw range 0-6 (two triangles): 0,1,2 and 0,2,3
+    const indices = [0, 1, 2, 0, 2, 3];
+    
+    // UVs corresponding to vertices above
+    // v = 1 - y/imgH because UV v=0 is bottom.
+    const uvs = new Float32Array([
+        srcX / imgW, 1 - (srcY + srcH) / imgH, // top-left vertex (y=srcH) -> v should be top of crop? 
+        // Wait. Local (0, srcH) is top-left of plane.
+        // Image coords: x=srcX, y=srcY (top of crop).
+        // UV v for top of crop: 1 - srcY/imgH.
+        // UV v for bottom of crop: 1 - (srcY+srcH)/imgH.
+        
+        // Vertex 0: (0, srcH) -> Top-Left of plane. Corresponds to Image (srcX, srcY).
+        // Vertex 1: (srcW, srcH) -> Top-Right. Image (srcX+srcW, srcY).
+        // Vertex 2: (srcW, 0) -> Bottom-Right. Image (srcX+srcW, srcY+srcH).
+        // Vertex 3: (0, 0) -> Bottom-Left. Image (srcX, srcY+srcH).
+        
+        srcX / imgW, 1 - srcY / imgH,
+        (srcX + srcW) / imgW, 1 - srcY / imgH,
+        (srcX + srcW) / imgW, 1 - (srcY + srcH) / imgH,
+        srcX / imgW, 1 - (srcY + srcH) / imgH,
+    ]);
+
+    geo.setAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.setIndex(indices);
+    geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    geo.computeVertexNormals();
+
+    const material = colorMap ? 
+        new THREE.MeshBasicMaterial({ map: colorMap }) : 
+        new THREE.MeshBasicMaterial({ color: 0xffffff });
+    
+    const mesh = new THREE.Mesh(geo, material);
+    return mesh;
+}
+
+function init() {
+    // Setup Scene
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    // Setup Camera (Orthographic, 1 pixel = 1 unit)
+    // left, right, top, bottom
+    camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, 0, IMAGE_HEIGHT, -1000, 1000);
+    camera.position.z = 500;
+    camera.lookAt(0, 0, 0);
+
+    // Setup Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+    document.body.appendChild(renderer.domElement);
+
+    // Load Texture
+    const loader = new THREE.TextureLoader();
+    loader.load(IMAGE_PATH, (tex) => {
+        texture = tex;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        
+        // 1. Background Mesh (Full Image)
+        const bgGeo = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+        const bgMat = new THREE.MeshBasicMaterial({ map: texture });
+        const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+        bgMesh.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+        bgMesh.renderOrder = 0;
+        scene.add(bgMesh);
+
+        // 2. Fill Mesh (White box to hide original arm)
+        // Placed at the arm box location.
+        fillMesh = createCroppedPlaneMesh(
+            ARM_BOX.x, ARM_BOX.y, ARM_BOX.w, ARM_BOX.h,
+            IMAGE_WIDTH, IMAGE_HEIGHT
+        );
+        fillMesh.position.set(ARM_BOX.x + ARM_BOX.w/2, ARM_BOX.y + ARM_BOX.h/2, 1);
+        fillMesh.renderOrder = 1;
+        scene.add(fillMesh);
+
+        // 3. Arm Mesh (The moving part)
+        armMesh = createCroppedPlaneMesh(
+            ARM_BOX.x, ARM_BOX.y, ARM_BOX.w, ARM_BOX.h,
+            IMAGE_WIDTH, IMAGE_HEIGHT, texture
+        );
+        
+        // Pivot setup
+        pivot = new THREE.Object3D();
+        // Position pivot at elbow
+        pivot.position.set(ELBOW.x, ELBOW.y, 2);
+        
+        // Offset armMesh so its local (0,0) [top-left of crop] aligns correctly relative to pivot.
+        // The mesh geometry vertices are (0..w, h..0). Center is (w/2, h/2).
+        // We place mesh at pivot, but we need the elbow to be the pivot point.
+        // Elbow in image: (ELBOW.x, ELBOW.y).
+        // Elbow relative to Arm Box Top-Left (ARM_BOX.x, ARM_BOX.y):
+        const elbowRelX = ELBOW.x - ARM_BOX.x;
+        const elbowRelY = ELBOW.y - ARM_BOX.y;
+        
+        // We want the point (elbowRelX, elbowRelY) on the mesh to be at pivot position.
+        // Mesh is added to pivot. Pivot is at World(ELBOW).
+        // So Mesh local position should be (-elbowRelX, -elbowRelY) relative to pivot?
+        // Wait. If Mesh is child of Pivot. Mesh.position = P.
+        // World Pos of Mesh origin = Pivot.Pos + P.
+        // We want World Pos of (elbowRelX, elbowRelY) on mesh to be Pivot.Pos.
+        // So Pivot.Pos + P + (elbowRelX, elbowRelY) = Pivot.Pos => P = (-elbowRelX, -elbowRelY).
+        // But our mesh geometry Y is flipped (0 at top).
+        // Vertices: y goes from h (top) to 0 (bottom).
+        // So local coord (x, y_local) where y_local=0 is bottom.
+        // Image Y increases downwards.
+        // Let's just set position to compensate.
+        
+        // Simple approach: Place mesh at Arm Box Center. Then parent to Pivot at Elbow.
+        // Mesh position relative to pivot = (BoxCenter - Elbow).
+        const boxCenterX = ARM_BOX.x + ARM_BOX.w / 2;
+        const boxCenterY = ARM_BOX.y + ARM_BOX.h / 2;
+        armMesh.position.set(boxCenterX - ELBOW.x, boxCenterY - ELBOW.y, 0);
+        
+        pivot.add(armMesh);
+        scene.add(pivot);
+        
+        armMesh.renderOrder = 2;
+
+        // Initial Render
+        window.ANIM_READY = true;
+        ready = true;
+        if (typeof window.setTime === 'function') {
+            // If setTime was called before ready, it would have failed. 
+            // But we define it after init usually.
+        }
+        renderFrame(0);
+    });
+}
+
+function renderFrame(t) {
+    if (!ready) return;
+
+    // Loop 0..2 seconds
+    // Angle: sin(PI * t) goes 0 -> 1 -> 0 -> -1 -> 0 as t goes 0->2.
+    // This creates a wave back and forth.
+    const angle = Math.sin(Math.PI * t) * MAX_ANGLE;
+    
+    pivot.rotation.z = angle;
+    
+    renderer.render(scene, camera);
+}
+
+window.setTime = function(t) {
+    if (t < 0) t = 0;
+    if (t > 2) t = 2;
+    renderFrame(t);
+};
+
+// Start
+init();
+
+</script>
+</body>
+</html>
+```

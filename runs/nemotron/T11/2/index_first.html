@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Head Tilt Loop</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; }
+  #canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+renderer.setSize(1200, 600);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-600, 600, 300, -300, -1, 1);
+camera.position.z = 1;
+
+let ready = false;
+let renderFrame = null;
+
+// Stub until the texture is ready
+window.setTime = function(t) { if (renderFrame) renderFrame(t); };
+window.ANIM_READY = false;
+
+const img = new Image();
+img.src = './image.png';
+img.onload = () => {
+  // Approximate bounding box for the small boy in the striped shirt (3rd figure)
+  const headX1 = 530;
+  const headY1 = 125;
+  const headX2 = 650;
+  const headY2 = 250;
+  const headW = headX2 - headX1;
+  const headH = headY2 - headY1;
+  const headCX = (headX1 + headX2) / 2;
+  const headCY = (headY1 + headY2) / 2;
+  const neckX = headCX;
+  const neckY = headY2;
+
+  // Full-size canvas for the background layer
+  const fullCanvas = document.createElement('canvas');
+  fullCanvas.width = 1200;
+  fullCanvas.height = 600;
+  const fctx = fullCanvas.getContext('2d');
+  fctx.drawImage(img, 0, 0);
+
+  // Cropped head canvas
+  const headCanvas = document.createElement('canvas');
+  headCanvas.width = headW;
+  headCanvas.height = headH;
+  const hctx = headCanvas.getContext('2d');
+  hctx.drawImage(fullCanvas, headX1, headY1, headW, headH, 0, 0, headW, headH);
+
+  // Textures
+  const bgTexture = new THREE.CanvasTexture(fullCanvas);
+  bgTexture.colorSpace = THREE.SRGBColorSpace;
+  bgTexture.flipY = true;
+  bgTexture.needsUpdate = true;
+
+  const headTexture = new THREE.CanvasTexture(headCanvas);
+  headTexture.colorSpace = THREE.SRGBColorSpace;
+  headTexture.flipY = true;
+  headTexture.needsUpdate = true;
+
+  // Background: full original image
+  const bgGeo = new THREE.PlaneGeometry(1200, 600);
+  const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+  const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+  bgMesh.position.set(0, 0, 0);
+  scene.add(bgMesh);
+
+  // Cover: opaque white rectangle over the original head area
+  const coverGeo = new THREE.PlaneGeometry(headW, headH);
+  const coverMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+  const coverMesh = new THREE.Mesh(coverGeo, coverMat);
+  coverMesh.position.set(headCX - 600, 300 - headCY, 0);
+  scene.add(coverMesh);
+
+  // Head: cropped head with pivot at bottom center (neck)
+  const headGeo = new THREE.PlaneGeometry(headW, headH);
+  headGeo.translate(0, headH / 2); // local (0,0) = bottom center
+  const headMat = new THREE.MeshBasicMaterial({ map: headTexture });
+  const headMesh = new THREE.Mesh(headGeo, headMat);
+  headMesh.position.set(neckX - 600, 300 - neckY, 0);
+  scene.add(headMesh);
+
+  renderFrame = (t) => {
+    // t in [0, 2], seamless 2-second loop
+    const angle = Math.sin(t * Math.PI) * 0.15; // side-to-side tilt in radians
+    headMesh.rotation.z = angle;
+    renderer.render(scene, camera);
+  };
+
+  ready = true;
+  window.ANIM_READY = true;
+  renderFrame(0);
+};
+
+// Optional live playback loop (not required for correctness)
+function animate(time) {
+  const t = ((time / 1000) % 2000) / 1000;
+  if (ready) renderFrame(t);
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

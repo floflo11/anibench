@@ -1,0 +1,50 @@
+{
+ "id": "T12",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make all four children wave their raised hands at the same time.",
+ "parts": [
+  "A1_hand",
+  "A2_forearm",
+  "A3_hand",
+  "A4_forearm"
+ ],
+ "kind": "rotate",
+ "amp": 22,
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "pivots": [
+  [
+   232,
+   192
+  ],
+  [
+   538,
+   256
+  ],
+  [
+   781,
+   256
+  ],
+  [
+   1099,
+   296
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

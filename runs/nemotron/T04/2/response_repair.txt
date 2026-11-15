@@ -1,0 +1,128 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Image Animation</title>
+    <style>
+        body { margin: 0; background-color: #ffffff; overflow: hidden; }
+        canvas { display: block; width: 1200px; height: 600px; }
+    </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+const IMG_PATH = './image.png';
+
+const ARM_X = 960;
+const ARM_Y = 140;
+const ARM_W = 190;
+const ARM_H = 240;
+
+const ELBOW_X = 1030;
+const ELBOW_Y = 330;
+
+const MAX_ANGLE = 0.7;
+
+let scene, camera, renderer, texture;
+let pivot = null;
+let ready = false;
+
+window.ANIM_READY = false;
+window.setTime = function(t) {
+    if (!ready) return;
+    if (t < 0) t = 0;
+    if (t > 2) t = 2;
+    const angle = Math.sin(Math.PI * t) * MAX_ANGLE;
+    pivot.rotation.z = angle;
+    renderer.render(scene, camera);
+};
+
+function makePlane(x, y, w, h, map) {
+    const geo = new THREE.BufferGeometry();
+    // Local Y increases downward, matching image coordinates.
+    const verts = new Float32Array([
+        0, 0, 0,      // top-left
+        w, 0, 0,      // top-right
+        w, h, 0,      // bottom-right
+        0, h, 0       // bottom-left
+    ]);
+    const idx = [0, 1, 2, 0, 2, 3];
+    const uvs = new Float32Array([
+        x / W, 1 - y / H,
+        (x + w) / W, 1 - y / H,
+        (x + w) / W, 1 - (y + h) / H,
+        x / W, 1 - (y + h) / H
+    ]);
+    geo.setAttribute('position', new THREE.BufferAttribute(verts, 3));
+    geo.setIndex(idx);
+    geo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+    geo.computeVertexNormals();
+    const mat = new THREE.MeshBasicMaterial({ map: map, side: THREE.DoubleSide });
+    return new THREE.Mesh(geo, mat);
+}
+
+function init() {
+    scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
+    // Orthographic camera: screen Y increases downward (top=0, bottom=H),
+    // so one image pixel maps to one canvas pixel with (0,0) at top-left.
+    camera = new THREE.OrthographicCamera(0, W, 0, H, -1000, 1000);
+    camera.position.z = 500;
+
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(W, H);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+    document.body.appendChild(renderer.domElement);
+
+    const loader = new THREE.TextureLoader();
+    loader.load(IMG_PATH, function(tex) {
+        texture = tex;
+        texture.colorSpace = THREE.SRGBColorSpace;
+
+        // Background
+        const bg = makePlane(0, 0, W, H, texture);
+        bg.position.set(0, 0, 0);
+        bg.renderOrder = 0;
+        scene.add(bg);
+
+        // Fill box to hide the original arm
+        const fill = makePlane(ARM_X, ARM_Y, ARM_W, ARM_H, null);
+        fill.material.color.set(0xffffff);
+        fill.position.set(ARM_X, ARM_Y, 1);
+        fill.renderOrder = 1;
+        scene.add(fill);
+
+        // Arm mesh
+        const armMesh = makePlane(ARM_X, ARM_Y, ARM_W, ARM_H, texture);
+
+        // Pivot at elbow
+        pivot = new THREE.Object3D();
+        pivot.position.set(ELBOW_X, ELBOW_Y, 2);
+
+        // Offset armMesh so its local elbow point aligns with pivot.
+        const dx = ELBOW_X - ARM_X;
+        const dy = ELBOW_Y - ARM_Y;
+        armMesh.position.set(-dx, -dy, 0);
+
+        pivot.add(armMesh);
+        scene.add(pivot);
+        armMesh.renderOrder = 2;
+
+        ready = true;
+        window.ANIM_READY = true;
+        window.setTime(0);
+    });
+}
+
+init();
+</script>
+</body>
+</html>
+```

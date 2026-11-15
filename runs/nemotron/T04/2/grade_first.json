@@ -1,0 +1,36 @@
+{
+ "stage": "first",
+ "task": "T04",
+ "model": "nemotron",
+ "try_": "2",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1192,
+  "completion_tokens": 10094,
+  "total_tokens": 11286,
+  "cost": 0,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0,
+   "upstream_inference_prompt_cost": 0,
+   "upstream_inference_completions_cost": 0
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 7408,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 87.155,
+ "status": "RUNTIME",
+ "error": "RUNTIME: ANIM_READY/setTime not available within 15s",
+ "logs": [
+  "pageerror: Identifier 'uvs' has already been declared"
+ ]
+}

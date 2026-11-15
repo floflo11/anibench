@@ -56,6 +56,17 @@ def clip_frames(run, stage, caption, seconds=6):
     g = json.loads((d / f"grade_{stage}.json").read_text())
     orig = Image.open(ROOT / "tasks" / g["task"] / "image.png").convert("RGB")
     spec = json.loads((ROOT / "tasks" / g["task"] / "spec.json").read_text())
+    allowed = np.array(Image.open(ROOT / "tasks" / g["task"] / "allowed.png")) > 127
+    ys, xs = np.nonzero(allowed)
+    pad = 30
+    x0, y0, x1, y1 = max(0, xs.min() - pad), max(0, ys.min() - pad), min(orig.width, xs.max() + pad), min(orig.height, ys.max() + pad)
+    # keep a 800:560 aspect
+    cx, cy, w, h = (x0 + x1) / 2, (y0 + y1) / 2, x1 - x0, y1 - y0
+    if w / h < 800 / 560:
+        w = h * 800 / 560
+    else:
+        h = w * 560 / 800
+    zbox = (int(max(0, cx - w / 2)), int(max(0, cy - h / 2)), int(min(orig.width, cx + w / 2)), int(min(orig.height, cy + h / 2)))
     out = []
     n = seconds * FPS
     for i in range(n):
@@ -63,22 +74,26 @@ def clip_frames(run, stage, caption, seconds=6):
         dr = ImageDraw.Draw(im)
         dr.text((40, 26), caption, font=font(30, True), fill=INK)
         dr.text((40, 68), f"{g['model']} · {g['task']}: “{spec['instruction']}”"[:110], font=font(18), fill=QUIET)
-        # left: original (small), right: model output (large)
-        o = fit(orig, 380, 300)
-        im.paste(o, (40, 140))
+        # left: original + full model frame (small); right: zoom on the region that should move
+        fr = src[int(i * len(src) / FPS / 2) % len(src)].resize(orig.size)
+        o = fit(orig, 380, 190)
+        im.paste(o, (40, 136))
         dr.text((40, 112), "Original", font=font(18, True), fill=QUIET)
-        f = fit(src[int(i * len(src) / FPS / 2) % len(src)], 800, 470)
-        im.paste(f, (450, 140))
-        dr.text((450, 112), "Model's animation", font=font(18, True), fill=QUIET)
+        f = fit(fr, 380, 190)
+        im.paste(f, (40, 356))
+        dr.text((40, 332), "Model's animation", font=font(18, True), fill=QUIET)
+        z = fit(fr.crop(zbox), 800, 560)
+        im.paste(z, (450 + (800 - z.width) // 2, 136))
+        dr.text((450, 112), "Zoom: the part that should move", font=font(18, True), fill=QUIET)
         # checks panel
-        y = 470
+        y = 560
         for k in ("G1", "G2", "G3", "G4", "G5", "G6"):
             if "grades" in g and k in g["grades"]:
                 ok = g["grades"][k]["ok"]
-                dr.rounded_rectangle([40, y, 400, y + 30], 6, fill=(232, 244, 236) if ok else (250, 230, 228))
-                dr.text((52, y + 5), f"{k} {GNAME[k]}", font=font(18, True), fill=INK)
-                dr.text((330, y + 5), "pass" if ok else "FAIL", font=font(18, True), fill=GOOD if ok else BAD)
-                y += 36
+                col = 40 + (["G1", "G2", "G3", "G4", "G5", "G6"].index(k) % 3) * 128
+                row = y + (["G1", "G2", "G3", "G4", "G5", "G6"].index(k) // 3) * 40
+                dr.rounded_rectangle([col, row, col + 122, row + 32], 6, fill=(232, 244, 236) if ok else (250, 230, 228))
+                dr.text((col + 8, row + 7), f"{k} {'pass' if ok else 'FAIL'}", font=font(17, True), fill=GOOD if ok else BAD)
         out.append(im)
     return out
 

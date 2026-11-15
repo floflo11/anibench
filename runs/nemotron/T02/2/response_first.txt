@@ -1,0 +1,163 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Pigtail Girl Wave</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: white; }
+        canvas { display: block; width: 1200px; height: 600px; }
+    </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1200;
+const HEIGHT = 600;
+const IMAGE_PATH = './image.png';
+
+// --- Configuration for the girl with pigtails (2nd child from left) ---
+// Her raised arm is on the viewer's right side of her body.
+// These coordinates are estimates based on the image layout.
+const ARM_BOX = { x: 400, y: 250, w: 120, h: 180 };
+// Pivot point (elbow) relative to the top-left corner of ARM_BOX.
+// Adjusting this moves the rotation center.
+const PIVOT_OFFSET = { x: 50, y: 120 };
+// Maximum wave angle in radians.
+const MAX_ANGLE = 0.35;
+
+let scene, camera, renderer, baseMesh, armMesh, armTexture;
+let textureLoaded = false;
+
+function init() {
+    // Renderer setup
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+    document.body.appendChild(renderer.domElement);
+
+    // Orthographic camera: 1 image pixel = 1 canvas pixel
+    camera = new THREE.OrthographicCamera(0, WIDTH, HEIGHT, 0, -1, 1);
+
+    scene = new THREE.Scene();
+
+    // Load the main image
+    const loader = new THREE.TextureLoader();
+    loader.load(IMAGE_PATH, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+
+        // --- Base Mesh (Full Image) ---
+        const baseGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+        const baseMat = new THREE.MeshBasicMaterial({ map: texture });
+        baseMesh = new THREE.Mesh(baseGeo, baseMat);
+        baseMesh.position.set(0, 0, 0);
+        
+        // Stencil configuration: Base mesh draws only where stencil is 0 (outside the arm box).
+        // This effectively "erases" the arm area from the background layer.
+        baseMat.stencilWrite = false;
+        baseMat.stencilFunc = THREE.EqualStencilFunc;
+        baseMat.stencilRef = 0;
+        baseMat.stencilFail = THREE.KeepStencilOp;
+        baseMat.stencilZFail = THREE.KeepStencilOp;
+        baseMat.stencilZPass = THREE.KeepStencilOp;
+
+        scene.add(baseMesh);
+
+        // --- Create Arm Texture (Cropped Region) ---
+        createArmTexture(texture.image).then(() => {
+            // --- Arm Mesh ---
+            const armGeo = new THREE.PlaneGeometry(ARM_BOX.w, ARM_BOX.h);
+            // Translate geometry so local (0,0,0) is the pivot point (elbow)
+            armGeo.translate(-PIVOT_OFFSET.x, -PIVOT_OFFSET.y, 0);
+            
+            const armMat = new THREE.MeshBasicMaterial({ 
+                map: armTexture, 
+                transparent: true 
+            });
+            armMesh = new THREE.Mesh(armGeo, armMat);
+            // Position mesh so the pivot aligns with the elbow in world space
+            armMesh.position.set(
+                ARM_BOX.x + PIVOT_OFFSET.x, 
+                ARM_BOX.y + PIVOT_OFFSET.y, 
+                1 // Slightly above base to avoid z-fighting
+            );
+            
+            scene.add(armMesh);
+
+            // --- Stencil Mask Mesh ---
+            // This mesh writes '1' to the stencil buffer in the arm box area.
+            const maskGeo = new THREE.PlaneGeometry(ARM_BOX.w, ARM_BOX.h);
+            const maskMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            maskMat.colorWrite = false;
+            maskMat.depthWrite = false;
+            maskMat.stencilWrite = true;
+            maskMat.stencilFunc = THREE.AlwaysStencilFunc;
+            maskMat.stencilRef = 1;
+            maskMat.stencilFail = THREE.KeepStencilOp;
+            maskMat.stencilZFail = THREE.KeepStencilOp;
+            maskMat.stencilZPass = THREE.ReplaceStencilOp;
+            
+            const maskMesh = new THREE.Mesh(maskGeo, maskMat);
+            maskMesh.position.set(ARM_BOX.x + ARM_BOX.w / 2, ARM_BOX.y + ARM_BOX.h / 2, 0);
+            scene.add(maskMesh);
+
+            // Render order: Mask -> Base -> Arm
+            maskMesh.renderOrder = 0;
+            baseMesh.renderOrder = 1;
+            armMesh.renderOrder = 2;
+
+            textureLoaded = true;
+            window.ANIM_READY = true;
+            
+            // Initial render
+            setTime(0);
+        });
+    });
+}
+
+function createArmTexture(imageElement) {
+    return new Promise((resolve) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = ARM_BOX.w;
+        canvas.height = ARM_BOX.h;
+        const ctx = canvas.getContext('2d');
+        
+        // Crop the arm region from the source image
+        ctx.drawImage(
+            imageElement, 
+            ARM_BOX.x, ARM_BOX.y, ARM_BOX.w, ARM_BOX.h, 
+            0, 0, ARM_BOX.w, ARM_BOX.h
+        );
+        
+        armTexture = new THREE.CanvasTexture(canvas);
+        armTexture.colorSpace = THREE.SRGBColorSpace;
+        resolve();
+    });
+}
+
+/**
+ * Synchronously renders the frame at time t seconds (0 <= t <= 2).
+ * Animation loops every 2 seconds.
+ */
+window.setTime = function(t) {
+    if (!textureLoaded) return;
+
+    // Clamp t to valid range just in case
+    const tt = Math.max(0, Math.min(2, t));
+    
+    // Sine wave for smooth looping: 0 at t=0, peak at t=0.5, 0 at t=1, trough at t=1.5, 0 at t=2
+    const angle = Math.sin(tt * Math.PI) * MAX_ANGLE;
+    
+    armMesh.rotation.z = angle;
+    
+    renderer.render(scene, camera);
+};
+
+init();
+
+</script>
+</body>
+</html>
+```

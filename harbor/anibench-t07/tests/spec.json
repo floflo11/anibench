@@ -1,0 +1,42 @@
+{
+ "id": "T07",
+ "tier": 1,
+ "image": "lineup",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the red earrings of the girl in the white dress (far right) swing gently, as if in a breeze.",
+ "parts": [
+  "A4_earringL",
+  "A4_earringR"
+ ],
+ "kind": "rotate",
+ "amp": 25,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   967,
+   197
+  ],
+  [
+   1062,
+   187
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
+}

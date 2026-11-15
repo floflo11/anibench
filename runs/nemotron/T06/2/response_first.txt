@@ -1,0 +1,177 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Toddler Arm Swing</title>
+<style>
+  body { margin: 0; background: #fff; overflow: hidden; }
+  canvas { display: block; width: 1024px; height: 683px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+renderer.setSize(W, H, false);
+renderer.setPixelRatio(1);
+renderer.setClearColor(0xffffff, 1);
+
+const camera = new THREE.OrthographicCamera(0, W, 0, H, -1, 1);
+camera.position.set(W / 2, H / 2, 1);
+camera.lookAt(W / 2, H / 2, 0);
+
+const scene = new THREE.Scene();
+
+let armGroup;
+let ready = false;
+
+const swingAngle = 0.35; // radians
+const pivotX = 800;
+const pivotY = 270;
+
+const img = new Image();
+img.src = './image.png';
+
+function init() {
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const octx = off.getContext('2d');
+  octx.drawImage(img, 0, 0);
+
+  // Polygon approximating the raised left arm of the navy-jacket toddler.
+  const armPoly = [
+    { x: 780, y: 270 },
+    { x: 840, y: 210 },
+    { x: 910, y: 160 },
+    { x: 950, y: 140 },
+    { x: 950, y: 220 },
+    { x: 870, y: 260 },
+    { x: 800, y: 290 }
+  ];
+
+  // Build binary mask (1 inside arm, 0 outside)
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = W; maskCanvas.height = H;
+  const mctx = maskCanvas.getContext('2d');
+  mctx.fillStyle = '#000';
+  mctx.beginPath();
+  mctx.moveTo(armPoly[0].x, armPoly[0].y);
+  for (let i = 1; i < armPoly.length; i++) mctx.lineTo(armPoly[i].x, armPoly[i].y);
+  mctx.closePath();
+  mctx.fill();
+  const md = mctx.getImageData(0, 0, W, H).data;
+  const mask = new Uint8Array(W * H);
+  for (let i = 0; i < W * H; i++) mask[i] = md[i * 4 + 3];
+
+  // Arm texture: original pixels inside polygon, transparent elsewhere
+  const armCanvas = document.createElement('canvas');
+  armCanvas.width = W; armCanvas.height = H;
+  const actx = armCanvas.getContext('2d');
+  actx.drawImage(img, 0, 0);
+  actx.globalCompositeOperation = 'destination-in';
+  actx.drawImage(maskCanvas, 0, 0);
+  actx.globalCompositeOperation = 'source-over';
+
+  // Background texture: inpaint the arm polygon from surrounding pixels
+  const bgCanvas = document.createElement('canvas');
+  bgCanvas.width = W; bgCanvas.height = H;
+  const bctx = bgCanvas.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  const bgImg = bctx.getImageData(0, 0, W, H);
+  const bgData = bgImg.data;
+
+  // Dilate-fill from the boundary inward until the whole polygon is filled
+  let changed = true;
+  let iter = 0;
+  while (changed && iter < 100) {
+    changed = false;
+    iter++;
+    for (let y = 0; y < H; y++) {
+      const row = y * W;
+      for (let x = 0; x < W; x++) {
+        const idx = row + x;
+        if (mask[idx] === 255) {
+          let filled = false;
+          if (x > 0 && mask[idx - 1] !== 255) {
+            const s = (idx - 1) * 4, d = idx * 4;
+            bgData[d] = bgData[s]; bgData[d + 1] = bgData[s + 1];
+            bgData[d + 2] = bgData[s + 2]; bgData[d + 3] = bgData[s + 3];
+            mask[idx] = 0; filled = true;
+          }
+          if (!filled && x < W - 1 && mask[idx + 1] !== 255) {
+            const s = (idx + 1) * 4, d = idx * 4;
+            bgData[d] = bgData[s]; bgData[d + 1] = bgData[s + 1];
+            bgData[d + 2] = bgData[s + 2]; bgData[d + 3] = bgData[s + 3];
+            mask[idx] = 0; filled = true;
+          }
+          if (!filled && y > 0 && mask[idx - W] !== 255) {
+            const s = (idx - W) * 4, d = idx * 4;
+            bgData[d] = bgData[s]; bgData[d + 1] = bgData[s + 1];
+            bgData[d + 2] = bgData[s + 2]; bgData[d + 3] = bgData[s + 3];
+            mask[idx] = 0; filled = true;
+          }
+          if (!filled && y < H - 1 && mask[idx + W] !== 255) {
+            const s = (idx + W) * 4, d = idx * 4;
+            bgData[d] = bgData[s]; bgData[d + 1] = bgData[s + 1];
+            bgData[d + 2] = bgData[s + 2]; bgData[d + 3] = bgData[s + 3];
+            mask[idx] = 0; filled = true;
+          }
+          if (filled) changed = true;
+        }
+      }
+    }
+  }
+  bctx.putImageData(bgImg, 0, 0);
+
+  // Textures
+  const bgTexture = new THREE.CanvasTexture(bgCanvas);
+  bgTexture.colorSpace = THREE.SRGBColorSpace;
+  bgTexture.flipY = false;
+
+  const armTexture = new THREE.CanvasTexture(armCanvas);
+  armTexture.colorSpace = THREE.SRGBColorSpace;
+  armTexture.flipY = false;
+
+  // Meshes
+  const geo = new THREE.PlaneGeometry(W, H);
+
+  const bgMesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: bgTexture }));
+  bgMesh.position.set(W / 2, H / 2, 0);
+  bgMesh.renderOrder = 0;
+  scene.add(bgMesh);
+
+  const armMesh = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ map: armTexture, transparent: true }));
+  armMesh.position.set(W / 2 - pivotX, H / 2 - pivotY, 0);
+  armMesh.renderOrder = 1;
+  scene.add(armMesh);
+
+  armGroup = new THREE.Group();
+  armGroup.position.set(pivotX, pivotY, 0);
+  armGroup.add(armMesh);
+  scene.add(armGroup);
+
+  window.setTime = function (t) {
+    t = Math.max(0, Math.min(2, t));
+    const angle = swingAngle * Math.sin(Math.PI * t);
+    armGroup.rotation.z = angle;
+    renderer.render(scene, camera);
+  };
+
+  window.ANIM_READY = true;
+  window.setTime(0);
+}
+
+if (img.complete) {
+  init();
+} else {
+  img.onload = init;
+}
+</script>
+</body>
+</html>
+```
