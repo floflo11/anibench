@@ -1,0 +1,32 @@
+{
+ "stage": "first",
+ "task": "T10",
+ "model": "sonnet-cc",
+ "try_": "1",
+ "tier": 1,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": false
+  },
+  "G2": {
+   "ok": false
+  },
+  "G3": {
+   "ok": true
+  },
+  "G4": {
+   "ok": true
+  },
+  "G5": {
+   "ok": false
+  },
+  "G6": {
+   "ok": true
+  },
+  "pass": false
+ },
+ "source": "valkyrie",
+ "run_id": "b7d9d479-e140-409d-b4d4-1fa103a0b294",
+ "verifier_tail": "n3\n{\n \"task\": \"T10\",\n \"status\": \"FAIL\",\n \"grades\": {\n  \"G1\": {\n   \"ok\": false,\n   \"value\": 0.00301\n  },\n  \"G2\": {\n   \"ok\": false,\n   \"value\": 6,\n   \"base\": 3\n  },\n  \"G3\": {\n   \"ok\": true,\n   \"value\": 0.0491\n  },\n  \"G4\": {\n   \"ok\": true,\n   \"value\": 0.387\n  },\n  \"G5\": {\n   \"ok\": false,\n   \"value\": 0.684\n  },\n  \"G6\": {\n   \"ok\": true,\n   \"loop\": 0.0,\n   \"first_vs_orig\": 0.0\n  },\n  \"pass\": false\n }\n}\n"
+}

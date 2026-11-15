@@ -10,6 +10,7 @@ anibench gives a model a still image of cartoon characters plus one instruction 
 to 25 frames and score it with **six image-math checks**, not a model judge.
 
 - **Kimi K3.1 Pro: 9/15 first-try runs passed (60%).**
+- **Claude Sonnet 5.5 (Claude Code, Valkyrie): 12/21 first-try runs passed (57%).**
 - **Qwen 3.8 27B: 6/15 first-try runs passed (40%).**
 - **Grok 4.7: 2/14 first-try runs passed (14%).**
 - **DeepSeek V4 Flash Vision: 1/13 first-try runs passed (8%).**
@@ -18,7 +19,7 @@ to 25 frames and score it with **six image-math checks**, not a model judge.
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
   Nemotron flipped or shifted the image in 9 of 21 first-try runs and left the canvas blank in 4;
   Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
-- On Valkyrie, the reference solutions score **21/21**, and Claude Sonnet 5.5 running as a Claude Code agent passed the T01 wave (all six checks). The full Sonnet and GPT-6.1 Sol Valkyrie runs were still in progress at submission time.
+- **On Valkyrie** (agent setting: Claude Code, which can open the image and iterate), Claude Sonnet 5.5 passed **12/21 (57%)**; reference solutions score **21/21**. It passed T01 in a separate smoke run and failed it here, so results vary run to run. The GPT-6.1 Sol run did not start before the deadline (model name not accepted).
 - Gemini 4 Carbon is left out of the table: in 8 of 8 completed runs it used the whole 32k-token budget reasoning and returned no file.
 - Every check is validated before use: a reference animation must pass it, and deliberately broken copies must fail it.
 
@@ -84,17 +85,18 @@ The weakest check is **G2 on small fragments**: a leftover piece that keeps touc
 | Kimi K3.1 Pro | 15 | 9 (60%) | 6/11 | 3/4 | 0 | $3.113 |
 | Nemotron 3.5 Super VL | 21 | 0 (0%) | 0/12 | 0/9 | 0 | $0 |
 | Qwen 3.8 27B | 15 | 6 (40%) | 4/10 | 2/5 | 1 | $0.458 |
+| Claude Sonnet 5.5 (Claude Code, Valkyrie) | 21 | 12 (57%) | 6/12 | 6/9 | 0 | $0 |
 
 ## Failure rate per check
 
-| Check | DeepSeek V4 Flash Vision | Grok 4.7 | Kimi K3.1 Pro | Nemotron 3.5 Super VL | Qwen 3.8 27B |
-| --- | --- | --- | --- | --- | --- |
-| G1 Isolation | 0/1 | 0/2 | 2/15 | 17/21 | 5/14 |
-| G2 Integrity | 0/0 | 0/1 | 4/9 | 2/12 | 1/8 |
-| G3 Area | 0/1 | 0/2 | 1/15 | 13/21 | 4/14 |
-| G4 Motion | 0/1 | 0/2 | 0/15 | 1/21 | 3/14 |
-| G5 Pivot | 0/1 | 0/0 | 3/13 | 9/13 | 4/11 |
-| G6 Loop/fidelity | 0/1 | 0/2 | 1/15 | 17/21 | 4/14 |
+| Check | DeepSeek V4 Flash Vision | Grok 4.7 | Kimi K3.1 Pro | Nemotron 3.5 Super VL | Qwen 3.8 27B | Claude Sonnet 5.5 (Claude Code, Valkyrie) |
+| --- | --- | --- | --- | --- | --- | --- |
+| G1 Isolation | 0/1 | 0/2 | 2/15 | 17/21 | 5/14 | 4/21 |
+| G2 Integrity | 0/0 | 0/1 | 4/9 | 2/12 | 1/8 | 3/12 |
+| G3 Area | 0/1 | 0/2 | 1/15 | 13/21 | 4/14 | 3/21 |
+| G4 Motion | 0/1 | 0/2 | 0/15 | 1/21 | 3/14 | 1/21 |
+| G5 Pivot | 0/1 | 0/0 | 3/13 | 9/13 | 4/11 | 5/13 |
+| G6 Loop/fidelity | 0/1 | 0/2 | 1/15 | 17/21 | 4/14 | 3/21 |
 
 ![pass rate](results/charts/pass_rate.png)
 
@@ -127,8 +129,7 @@ All runs are in `results/library/` as GIFs.
 
 ## Limits
 
-- One model ran the full set. Claude Sonnet 5.5 and GPT-6.1 Sol were planned but the OpenRouter account had no credits overnight;
-  the runner is ready to add them (`runs/jobs/full.json`).
+- Single-shot models (OpenRouter) and the Claude Code agent (Valkyrie) are different setups; compare within a setup. Some single-shot runs were lost to network drops, so run counts differ by model.
 - Single-turn generation with one repair turn for outputs that don't run. An agent that renders and looks at its own output
   might do much better; that's the natural next experiment.
 - Checks are tolerant of faint artifacts (e.g. a light halo around a cut-out), and G2 misses small attached fragments.

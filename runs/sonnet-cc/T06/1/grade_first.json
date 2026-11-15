@@ -1,0 +1,29 @@
+{
+ "stage": "first",
+ "task": "T06",
+ "model": "sonnet-cc",
+ "try_": "1",
+ "tier": 1,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": true
+  },
+  "G3": {
+   "ok": true
+  },
+  "G4": {
+   "ok": true
+  },
+  "G5": {
+   "ok": false
+  },
+  "G6": {
+   "ok": true
+  },
+  "pass": false
+ },
+ "source": "valkyrie",
+ "run_id": "b7d9d479-e140-409d-b4d4-1fa103a0b294",
+ "verifier_tail": "ader packages into /usr/bin/python3\nusing /usr/bin/python3\n{\n \"task\": \"T06\",\n \"status\": \"FAIL\",\n \"grades\": {\n  \"G1\": {\n   \"ok\": true,\n   \"value\": 0.00057\n  },\n  \"G3\": {\n   \"ok\": true,\n   \"value\": 0.1416\n  },\n  \"G4\": {\n   \"ok\": true,\n   \"value\": 0.476\n  },\n  \"G5\": {\n   \"ok\": false,\n   \"value\": 0.451\n  },\n  \"G6\": {\n   \"ok\": true,\n   \"loop\": 0.0,\n   \"first_vs_orig\": 0.00213\n  },\n  \"pass\": false\n }\n}\n"
+}

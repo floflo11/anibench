@@ -262,5 +262,49 @@
    }
   },
   "cost": 0.458
+ },
+ "sonnet-cc": {
+  "label": "Claude Sonnet 5.5 (Claude Code, Valkyrie)",
+  "n": 21,
+  "passed": 12,
+  "pass_rate": 0.571,
+  "by_tier": {
+   "1": {
+    "n": 12,
+    "passed": 6
+   },
+   "2": {
+    "n": 9,
+    "passed": 6
+   }
+  },
+  "runtime_fail": 0,
+  "grader_fail": {
+   "G1": {
+    "n": 21,
+    "failed": 4
+   },
+   "G2": {
+    "n": 12,
+    "failed": 3
+   },
+   "G3": {
+    "n": 21,
+    "failed": 3
+   },
+   "G4": {
+    "n": 21,
+    "failed": 1
+   },
+   "G5": {
+    "n": 13,
+    "failed": 5
+   },
+   "G6": {
+    "n": 21,
+    "failed": 3
+   }
+  },
+  "cost": 0
  }
 }
