@@ -1,0 +1,33 @@
+{
+ "stage": "first",
+ "task": "T04",
+ "model": "grok",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 2454,
+  "completion_tokens": 3366,
+  "total_tokens": 5820,
+  "cost": 0.023376,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 1152,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.023376,
+   "upstream_inference_prompt_cost": 0.00318,
+   "upstream_inference_completions_cost": 0.020196
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 3338,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 53.541,
+ "status": "NO_HTML",
+ "finish": "stop"
+}

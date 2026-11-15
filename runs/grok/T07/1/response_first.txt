@@ -1,0 +1,1 @@
+I'll inspect the image to locate the red earrings precisely, then build a self-contained three.js loop that swings only those pixels. Let me analyze the pixel data first.

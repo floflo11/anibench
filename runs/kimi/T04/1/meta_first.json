@@ -1,0 +1,33 @@
+{
+ "id": "kimi__T04__1",
+ "stage": "first",
+ "model": "moonshotai/kimi-k3.1-pro",
+ "provider": "InferenceNet",
+ "finish": "stop",
+ "usage": {
+  "prompt_tokens": 1478,
+  "completion_tokens": 27830,
+  "total_tokens": 29308,
+  "cost": 0.3796956,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.3796956,
+   "upstream_inference_prompt_cost": 0.0039906,
+   "upstream_inference_completions_cost": 0.375705
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 25819,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 310.01,
+ "attempts": 1,
+ "has_html": true
+}

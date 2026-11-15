@@ -1,0 +1,167 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Arm swing</title>
+<style>
+  html,body{margin:0;padding:0;background:#fff;overflow:hidden}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+const PERIOD = 2.0;
+const AMPL = 0.20; // radians of swing
+
+// Shoulder pivot (pixel coords, y down) and invariant cap radius
+const P = { x: 804, y: 272 };
+const R = 34;
+const a1 = Math.atan2(-32, 2);      // ~ -1.508  (top of cut, on sleeve)
+const a2 = Math.atan2(14, 8);       // ~  1.052  (bottom of cut)
+const A1 = { x: P.x + R * Math.cos(a1), y: P.y + R * Math.sin(a1) };
+const A2 = { x: P.x + R * Math.cos(a2), y: P.y + R * Math.sin(a2) };
+
+// Sleeve polygon (clockwise in y-down pixel space), closed by an arc
+// centered at the pivot -> the arc boundary is invariant under rotation.
+const sleeveTop  = [[828,222],[850,204],[866,192]];
+const cuff       = [[876,199],[873,212],[857,218]];
+const sleeveLow  = [[838,238],[824,262]];
+// Hand polygon (generous margin, sits on pure-white background)
+const hand = [
+  [860,198],[856,170],[862,146],[878,128],[900,122],[922,128],
+  [938,144],[948,166],[946,188],[930,202],[908,208],[884,206],[868,204]
+];
+
+function traceMaskPath(ctx){
+  ctx.beginPath();
+  ctx.moveTo(A1.x, A1.y);
+  for (const p of sleeveTop) ctx.lineTo(p[0], p[1]);
+  for (const p of cuff)      ctx.lineTo(p[0], p[1]);
+  for (const p of sleeveLow) ctx.lineTo(p[0], p[1]);
+  ctx.lineTo(A2.x, A2.y);
+  ctx.arc(P.x, P.y, R, a2, a1 + Math.PI * 2, false);
+  ctx.closePath();
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.moveTo(hand[0][0], hand[0][1]);
+  for (let i = 1; i < hand.length; i++) ctx.lineTo(hand[i][0], hand[i][1]);
+  ctx.closePath();
+  ctx.fill();
+}
+
+function makeCanvas(){
+  const c = document.createElement('canvas');
+  c.width = W; c.height = H;
+  return c;
+}
+
+let renderer, scene, camera, armGroup;
+let ANIM_READY_INTERNAL = false;
+
+function angleFor(t){
+  let a = Math.sin(Math.PI * t);
+  if (Math.abs(a) < 1e-12) a = 0;
+  return AMPL * a;
+}
+
+function initGraphics(baseCanvas, armCanvas){
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: false });
+  renderer.setPixelRatio(1);
+  renderer.setSize(W, H);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NoToneMapping;
+  document.body.appendChild(renderer.domElement);
+
+  scene = new THREE.Scene();
+  camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0.1, 10);
+  camera.position.z = 1;
+
+  const baseTex = new THREE.CanvasTexture(baseCanvas);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  baseTex.magFilter = THREE.LinearFilter;
+  baseTex.minFilter = THREE.LinearFilter;
+
+  const armTex = new THREE.CanvasTexture(armCanvas);
+  armTex.colorSpace = THREE.SRGBColorSpace;
+  armTex.magFilter = THREE.LinearFilter;
+  armTex.minFilter = THREE.LinearFilter;
+
+  const plane = new THREE.PlaneGeometry(W, H);
+
+  const baseMesh = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({
+    map: baseTex, toneMapped: false
+  }));
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  armGroup = new THREE.Group();
+  // pivot in world coords (y up)
+  armGroup.position.set(P.x - W/2, H/2 - P.y, 0);
+  const armMesh = new THREE.Mesh(plane, new THREE.MeshBasicMaterial({
+    map: armTex, transparent: true, depthTest: false, depthWrite: false, toneMapped: false
+  }));
+  armMesh.position.set(-(P.x - W/2), -(H/2 - P.y), 0);
+  armMesh.renderOrder = 1;
+  armGroup.add(armMesh);
+  scene.add(armGroup);
+
+  window.setTime = function(t){
+    armGroup.rotation.z = angleFor(t);
+    renderer.render(scene, camera);
+  };
+
+  // verify frame 0 works, then flag ready
+  window.setTime(0);
+  window.ANIM_READY = true;
+  ANIM_READY_INTERNAL = true;
+}
+
+function load(){
+  const img = new Image();
+  img.onload = function(){
+    const maskC = makeCanvas();
+    const mctx = maskC.getContext('2d');
+    mctx.fillStyle = '#fff';
+    traceMaskPath(mctx);
+
+    // Base: original with arm region filled white (always covered by arm mesh)
+    const baseC = makeCanvas();
+    const bctx = baseC.getContext('2d');
+    bctx.drawImage(img, 0, 0);
+    bctx.fillStyle = '#fff';
+    traceMaskPath(bctx);
+
+    // Arm: original cut out with the same mask
+    const armC = makeCanvas();
+    const actx = armC.getContext('2d');
+    actx.drawImage(img, 0, 0);
+    actx.globalCompositeOperation = 'destination-in';
+    actx.drawImage(maskC, 0, 0);
+
+    initGraphics(baseC, armC);
+
+    // optional live playback
+    const clock = { t0: performance.now() };
+    function loop(){
+      if (ANIM_READY_INTERNAL){
+        const t = ((performance.now() - clock.t0) / 1000) % PERIOD;
+        window.setTime(t);
+      }
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  };
+  img.src = './image.png';
+}
+load();
+</script>
+</body>
+</html>
+```

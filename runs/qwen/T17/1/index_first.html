@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Squatting girl — 2s loop</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+const LOOP = 2.0;
+
+// Cutout rectangle (image pixel coords, top-left origin) around the girl with pigtails.
+const CX0 = 298, CY0 = 56, CX1 = 578, CY1 = 600;
+const CW = CX1 - CX0, CH = CY1 - CY0;
+const FEET_IMG_Y = 590;   // vertical anchor: bottom of her shoes (stays on the ground)
+const DEPTH = 0.16;       // how far she squats (fraction of body compression)
+
+// ---------- renderer / scene / camera ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+if (THREE.NoToneMapping !== undefined) renderer.toneMapping = THREE.NoToneMapping;
+if ('outputColorSpace' in renderer && THREE.SRGBColorSpace !== undefined)
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 10);
+camera.position.z = 1;
+
+let baseMesh = null, girlMesh = null;
+let centerY0 = 0, anchorWorldY = 0;
+let currentT = 0;
+
+// ---------- deterministic frame renderer ----------
+function renderFrame(t) {
+  // smooth periodic squash: s=1 at t=0 and t=2, minimum at t=1 (C^1 at loop seam)
+  const p = (t % LOOP) / LOOP;
+  const c = 0.5 * (1 - Math.cos(Math.PI * 2 * p));
+  const s = 1 - DEPTH * c;
+  girlMesh.scale.set(1, s, 1);
+  girlMesh.position.y = anchorWorldY + (centerY0 - anchorWorldY) * s;
+  renderer.render(scene, camera);
+}
+
+window.setTime = function (t) {
+  if (!baseMesh) return;
+  t = ((t % LOOP) + LOOP) % LOOP;
+  currentT = t;
+  renderFrame(t);
+};
+
+// ---------- build textures from the loaded image ----------
+function setup(img) {
+  // sample the (flat) background color so the filled hole matches perfectly
+  const tmp = document.createElement('canvas');
+  tmp.width = W; tmp.height = H;
+  const tctx = tmp.getContext('2d');
+  tctx.drawImage(img, 0, 0);
+  const px = tctx.getImageData(8, 8, 1, 1).data;
+  const bg = 'rgb(' + px[0] + ',' + px[1] + ',' + px[2] + ')';
+
+  // base layer: original image with the girl's rectangle filled with background
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W; baseCanvas.height = H;
+  const bctx = baseCanvas.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  bctx.fillStyle = bg;
+  bctx.fillRect(CX0, CY0, CW, CH);
+
+  // girl layer: the cropped cutout (her white margins blend into the white hole)
+  const girlCanvas = document.createElement('canvas');
+  girlCanvas.width = CW; girlCanvas.height = CH;
+  const gctx = girlCanvas.getContext('2d');
+  gctx.drawImage(img, CX0, CY0, CW, CH, 0, 0, CW, CH);
+
+  const baseTex = new THREE.CanvasTexture(baseCanvas);
+  const girlTex = new THREE.CanvasTexture(girlCanvas);
+  for (const tex of [baseTex, girlTex]) {
+    if (tex.colorSpace !== undefined && THREE.SRGBColorSpace !== undefined)
+      tex.colorSpace = THREE.SRGBColorSpace;
+    tex.anisotropy = 1;
+  }
+
+  const baseMat = new THREE.MeshBasicMaterial({ map: baseTex });
+  const girlMat = new THREE.MeshBasicMaterial({ map: girlTex });
+  if ('toneMapped' in baseMat) baseMat.toneMapped = false;
+  if ('toneMapped' in girlMat) girlMat.toneMapped = false;
+
+  baseMesh = new THREE.Mesh(new THREE.PlaneGeometry(W, H), baseMat);
+  baseMesh.position.set(W / 2, H / 2, 0);
+  scene.add(baseMesh);
+
+  girlMesh = new THREE.Mesh(new THREE.PlaneGeometry(CW, CH), girlMat);
+  centerY0 = H - (CY0 + CY1) / 2;         // world y of sprite center (world y = H - image y)
+  anchorWorldY = H - FEET_IMG_Y;          // world y of the feet line (fixed anchor)
+  girlMesh.position.set((CX0 + CX1) / 2, centerY0, 0.1);
+  scene.add(girlMesh);
+
+  window.setTime(0);        // frame 0 == original image
+  window.ANIM_READY = true;
+}
+
+// ---------- load image, then start optional live playback ----------
+const img = new Image();
+img.onload = () => {
+  setup(img);
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000);
+    last = now;
+    currentT = (currentT + dt) % LOOP;   // continues from wherever setTime left it
+    renderFrame(currentT);
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+};
+img.src = './image.png';
+</script>
+</body>
+</html>

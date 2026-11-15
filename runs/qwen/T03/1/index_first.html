@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wave</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas#c{position:absolute;top:0;left:0;display:block;}
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+// ---- Wrist pivot and cut-out polygons (image pixel coords, y down) ----
+// The small boy in the striped shirt is the third figure; his raised hand
+// is at roughly x 752-816, y 190-268. Wrist pivot just below the palm.
+const PIVOT = { x: 774, y: 264 };
+
+// Polygon erased from the base image (hand only; bottom is a short stub
+// centered on the wrist so the forearm stays in the base).
+const ERASE_POLY = [
+  [762, 268],
+  [752, 244],
+  [752, 214],
+  [760, 192],
+  [810, 190],
+  [816, 222],
+  [810, 250],
+  [786, 268]
+];
+
+// Polygon for the moving hand layer: same outline, but the bottom stub is
+// extended ~16px down the forearm so it always covers the erased region
+// while rotating (the extra pixels overlap the un-erased forearm, hiding
+// any sliver near the wrist).
+const HAND_POLY = [
+  [760, 280],
+  [752, 244],
+  [752, 214],
+  [760, 192],
+  [810, 190],
+  [816, 222],
+  [810, 250],
+  [788, 280]
+];
+
+function tracePoly(ctx, pts){
+  ctx.beginPath();
+  ctx.moveTo(pts[0][0], pts[0][1]);
+  for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i][0], pts[i][1]);
+  ctx.closePath();
+}
+
+// ---- Renderer / scene ----
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias:true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+canvas.style.width = W + 'px';
+canvas.style.height = H + 'px';
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 200);
+camera.position.set(0, 0, 10);
+
+let baseMesh = null, handMesh = null;
+let ready = false;
+
+const CYCLES = 3;                 // full waves per 2 s loop
+const AMP = 12 * Math.PI / 180;   // peak rotation in radians
+
+function setTime(t){
+  if(!ready) return;
+  const a = AMP * Math.sin(2 * Math.PI * CYCLES * t / 2);
+  handMesh.rotation.z = a;
+  renderer.render(scene, camera);
+}
+window.setTime = setTime;
+
+// ---- Build textures once the image is loaded ----
+const img = new Image();
+img.onload = function(){
+  // Base: original with the hand region filled white (background is white there).
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W; baseCanvas.height = H;
+  const bctx = baseCanvas.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  tracePoly(bctx, ERASE_POLY);
+  bctx.fillStyle = '#ffffff';
+  bctx.fill();
+
+  // Hand layer: original image clipped to the hand polygon (alpha cut-out).
+  const handCanvas = document.createElement('canvas');
+  handCanvas.width = W; handCanvas.height = H;
+  const hctx = handCanvas.getContext('2d');
+  hctx.drawImage(img, 0, 0);
+  hctx.globalCompositeOperation = 'destination-in';
+  tracePoly(hctx, HAND_POLY);
+  hctx.fillStyle = '#ffffff';
+  hctx.fill();
+
+  const baseTex = new THREE.CanvasTexture(baseCanvas);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  baseTex.minFilter = THREE.LinearFilter;
+  baseTex.magFilter = THREE.LinearFilter;
+
+  const handTex = new THREE.CanvasTexture(handCanvas);
+  handTex.colorSpace = THREE.SRGBColorSpace;
+  handTex.minFilter = THREE.LinearFilter;
+  handTex.magFilter = THREE.LinearFilter;
+
+  // Base plane (one image pixel = one world unit, one canvas pixel).
+  const baseGeo = new THREE.PlaneGeometry(W, H);
+  baseMesh = new THREE.Mesh(
+    baseGeo,
+    new THREE.MeshBasicMaterial({ map: baseTex })
+  );
+  baseMesh.position.set(W/2, H/2, 0);
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  // Hand plane, geometry re-centered so the wrist pivot is the local origin.
+  const handGeo = new THREE.PlaneGeometry(W, H);
+  // world(u, v) = (u, H - v); local before pivot shift = (u - W/2, H/2 - v)
+  handGeo.translate(W/2 - PIVOT.x, PIVOT.y - H/2, 0);
+  handMesh = new THREE.Mesh(
+    handGeo,
+    new THREE.MeshBasicMaterial({
+      map: handTex,
+      transparent: true,
+      depthWrite: false
+    })
+  );
+  handMesh.position.set(PIVOT.x, H - PIVOT.y, 1);
+  handMesh.renderOrder = 1;
+  scene.add(handMesh);
+
+  ready = true;
+  window.ANIM_READY = true;
+  setTime(0); // ensure frame 0 renders correctly
+};
+img.src = './image.png';
+
+// Optional live playback (setTime itself is fully deterministic).
+let t0 = null;
+function loop(now){
+  if(t0 === null) t0 = now;
+  const t = ((now - t0) / 1000) % 2;
+  setTime(t);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

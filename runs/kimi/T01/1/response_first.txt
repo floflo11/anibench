@@ -1,0 +1,243 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.domElement.style.width = '1200px';
+renderer.domElement.style.height = '600px';
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+// The wrist and everything below y=202 remain stationary; the hand above
+// y=180 rotates rigidly, with a smooth bend through the wrist between them.
+const PIVOT_X = 232;
+const PIVOT_Y = 196;
+const BOX_X = 188;
+const BOX_Y = 112;
+const BOX_W = 88;
+const BOX_H = 104;
+
+function traceHand(path) {
+  path.moveTo(219, 204);
+  path.bezierCurveTo(218, 198, 219, 193, 215, 189);
+  path.bezierCurveTo(209, 184, 205, 179, 202, 173);
+  path.bezierCurveTo(198, 169, 194, 163, 195, 158);
+  path.bezierCurveTo(195, 154, 198, 151, 201, 152);
+  path.bezierCurveTo(205, 153, 208, 157, 212, 160);
+  path.lineTo(212, 139);
+  path.bezierCurveTo(211, 132, 212, 127, 215, 125);
+  path.bezierCurveTo(218, 122, 222, 124, 223, 127);
+  path.bezierCurveTo(225, 131, 225, 138, 226, 145);
+  path.lineTo(227, 132);
+  path.bezierCurveTo(227, 126, 229, 122, 233, 121);
+  path.bezierCurveTo(238, 120, 241, 123, 240, 129);
+  path.lineTo(238, 145);
+  path.lineTo(242, 131);
+  path.bezierCurveTo(243, 126, 246, 124, 249, 126);
+  path.bezierCurveTo(252, 127, 253, 131, 251, 137);
+  path.lineTo(248, 149);
+  path.lineTo(253, 144);
+  path.bezierCurveTo(256, 141, 259, 142, 262, 146);
+  path.bezierCurveTo(266, 150, 266, 154, 263, 159);
+  path.bezierCurveTo(260, 165, 256, 171, 252, 177);
+  path.bezierCurveTo(248, 183, 244, 188, 243, 193);
+  path.bezierCurveTo(242, 197, 241, 201, 240, 204);
+  path.bezierCurveTo(234, 206, 225, 206, 219, 204);
+  path.closePath();
+}
+
+let autoPlay = true;
+let rafId = null;
+let playbackStart = null;
+
+new THREE.TextureLoader().load('./image.png', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+
+  const image = texture.image;
+
+  const base = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({
+      map: texture,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  base.position.set(W / 2, H / 2, 0);
+  base.renderOrder = 0;
+  scene.add(base);
+
+  // Remove only the original moving hand while it is being animated.
+  const handShape = new THREE.Shape();
+  traceHand(handShape);
+  const patchGeometry = new THREE.ShapeGeometry(handShape, 24);
+  const patchPositions = patchGeometry.attributes.position;
+  for (let i = 0; i < patchPositions.count; i++) {
+    patchPositions.setY(i, H - patchPositions.getY(i));
+  }
+
+  const whitePatch = new THREE.Mesh(
+    patchGeometry,
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  whitePatch.position.z = 0.2;
+  whitePatch.renderOrder = 1;
+  whitePatch.frustumCulled = false;
+  scene.add(whitePatch);
+
+  // Extract the hand and a small overlap of wrist from the source image.
+  const handCanvas = document.createElement('canvas');
+  handCanvas.width = BOX_W;
+  handCanvas.height = BOX_H;
+  const handContext = handCanvas.getContext('2d');
+  handContext.save();
+  handContext.translate(-BOX_X, -BOX_Y);
+  handContext.beginPath();
+  traceHand(handContext);
+  handContext.clip();
+  handContext.drawImage(image, 0, 0);
+  handContext.restore();
+
+  const handTexture = new THREE.CanvasTexture(handCanvas);
+  handTexture.colorSpace = THREE.SRGBColorSpace;
+  handTexture.minFilter = THREE.LinearFilter;
+  handTexture.magFilter = THREE.LinearFilter;
+  handTexture.generateMipmaps = false;
+
+  const handGeometry = new THREE.PlaneGeometry(BOX_W, BOX_H, 22, 26);
+  const handPositions = handGeometry.attributes.position;
+  const count = handPositions.count;
+  const restX = new Float32Array(count);
+  const restY = new Float32Array(count);
+  const sourceY = new Float32Array(count);
+
+  for (let i = 0; i < count; i++) {
+    const localX = handPositions.getX(i);
+    const localY = handPositions.getY(i);
+    const imageX = BOX_X + localX + BOX_W / 2;
+    const imageY = BOX_Y + BOX_H / 2 - localY;
+
+    restX[i] = imageX - PIVOT_X;
+    restY[i] = PIVOT_Y - imageY;
+    sourceY[i] = imageY;
+    handPositions.setXYZ(i, restX[i], restY[i], 0);
+  }
+
+  const hand = new THREE.Mesh(
+    handGeometry,
+    new THREE.MeshBasicMaterial({
+      map: handTexture,
+      transparent: true,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  hand.position.set(PIVOT_X, H - PIVOT_Y, 0.4);
+  hand.renderOrder = 2;
+  hand.frustumCulled = false;
+  scene.add(hand);
+
+  function renderTime(t) {
+    t = Math.max(0, Math.min(2, t));
+
+    // Rendering only the untouched source at the endpoints guarantees an
+    // unchanged original frame and an exactly seamless two-second loop.
+    const endpoint = t === 0 || t === 2;
+    whitePatch.visible = !endpoint;
+    hand.visible = !endpoint;
+
+    if (!endpoint) {
+      // One complete left/right wrist wave per second.
+      const angle = 0.32 * Math.sin(2 * Math.PI * t);
+
+      for (let i = 0; i < count; i++) {
+        let weight = Math.max(0, Math.min(1, (202 - sourceY[i]) / 22));
+        weight = weight * weight * (3 - 2 * weight);
+
+        const a = angle * weight;
+        const c = Math.cos(a);
+        const s = Math.sin(a);
+        const x = restX[i];
+        const y = restY[i];
+
+        handPositions.setXY(i, c * x - s * y, s * x + c * y);
+      }
+      handPositions.needsUpdate = true;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  window.setTime = function(t) {
+    // Explicit deterministic inspection stops live playback, preventing a
+    // subsequent animation callback from overwriting the requested frame.
+    autoPlay = false;
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    renderTime(t);
+  };
+
+  renderTime(0);
+  window.ANIM_READY = true;
+
+  function play(now) {
+    if (!autoPlay) return;
+    if (playbackStart === null) playbackStart = now;
+    const t = ((now - playbackStart) / 1000) % 2;
+    renderTime(t);
+    rafId = requestAnimationFrame(play);
+  }
+  rafId = requestAnimationFrame(play);
+});
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,33 @@
+{
+ "id": "kimi__T03__1",
+ "stage": "first",
+ "model": "moonshotai/kimi-k3.1-pro",
+ "provider": "River",
+ "finish": "stop",
+ "usage": {
+  "prompt_tokens": 1474,
+  "completion_tokens": 24237,
+  "total_tokens": 25711,
+  "cost": 0.245318,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.245318,
+   "upstream_inference_prompt_cost": 0.002948,
+   "upstream_inference_completions_cost": 0.24237
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 21579,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 249.814,
+ "attempts": 1,
+ "has_html": true
+}

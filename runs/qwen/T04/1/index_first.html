@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas{display:block;position:absolute;left:0;top:0;}
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+// Forearm + hand polygon of the girl in the white dress (image coords, y down)
+const POLY = [
+  [1076, 150],
+  [1146, 150],
+  [1144, 208],
+  [1130, 248],
+  [1128, 296],
+  [1090, 290],
+  [1082, 240],
+  [1074, 202]
+];
+// Elbow pivot (image coords)
+const PIVOT = [1106, 276];
+const AMP = 0.22; // radians (~12.6 deg)
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+// Orthographic camera: one image pixel = one canvas pixel, (0,0) top-left
+const camera = new THREE.OrthographicCamera(0, W, -H, 0, 0.1, 100);
+camera.position.z = 1;
+
+const scene = new THREE.Scene();
+
+function tracePoly(ctx) {
+  ctx.beginPath();
+  for (let i = 0; i < POLY.length; i++) {
+    if (i) ctx.lineTo(POLY[i][0], POLY[i][1]);
+    else ctx.moveTo(POLY[i][0], POLY[i][1]);
+  }
+  ctx.closePath();
+}
+
+const img = new Image();
+img.crossOrigin = 'anonymous';
+img.onload = () => {
+  // ---- Base layer: original image with the forearm region painted white ----
+  const baseC = document.createElement('canvas');
+  baseC.width = W; baseC.height = H;
+  const bctx = baseC.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  bctx.fillStyle = '#ffffff';
+  tracePoly(bctx);
+  bctx.fill();
+
+  // ---- Piece layer: original image kept only inside the forearm polygon ----
+  const pieceC = document.createElement('canvas');
+  pieceC.width = W; pieceC.height = H;
+  const pctx = pieceC.getContext('2d');
+  pctx.drawImage(img, 0, 0);
+  pctx.globalCompositeOperation = 'destination-in';
+  tracePoly(pctx);
+  pctx.fill();
+
+  function makeTex(c) {
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.magFilter = THREE.LinearFilter;
+    t.minFilter = THREE.LinearFilter;
+    t.generateMipmaps = false;
+    return t;
+  }
+
+  const baseTex = makeTex(baseC);
+  const pieceTex = makeTex(pieceC);
+
+  // Base mesh: full image plane
+  const baseMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: baseTex })
+  );
+  baseMesh.position.set(W / 2, -H / 2, 0);
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  // Piece mesh: same-size plane with alpha-masked arm, rotated about the elbow.
+  // Geometry is offset so the local origin sits on the pivot; mesh positioned at pivot.
+  const pieceGeom = new THREE.PlaneGeometry(W, H);
+  pieceGeom.translate(600 - PIVOT[0], -300 + PIVOT[1], 0);
+  const pieceMesh = new THREE.Mesh(
+    pieceGeom,
+    new THREE.MeshBasicMaterial({
+      map: pieceTex,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  pieceMesh.position.set(PIVOT[0], -PIVOT[1], 0.01);
+  pieceMesh.renderOrder = 1;
+  scene.add(pieceMesh);
+
+  // ---- Deterministic time control ----
+  window.setTime = function (t) {
+    // wrap into [0, 2); loop period is exactly 2 s
+    t = ((Number(t) % 2) + 2) % 2;
+    const a = AMP * Math.sin(Math.PI * t); // sin has period 2 in t; a(0)=a(2)=0
+    pieceMesh.rotation.z = a;
+    renderer.render(scene, camera);
+  };
+
+  // Verify frame 0 (identical to original) then signal readiness
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  // Live playback (correctness does not depend on this)
+  (function loop () {
+    requestAnimationFrame(loop);
+    window.setTime((performance.now() / 1000) % 2);
+  })();
+};
+img.src = './image.png';
+</script>
+</body>
+</html>

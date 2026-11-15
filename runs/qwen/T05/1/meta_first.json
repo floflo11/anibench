@@ -1,0 +1,33 @@
+{
+ "id": "qwen__T05__1",
+ "stage": "first",
+ "model": "qwen/qwen3.8-27b",
+ "provider": "Tenstorrent",
+ "finish": "stop",
+ "usage": {
+  "prompt_tokens": 1177,
+  "completion_tokens": 13182,
+  "total_tokens": 14359,
+  "cost": 0.02126775,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.02126775,
+   "upstream_inference_prompt_cost": 0.00017655,
+   "upstream_inference_completions_cost": 0.0210912
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 11326,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 126.294,
+ "attempts": 1,
+ "has_html": true
+}

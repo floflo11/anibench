@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0;padding:0;background:#fff;overflow:hidden;}
+  canvas{display:block;}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+
+const camera = new THREE.OrthographicCamera(0, W, 0, H, 1, 100);
+camera.position.z = 50;
+const scene = new THREE.Scene();
+
+// Head cut-out region in image pixel coordinates (top-left origin).
+const CX0 = 62, CY0 = 0, CW = 138, CH = 185;  // crop box around the boy's head
+const CUTY = 166;                              // horizontal neck cut line (image y)
+const PIVX = 128, PIVY = CUTY;                 // nod pivot (neck), image coords
+
+const img = new Image();
+img.onload = () => { init(img); };
+img.src = './image.png';
+
+function init(img) {
+  // ---- crop the head region ----
+  const crop = document.createElement('canvas');
+  crop.width = CW; crop.height = CH;
+  const cctx = crop.getContext('2d');
+  cctx.drawImage(img, -CX0, -CY0);
+  const id = cctx.getImageData(0, 0, CW, CH);
+  const d = id.data;
+
+  // ink = how far the pixel is from white
+  const m = new Uint8Array(CW * CH);
+  for (let i = 0; i < CW * CH; i++) {
+    const ink = 255 - Math.min(d[i*4], d[i*4+1], d[i*4+2]);
+    m[i] = ink > 12 ? 1 : 0;
+  }
+
+  // keep only the largest connected component (the head+neck; drops any stray bits)
+  const lab = new Int32Array(CW * CH).fill(-1);
+  let labCount = 0, bestLab = -1, bestSize = 0;
+  const stack = [];
+  for (let s = 0; s < CW * CH; s++) {
+    if (!m[s] || lab[s] !== -1) continue;
+    const cur = labCount++;
+    let size = 0;
+    lab[s] = cur; stack.length = 0; stack.push(s);
+    while (stack.length) {
+      const p = stack.pop(); size++;
+      const x = p % CW, y = (p / CW) | 0;
+      if (x > 0        && m[p-1]  && lab[p-1]  === -1) { lab[p-1]  = cur; stack.push(p-1); }
+      if (x < CW-1     && m[p+1]  && lab[p+1]  === -1) { lab[p+1]  = cur; stack.push(p+1); }
+      if (y > 0        && m[p-CW] && lab[p-CW] === -1) { lab[p-CW] = cur; stack.push(p-CW); }
+      if (y < CH-1     && m[p+CW] && lab[p+CW] === -1) { lab[p+CW] = cur; stack.push(p+CW); }
+    }
+    if (size > bestSize) { bestSize = size; bestLab = cur; }
+  }
+
+  // final mask: head component, cut across the neck at CUTY
+  const mask = document.createElement('canvas');
+  mask.width = CW; mask.height = CH;
+  const mctx = mask.getContext('2d');
+  const md = mctx.createImageData(CW, CH);
+  for (let y = 0; y < CH; y++) {
+    for (let x = 0; x < CW; x++) {
+      const i = y * CW + x;
+      const on = (lab[i] === bestLab && (CY0 + y) <= CUTY) ? 255 : 0;
+      md.data[i*4+3] = on;
+    }
+  }
+  mctx.putImageData(md, 0, 0);
+
+  // head texture = crop, alpha = mask
+  cctx.globalCompositeOperation = 'destination-in';
+  cctx.drawImage(mask, 0, 0);
+  cctx.globalCompositeOperation = 'source-over';
+
+  // base texture = full image with the head region punched out (white shows through)
+  const base = document.createElement('canvas');
+  base.width = W; base.height = H;
+  const bctx = base.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  bctx.globalCompositeOperation = 'destination-out';
+  bctx.drawImage(mask, CX0, CY0);
+  bctx.globalCompositeOperation = 'source-over';
+
+  const baseTex = new THREE.CanvasTexture(base);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  const headTex = new THREE.CanvasTexture(crop);
+  headTex.colorSpace = THREE.SRGBColorSpace;
+
+  const baseMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: baseTex, transparent: true })
+  );
+  baseMesh.position.set(W / 2, H / 2, 0);
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  // head mesh: pivot (neck) placed at the geometry origin so scale/translate nod about it
+  const geo = new THREE.PlaneGeometry(CW, CH);
+  geo.translate((CX0 + CW / 2) - PIVX, (CUTY - CY0) - CH / 2);
+  const headMesh = new THREE.Mesh(
+    geo,
+    new THREE.MeshBasicMaterial({ map: headTex, transparent: true, depthWrite: false })
+  );
+  headMesh.position.set(PIVX, H - PIVY, 0.5);
+  headMesh.renderOrder = 1;
+  scene.add(headMesh);
+
+  // ---- animation: one smooth nod per 2 s, zero displacement/rotation at t=0 and t=2 ----
+  window.setTime = function (t) {
+    const s = Math.sin(Math.PI * t);   // 0 -> 1 -> 0 over [0,2], smooth at both ends
+    const s2 = s * s;
+    headMesh.position.y = (H - PIVY) - 4.0 * s2;   // drop ~4px
+    headMesh.scale.y = 1 - 0.06 * s2;              // chin tucks (top of head drops ~5px more)
+    headMesh.scale.x = 1;
+    renderer.render(scene, camera);
+  };
+
+  renderer.render(scene, camera);
+  window.ANIM_READY = true;
+
+  // live playback (optional; correctness does not depend on it)
+  function loop(now) {
+    setTime((now % 2000) / 1000);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+}
+</script>
+</body>
+</html>

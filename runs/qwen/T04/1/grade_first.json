@@ -1,0 +1,56 @@
+{
+ "stage": "first",
+ "task": "T04",
+ "model": "qwen",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1231,
+  "completion_tokens": 17233,
+  "total_tokens": 18464,
+  "cost": 0.03968514,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.03968514,
+   "upstream_inference_prompt_cost": 4.924e-05,
+   "upstream_inference_completions_cost": 0.0396359
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 13138,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 100.674,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": false,
+   "value": 0.99965
+  },
+  "G3": {
+   "ok": false,
+   "value": 2.2251
+  },
+  "G4": {
+   "ok": true,
+   "value": 1.0
+  },
+  "G5": {
+   "ok": false,
+   "value": 1.0
+  },
+  "G6": {
+   "ok": false,
+   "loop": 0.0,
+   "first_vs_orig": 0.99966
+  },
+  "pass": false
+ }
+}

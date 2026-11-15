@@ -1,0 +1,319 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Left Hand Wave</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.setClearColor(0xffffff, 1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+const loader = new THREE.TextureLoader();
+
+loader.load('./image.png', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.flipY = true;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.needsUpdate = true;
+
+  const baseMaterial = new THREE.MeshBasicMaterial({ map: texture });
+  baseMaterial.toneMapped = false;
+
+  const base = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    baseMaterial
+  );
+  base.position.set(W / 2, H / 2, 0);
+  base.renderOrder = 0;
+  scene.add(base);
+
+  // A generous envelope around only the raised hand and wrist. Foreground
+  // pixels are extracted from their difference against the white background.
+  const handPolygon = [
+    [218, 214], [243, 214], [243, 195], [247, 184],
+    [253, 176], [256, 167], [263, 158], [267, 150],
+    [265, 143], [261, 139], [253, 139], [250, 126],
+    [246, 120], [238, 118], [234, 116], [225, 116],
+    [220, 119], [214, 119], [208, 123], [205, 130],
+    [207, 141], [201, 143], [195, 146], [191, 152],
+    [193, 158], [202, 164], [207, 166], [210, 177],
+    [215, 187], [219, 194]
+  ];
+
+  const region = { x0: 184, y0: 108, x1: 278, y1: 222 };
+
+  function pointInPolygon(x, y) {
+    let inside = false;
+    for (let i = 0, j = handPolygon.length - 1;
+         i < handPolygon.length;
+         j = i++) {
+      const xi = handPolygon[i][0];
+      const yi = handPolygon[i][1];
+      const xj = handPolygon[j][0];
+      const yj = handPolygon[j][1];
+
+      const crosses = ((yi > y) !== (yj > y)) &&
+        (x < (xj - xi) * (y - yi) / (yj - yi) + xi);
+
+      if (crosses) inside = !inside;
+    }
+    return inside;
+  }
+
+  function createHandMask(image) {
+    const sourceCanvas = document.createElement('canvas');
+    sourceCanvas.width = W;
+    sourceCanvas.height = H;
+
+    const sourceContext = sourceCanvas.getContext('2d', {
+      willReadFrequently: true
+    });
+    sourceContext.drawImage(image, 0, 0, W, H);
+
+    const sourcePixels = sourceContext.getImageData(0, 0, W, H).data;
+
+    const maskCanvas = document.createElement('canvas');
+    maskCanvas.width = W;
+    maskCanvas.height = H;
+
+    const maskContext = maskCanvas.getContext('2d');
+    const output = maskContext.createImageData(W, H);
+
+    for (let y = region.y0; y < region.y1; y++) {
+      for (let x = region.x0; x < region.x1; x++) {
+        if (!pointInPolygon(x + 0.5, y + 0.5)) continue;
+
+        const sourceIndex = (y * W + x) * 4;
+        const r = sourcePixels[sourceIndex];
+        const g = sourcePixels[sourceIndex + 1];
+        const b = sourcePixels[sourceIndex + 2];
+
+        const maximum = Math.max(r, g, b);
+        const minimum = Math.min(r, g, b);
+        const darkness = 255 - minimum;
+        const chroma = maximum - minimum;
+        const signal = Math.max(darkness, chroma * 1.4);
+
+        // Nearly binary extraction retains the original antialiased colored
+        // edge pixels without carrying rectangular pieces of background.
+        const alpha = Math.max(0, Math.min(1, (signal - 4) / 10));
+        const value = Math.round(alpha * 255);
+
+        const outputIndex = (y * W + x) * 4;
+        output.data[outputIndex] = value;
+        output.data[outputIndex + 1] = value;
+        output.data[outputIndex + 2] = value;
+        output.data[outputIndex + 3] = 255;
+      }
+    }
+
+    maskContext.putImageData(output, 0, 0);
+
+    const maskTexture = new THREE.CanvasTexture(maskCanvas);
+    maskTexture.flipY = true;
+    maskTexture.minFilter = THREE.LinearFilter;
+    maskTexture.magFilter = THREE.LinearFilter;
+    maskTexture.generateMipmaps = false;
+    maskTexture.wrapS = THREE.ClampToEdgeWrapping;
+    maskTexture.wrapT = THREE.ClampToEdgeWrapping;
+    maskTexture.needsUpdate = true;
+
+    return maskTexture;
+  }
+
+  const handMask = createHandMask(texture.image);
+
+  function createRegionGeometry(segmentsX, segmentsY) {
+    const width = region.x1 - region.x0;
+    const height = region.y1 - region.y0;
+    const geometry = new THREE.PlaneGeometry(
+      width, height, segmentsX, segmentsY
+    );
+
+    const positions = geometry.attributes.position;
+    const uvs = geometry.attributes.uv;
+    const centerX = region.x0 + width / 2;
+    const centerY = H - (region.y0 + height / 2);
+
+    for (let i = 0; i < positions.count; i++) {
+      const localX = positions.getX(i);
+      const localY = positions.getY(i);
+      positions.setXYZ(i, centerX + localX, centerY + localY, 0);
+
+      const u = uvs.getX(i);
+      const v = uvs.getY(i);
+      uvs.setXY(
+        i,
+        (region.x0 + u * width) / W,
+        (H - region.y1 + v * height) / H
+      );
+    }
+
+    positions.needsUpdate = true;
+    uvs.needsUpdate = true;
+    return geometry;
+  }
+
+  const eraserMaterial = new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    alphaMap: handMask,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false
+  });
+  eraserMaterial.toneMapped = false;
+
+  const eraser = new THREE.Mesh(
+    createRegionGeometry(1, 1),
+    eraserMaterial
+  );
+  eraser.position.z = 1;
+  eraser.renderOrder = 1;
+  eraser.frustumCulled = false;
+  scene.add(eraser);
+
+  const handMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    alphaMap: handMask,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false
+  });
+  handMaterial.toneMapped = false;
+
+  const handGeometry = createRegionGeometry(12, 24);
+  const originalPositions = new Float32Array(handGeometry.attributes.position.array);
+
+  const movingHand = new THREE.Mesh(handGeometry, handMaterial);
+  movingHand.position.z = 2;
+  movingHand.renderOrder = 2;
+  movingHand.frustumCulled = false;
+  scene.add(movingHand);
+
+  const pivotX = 230;
+  const pivotY = 204;
+  const pivotWorldY = H - pivotY;
+
+  function updateHand(angle) {
+    const positions = handGeometry.attributes.position;
+
+    for (let i = 0; i < positions.count; i++) {
+      const offset = i * 3;
+      const originalX = originalPositions[offset];
+      const originalY = originalPositions[offset + 1];
+      const imageY = H - originalY;
+
+      // The lower wrist remains fixed. A short smooth transition above it
+      // avoids a seam while the hand itself rotates rigidly.
+      let weight = Math.max(0, Math.min(1, (pivotY - imageY) / 20));
+      weight = weight * weight * (3 - 2 * weight);
+
+      const localAngle = angle * weight;
+      const cosine = Math.cos(localAngle);
+      const sine = Math.sin(localAngle);
+
+      const dx = originalX - pivotX;
+      const dy = originalY - pivotWorldY;
+
+      positions.setXY(
+        i,
+        pivotX + cosine * dx - sine * dy,
+        pivotWorldY + sine * dx + cosine * dy
+      );
+    }
+
+    positions.needsUpdate = true;
+  }
+
+  function draw(time) {
+    const atEndpoint = time <= 0 || time >= 2;
+
+    // Two smooth waves in the two-second period, with the unmodified pose at
+    // both endpoints.
+    const angle = atEndpoint ? 0 : 0.26 * Math.sin(2 * Math.PI * time);
+    const showCutout = !atEndpoint && Math.abs(angle) > 1e-12;
+
+    updateHand(angle);
+    eraser.visible = showCutout;
+    movingHand.visible = showCutout;
+
+    renderer.render(scene, camera);
+  }
+
+  let live = true;
+  let rafId = 0;
+  let playbackOrigin = null;
+
+  window.setTime = function(t) {
+    live = false;
+    if (rafId !== 0) {
+      cancelAnimationFrame(rafId);
+      rafId = 0;
+    }
+
+    const numericTime = Number(t);
+    const clampedTime = Number.isFinite(numericTime)
+      ? Math.max(0, Math.min(2, numericTime))
+      : 0;
+
+    draw(clampedTime);
+  };
+
+  function playbackFrame(timestamp) {
+    if (!live) return;
+
+    if (playbackOrigin === null) playbackOrigin = timestamp;
+    const elapsed = (timestamp - playbackOrigin) / 1000;
+    draw(elapsed % 2);
+
+    rafId = requestAnimationFrame(playbackFrame);
+  }
+
+  updateHand(0);
+  draw(0);
+
+  window.ANIM_READY = true;
+  rafId = requestAnimationFrame(playbackFrame);
+});
+</script>
+</body>
+</html>
+```

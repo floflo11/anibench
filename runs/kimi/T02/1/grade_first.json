@@ -1,0 +1,57 @@
+{
+ "stage": "first",
+ "task": "T02",
+ "model": "kimi",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1473,
+  "completion_tokens": 21292,
+  "total_tokens": 22765,
+  "cost": 0.19417572,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 64,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.19417572,
+   "upstream_inference_prompt_cost": 0.00254772,
+   "upstream_inference_completions_cost": 0.191628
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 19183,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 168.445,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": false,
+   "value": 0.00735
+  },
+  "G2": {
+   "ok": false,
+   "value": 6,
+   "base": 2
+  },
+  "G3": {
+   "ok": false,
+   "value": 0.9262
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.86
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": false
+ }
+}

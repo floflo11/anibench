@@ -1,0 +1,144 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wave</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas{display:block;}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.setClearColor(0xffffff, 1);
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0, 100);
+camera.position.set(0, 0, 10);
+
+/* Polygon (pixel coords, y-down) enclosing the red-jacket toddler's raised
+   right hand plus a band of the red cuff so the seam hides in solid red.
+   Everything else stays in the base layer. */
+const verts = [
+  [45,172],[50,142],[64,118],[86,104],[110,99],[132,107],[146,126],
+  [146,152],[146,178],[147,198],[152,222],[138,244],[112,251],
+  [90,234],[80,202],[64,184]
+];
+const N = verts.length; // 16
+const edgesArr = [];
+for (let i = 0; i < N; i++) {
+  const a = verts[i], b = verts[(i + 1) % N];
+  edgesArr.push(new THREE.Vector4(a[0], a[1], b[0], b[1]));
+}
+
+/* Wrist pivot (pixel coords, y-down) -> world (y-up, origin center) */
+const pivotPix = [110, 200];
+const Pw = [pivotPix[0] - W/2, H/2 - pivotPix[1]];
+
+const VERT = `
+varying vec2 vPx;
+varying vec2 vUv;
+void main(){
+  vUv = uv;
+  vPx = vec2(position.x + ${W/2}.0, ${H/2}.0 - position.y);
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+const FRAG = `
+uniform sampler2D map;
+uniform vec4 edges[${N}];
+uniform float uHole;
+varying vec2 vPx;
+varying vec2 vUv;
+void main(){
+  bool inside = false;
+  for (int i = 0; i < ${N}; i++) {
+    vec4 e = edges[i];
+    vec2 a = vec2(e.x, e.y);
+    vec2 b = vec2(e.z, e.w);
+    if (((a.y > vPx.y) != (b.y > vPx.y))) {
+      float x = a.x + (b.x - a.x) * (vPx.y - a.y) / (b.y - a.y);
+      if (vPx.x < x) inside = !inside;
+    }
+  }
+  if (uHole > 0.5) { if (!inside) discard; }
+  else             { if (inside)  discard; }
+  gl_FragColor = texture2D(map, vUv);
+}
+`;
+
+const texture = new THREE.Texture();
+texture.colorSpace = THREE.SRGBColorSpace;
+texture.minFilter = THREE.LinearFilter;
+texture.magFilter = THREE.LinearFilter;
+texture.generateMipmaps = false;
+texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
+
+function makeMat(hole){
+  return new THREE.ShaderMaterial({
+    uniforms: {
+      map:    { value: texture },
+      edges:  { value: edgesArr },
+      uHole:  { value: hole }
+    },
+    vertexShader: VERT,
+    fragmentShader: FRAG,
+    side: THREE.FrontSide,
+    depthTest: false,
+    depthWrite: false,
+    transparent: false
+  });
+}
+
+const geo  = new THREE.PlaneGeometry(W, H);
+const base = new THREE.Mesh(geo, makeMat(1)); // image with the hand cut out
+base.renderOrder = 0;
+const part = new THREE.Mesh(geo, makeMat(0)); // just the hand + cuff
+part.renderOrder = 1;
+scene.add(base);
+scene.add(part);
+
+/* Wave: two full wrist-waves in the 2 s loop. th(0)=th(2)=0 and the
+   derivative matches, so the loop is seamless. Frame 0 is the identity
+   transform, so the composite is exactly the original image. */
+function setTime(t){
+  const th = 0.11 * Math.sin(2 * Math.PI * 1.0 * t);
+  const c = Math.cos(th), s = Math.sin(th);
+  part.rotation.z = th;
+  part.position.set(
+    Pw[0] - (c * Pw[0] - s * Pw[1]),
+    Pw[1] - (s * Pw[0] + c * Pw[1]),
+    0
+  );
+  renderer.render(scene, camera);
+}
+window.setTime = setTime;
+
+const img = new Image();
+img.onload = () => {
+  texture.image = img;
+  texture.needsUpdate = true;
+  window.ANIM_READY = true;
+  const t0 = performance.now();
+  (function loop(){
+    setTime(((performance.now() - t0) / 1000) % 2);
+    requestAnimationFrame(loop);
+  })();
+};
+img.src = './image.png';
+</script>
+</body>
+</html>
+```

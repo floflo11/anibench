@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+window.ANIM_READY = false;
+
+// Renderer: DPR exactly 1, white background, no tone mapping.
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.domElement.style.width = W + 'px';
+renderer.domElement.style.height = H + 'px';
+renderer.domElement.style.position = 'absolute';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.top = '0';
+document.body.appendChild(renderer.domElement);
+
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.setClearColor(0xffffff, 1);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+// One world unit = one image pixel.
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 10);
+camera.position.set(0, 0, 1);
+camera.lookAt(0, 0, 0);
+
+// Working canvases.
+const mainCanvas = document.createElement('canvas');
+mainCanvas.width = W;
+mainCanvas.height = H;
+const mainCtx = mainCanvas.getContext('2d');
+
+const originalCanvas = document.createElement('canvas');
+originalCanvas.width = W;
+originalCanvas.height = H;
+const originalCtx = originalCanvas.getContext('2d', { willReadFrequently: true });
+
+const handCanvas = document.createElement('canvas');
+handCanvas.width = W;
+handCanvas.height = H;
+const handCtx = handCanvas.getContext('2d', { willReadFrequently: true });
+
+const eraseCanvas = document.createElement('canvas');
+eraseCanvas.width = W;
+eraseCanvas.height = H;
+const eraseCtx = eraseCanvas.getContext('2d', { willReadFrequently: true });
+
+const texture = new THREE.CanvasTexture(mainCanvas);
+texture.colorSpace = THREE.SRGBColorSpace;
+texture.generateMipmaps = false;
+texture.minFilter = THREE.NearestFilter;
+texture.magFilter = THREE.NearestFilter;
+
+const material = new THREE.MeshBasicMaterial({
+  map: texture,
+  transparent: true,
+  depthTest: false,
+  depthWrite: false
+});
+
+const plane = new THREE.Mesh(new THREE.PlaneGeometry(W, H), material);
+plane.position.set(W / 2, H / 2, 0);
+scene.add(plane);
+
+// The striped-shirt boy's raised hand.
+// This polygon encloses the hand and wrist but avoids the head.
+const HAND_POLY = [
+  [747, 276],
+  [741, 269],
+  [738, 259],
+  [738, 247],
+  [740, 235],
+  [744, 223],
+  [748, 211],
+  [753, 200],
+  [760, 190],
+  [769, 184],
+  [779, 184],
+  [789, 188],
+  [798, 196],
+  [805, 205],
+  [811, 216],
+  [814, 229],
+  [814, 242],
+  [810, 254],
+  [804, 264],
+  [796, 272],
+  [786, 277],
+  [774, 279],
+  [762, 279],
+  [753, 278]
+];
+
+// Wrist pivot inside the lower part of the palm/wrist.
+const PIVOT_X = 762;
+const PIVOT_Y = 268;
+const AMPLITUDE = 0.20; // radians, about 11.5 degrees
+
+let ready = false;
+let manualMode = false;
+
+function pointInPoly(x, y, poly) {
+  let inside = false;
+  for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+    const xi = poly[i][0];
+    const yi = poly[i][1];
+    const xj = poly[j][0];
+    const yj = poly[j][1];
+    const intersect = ((yi > y) !== (yj > y)) &&
+      (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
+    if (intersect) inside = !inside;
+  }
+  return inside;
+}
+
+function buildHandCanvases() {
+  const src = originalCtx.getImageData(0, 0, W, H).data;
+  const handData = handCtx.createImageData(W, H);
+  const eraseData = eraseCtx.createImageData(W, H);
+
+  let minX = W, maxX = 0, minY = H, maxY = 0;
+  for (const p of HAND_POLY) {
+    minX = Math.min(minX, p[0]);
+    maxX = Math.max(maxX, p[0]);
+    minY = Math.min(minY, p[1]);
+    maxY = Math.max(maxY, p[1]);
+  }
+ 

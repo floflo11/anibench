@@ -1,0 +1,1 @@
+I'll inspect the image and locate the raised forearm so the wave can pivot only at the elbow. Then I'll build the three.js animation.0

@@ -1,0 +1,217 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+    width: 1024px;
+    height: 683px;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1024;
+const HEIGHT = 683;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(WIDTH, HEIGHT, false);
+renderer.domElement.style.width = WIDTH + 'px';
+renderer.domElement.style.height = HEIGHT + 'px';
+renderer.setClearColor(0xffffff, 1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(
+  -WIDTH / 2,
+  WIDTH / 2,
+  HEIGHT / 2,
+  -HEIGHT / 2,
+  0.1,
+  10
+);
+camera.position.z = 1;
+
+const geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+let quad = null;
+let originalMaterial = null;
+let warpMaterial = null;
+
+let live = true;
+let liveFrame = 0;
+let liveEpoch = 0;
+
+function renderFrame(time) {
+  const t = Math.max(0, Math.min(2, time));
+
+  // A zero-velocity, knee-flexed crouch at the middle of the cycle.
+  const bend = 0.5 - 0.5 * Math.cos(Math.PI * t);
+
+  if (t === 0 || t === 2) {
+    // Use the unmodified image material at both endpoints.
+    quad.material = originalMaterial;
+  } else {
+    warpMaterial.uniforms.uDrop.value = 26.0 * bend;
+    warpMaterial.uniforms.uSpread.value = 8.0 * bend;
+    quad.material = warpMaterial;
+  }
+
+  renderer.render(scene, camera);
+}
+
+window.setTime = function(time) {
+  // Manual frame control also stops live playback from overwriting the frame.
+  live = false;
+  if (liveFrame) {
+    cancelAnimationFrame(liveFrame);
+    liveFrame = 0;
+  }
+
+  const value = Number(time);
+  renderFrame(Number.isFinite(value) ? value : 0);
+};
+
+function play(now) {
+  if (!live) return;
+  const t = ((now - liveEpoch) * 0.001) % 2;
+  renderFrame(t);
+  liveFrame = requestAnimationFrame(play);
+}
+
+new THREE.TextureLoader().load('./image.png', function(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.flipY = true;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+
+  originalMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  warpMaterial = new THREE.ShaderMaterial({
+    uniforms: {
+      uImage: { value: texture },
+      uDrop: { value: 0 },
+      uSpread: { value: 0 }
+    },
+    vertexShader: `
+      varying vec2 vUv;
+
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      precision highp float;
+
+      varying vec2 vUv;
+      uniform sampler2D uImage;
+      uniform float uDrop;
+      uniform float uSpread;
+
+      void main() {
+        // Image-space coordinates, with the origin at the upper-left.
+        vec2 p = vec2(vUv.x * 1024.0, (1.0 - vUv.y) * 683.0);
+        vec4 color;
+
+        // This rectangle contains only the toddler in the navy jacket.
+        // All pixels outside it are sampled directly from the original.
+        if (p.x >= 510.0 && p.x <= 980.0) {
+          const float hipY = 514.0;
+          const float kneeY = 582.0;
+          const float ankleY = 628.0;
+
+          float kneeDrop = uDrop * 0.32;
+          float hipOut = hipY + uDrop;
+          float kneeOut = kneeY + kneeDrop;
+
+          float sourceY;
+
+          // Invert a piecewise vertical deformation:
+          // torso lowers rigidly, thighs and shins compress, feet stay planted.
+          if (p.y <= hipOut) {
+            sourceY = p.y - uDrop;
+          } else if (p.y <= kneeOut) {
+            float f = (p.y - hipOut) / (kneeOut - hipOut);
+            sourceY = mix(hipY, kneeY, f);
+          } else if (p.y <= ankleY) {
+            float f = (p.y - kneeOut) / (ankleY - kneeOut);
+            sourceY = mix(kneeY, ankleY, f);
+          } else {
+            sourceY = p.y;
+          }
+
+          // The knees move gently outward while the hips, ankles, and shoes
+          // retain their horizontal positions.
+          float kneeWeight = 0.0;
+          if (sourceY > hipY && sourceY < kneeY) {
+            kneeWeight = smoothstep(hipY, kneeY, sourceY);
+          } else if (sourceY >= kneeY && sourceY < ankleY) {
+            kneeWeight = 1.0 - smoothstep(kneeY, ankleY, sourceY);
+          }
+
+          float side = clamp((p.x - 702.0) / 42.0, -1.0, 1.0);
+          float sourceX = p.x - side * uSpread * kneeWeight;
+
+          vec2 sourceUv = vec2(
+            sourceX / 1024.0,
+            1.0 - sourceY / 683.0
+          );
+          color = texture2D(uImage, sourceUv);
+        } else {
+          color = texture2D(uImage, vUv);
+        }
+
+        gl_FragColor = vec4(color.rgb, 1.0);
+        #include <colorspace_fragment>
+      }
+    `,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  quad = new THREE.Mesh(geometry, originalMaterial);
+  quad.frustumCulled = false;
+  scene.add(quad);
+
+  // Verify that synchronous rendering works before exposing readiness.
+  renderFrame(0);
+  window.ANIM_READY = true;
+
+  liveEpoch = performance.now();
+  liveFrame = requestAnimationFrame(play);
+});
+</script>
+</body>
+</html>
+```

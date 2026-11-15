@@ -25,6 +25,8 @@ def main():
         g = json.loads((ROOT / "runs/nemotron" / r["task"] / r["try_"] / f"grade_{r['stage']}.json").read_text())
         if g.get("grades", {}).get("G6", {}).get("first_vs_orig", 0) > 0.05:
             fid += 1
+    order = sorted(summ, key=lambda m: -(summ[m]["pass_rate"] or 0))
+    ranking = "\n".join(f"- **{summ[m]['label']}: {summ[m]['passed']}/{summ[m]['n']} first-try runs passed ({pct(summ[m]['passed'], summ[m]['n'])}).**" for m in order if summ[m]["n"] >= 5)
     kept_total = sum(len(v["kept"]) for v in adm["tasks"].values())
     all_total = sum(len(v["kept"]) + len(v["dropped"]) for v in adm["tasks"].values())
 
@@ -44,10 +46,11 @@ anibench gives a model a still image of cartoon characters plus one instruction 
 \"make her earrings swing\", \"lift her hat\") and asks for a three.js page that animates only that part. We render the page
 to 25 frames and score it with **six image-math checks**, not a model judge.
 
-- **{nem['label'] if nem else 'Nemotron'} passed {nem['passed'] if nem else 0} of {nem['n'] if nem else 0} scored runs ({pct(nem['passed'], nem['n']) if nem else 'n/a'}).**
-  Of those runs, {cats.get('image flipped or shifted', 0)} flipped or shifted the image, {cats.get('blank canvas', 0)} left the canvas blank,
-  {cats.get('did not run', 0)} never ran, and in the {cats.get('image right, animation wrong', 0)} runs that showed the image correctly, the animation was wrong every time.
-- The tasks are solvable: in a smoke test, Qwen 3.8 27B produced a correct wrist wave on T01 that passes every check ({qwen_txt}).
+{ranking}
+- In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
+  Nemotron flipped or shifted the image in {cats.get('image flipped or shifted', 0)} of {len(nem_rows)} runs and left the canvas blank in {cats.get('blank canvas', 0)};
+  Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
+- On Valkyrie, the reference solutions score **21/21**, so the packaging and checks hold up inside the platform.
 - Every check is validated before use: a reference animation must pass it, and deliberately broken copies must fail it.
 
 ## Why this benchmark

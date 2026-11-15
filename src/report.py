@@ -20,6 +20,7 @@ GNAME = {"G1": "Isolation", "G2": "Integrity", "G3": "Area", "G4": "Motion", "G5
 STAGE = {"G1": "isolation", "G2": "cut-out", "G3": "cut-out", "G4": "motion", "G5": "pivot", "G6": "motion"}
 LABEL = {"sonnet": "Claude Sonnet 5.5", "sol": "GPT-6.1 Sol", "qwen": "Qwen 3.8 27B",
          "nemotron": "Nemotron 3.5 Super VL", "gemma": "Gemma 4 31B",
+         "sonnet-cc": "Claude Sonnet 5.5 (Claude Code, Valkyrie)", "sol-codex": "GPT-6.1 Sol (Codex, Valkyrie)",
          "gemini4": "Gemini 4 Carbon", "grok": "Grok 4.7", "kimi": "Kimi K3.1 Pro", "deepseek": "DeepSeek V4 Flash Vision"}
 
 
@@ -59,10 +60,12 @@ def main():
     if not rows:
         print("no graded runs")
         return
+    all_rows = rows
+    rows = [r for r in rows if r["try_"] == "1"]  # compare every model on its first try
     with open(OUT / "runs.csv", "w", newline="") as f:
-        w = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+        w = csv.DictWriter(f, fieldnames=list(all_rows[0].keys()))
         w.writeheader()
-        w.writerows(rows)
+        w.writerows(all_rows)
 
     models = sorted({r["model"] for r in rows})
     summ = {}

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Head Tilt</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; overflow: hidden; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+// Renderer: 1200x600 CSS px, pixel ratio 1, no tone mapping
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+
+// Orthographic camera: world (x, -yPixel) maps 1:1 to screen pixel (x, yPixel)
+const camera = new THREE.OrthographicCamera(0, W, 0, -H, 0.1, 100);
+camera.position.set(0, 0, 10);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+let tex = null;
+let head = null;
+let ready = false;
+
+// Head silhouette of the third boy (the small boy in the striped shirt),
+// in image pixel coordinates (0,0 top-left). A rounded outline that
+// fully encloses hair, face and ears; everything outside the actual head
+// within this outline is plain white background, so covering it with
+// white is invisible.
+const headPts = [
+  [578, 100], [560, 104], [545, 114], [534, 132], [528, 155],
+  [527, 178], [532, 200], [542, 218], [556, 232],
+  [578, 238],
+  [600, 232], [614, 218], [624, 200], [629, 178],
+  [628, 155], [622, 132], [611, 114], [596, 104]
+];
+
+// Pivot at the neck (below the chin) so the chin barely moves.
+const pivot = new THREE.Vector2(578, -247); // world coords (x, -yPixel)
+const AMP = 0.10; // ~5.7 degrees
+
+function build() {
+  // Full-image background plane
+  const bg = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: tex, toneMapped: false })
+  );
+  bg.position.set(W / 2, -H / 2, 0);
+  scene.add(bg);
+
+  // Head polygon geometry in world coordinates; UVs point at each
+  // vertex's original image location so the texture is "stamped" onto
+  // the polygon and moves rigidly with it.
+  const shape = new THREE.Shape(headPts.map(p => new THREE.Vector2(p[0], -p[1])));
+  const geom = new THREE.ShapeGeometry(shape);
+  const pos = geom.attributes.position;
+  const uv = new THREE.Float32BufferAttribute(new Float32Array(pos.count * 2), 2);
+  for (let i = 0; i < pos.count; i++) {
+    const x = pos.getX(i), y = pos.getY(i);
+    uv.setXY(i, x / W, 1 + y / H);
+  }
+  geom.setAttribute('uv', uv);
+
+  // White fill: same shape, just under the head cutout. At t=0 it is
+  // completely covered by the head mesh; when the head tilts away, this
+  // reveals white (matching the original background there).
+  const whiteFill = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ color: 0xffffff, toneMapped: false }));
+  whiteFill.position.z = 0.5;
+  scene.add(whiteFill);
+
+  // Head cutout: original image pixels inside the polygon, on top.
+  head = new THREE.Mesh(geom, new THREE.MeshBasicMaterial({ map: tex, toneMapped: false }));
+  head.position.z = 1.0;
+  scene.add(head);
+}
+
+window.setTime = function (t) {
+  if (!ready) return;
+  // Period 2 s: sin(pi*t) is 0 at t=0 and t=2 -> seamless loop,
+  // t=0 renders the untouched original.
+  const a = AMP * Math.sin(Math.PI * t);
+  const ca = Math.cos(a), sa = Math.sin(a);
+  const rx = ca * pivot.x - sa * pivot.y;
+  const ry = sa * pivot.x + ca * pivot.y;
+  head.position.x = pivot.x - rx;
+  head.position.y = pivot.y - ry;
+  head.position.z = 1.0;
+  head.rotation.z = a;
+  renderer.render(scene, camera);
+};
+
+// Load the image, then arm the API.
+const loader = new THREE.TextureLoader();
+loader.load('./image.png', (t) => {
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.minFilter = THREE.LinearFilter;
+  t.magFilter = THREE.LinearFilter;
+  tex = t;
+  build();
+  ready = true;
+  window.ANIM_READY = true;
+  window.setTime(0);
+
+  // Optional live playback (does not affect setTime determinism).
+  const t0 = performance.now();
+  (function loop(now) {
+    window.setTime(((now - t0) % 2000) / 1000);
+    requestAnimationFrame(loop);
+  })(performance.now());
+});
+</script>
+</body>
+</html>

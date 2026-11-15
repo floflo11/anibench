@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Forearm Wave</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1200;
+const HEIGHT = 600;
+
+window.ANIM_READY = false;
+
+const image = new Image();
+
+image.onload = () => {
+  // This outline surrounds only the raised hand, forearm, and elbow.
+  // Coordinates are in original image space, with y increasing downward.
+  const outline = [
+    [1086, 283], [1090, 260], [1092, 238], [1091, 227],
+    [1086, 219], [1078, 214], [1073, 208], [1071, 202],
+    [1072, 197], [1075, 194], [1080, 197], [1087, 202],
+    [1089, 200], [1087, 188], [1084, 177], [1085, 170],
+    [1088, 166], [1092, 167], [1095, 174], [1097, 185],
+    [1096, 173], [1098, 165], [1102, 162], [1106, 163],
+    [1109, 167], [1110, 180], [1111, 171], [1114, 166],
+    [1118, 165], [1122, 168], [1123, 175], [1121, 188],
+    [1126, 179], [1130, 176], [1134, 178], [1137, 183],
+    [1136, 191], [1131, 204], [1127, 213], [1119, 221],
+    [1115, 227], [1116, 238], [1120, 253], [1122, 270],
+    [1121, 283], [1117, 293], [1110, 300], [1102, 304],
+    [1094, 302], [1088, 294], [1085, 288]
+  ];
+
+  function traceOutline(ctx) {
+    ctx.beginPath();
+    ctx.moveTo(outline[0][0], outline[0][1]);
+    for (let i = 1; i < outline.length; i++) {
+      ctx.lineTo(outline[i][0], outline[i][1]);
+    }
+    ctx.closePath();
+  }
+
+  // Background with the original position of the moving part removed.
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = WIDTH;
+  baseCanvas.height = HEIGHT;
+  const baseCtx = baseCanvas.getContext('2d');
+  baseCtx.drawImage(image, 0, 0);
+  baseCtx.save();
+  traceOutline(baseCtx);
+  baseCtx.fillStyle = '#ffffff';
+  baseCtx.fill();
+  baseCtx.restore();
+
+  // Transparent cut-out of the hand and forearm.
+  const armCanvas = document.createElement('canvas');
+  armCanvas.width = WIDTH;
+  armCanvas.height = HEIGHT;
+  const armCtx = armCanvas.getContext('2d');
+  armCtx.save();
+  traceOutline(armCtx);
+  armCtx.clip();
+  armCtx.drawImage(image, 0, 0);
+  armCtx.restore();
+
+  // Remove the white background inside the clipping outline, including
+  // the spaces between fingers, while retaining the illustrated skin edge.
+  const matteX = 1060;
+  const matteY = 150;
+  const matteW = 90;
+  const matteH = 165;
+  const matte = armCtx.getImageData(matteX, matteY, matteW, matteH);
+  const pixels = matte.data;
+
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (pixels[i + 3] === 0) continue;
+
+    const r = pixels[i];
+    const g = pixels[i + 1];
+    const b = pixels[i + 2];
+    const minimum = Math.min(r, g, b);
+    const maximum = Math.max(r, g, b);
+
+    if (minimum > 246 && maximum - minimum < 12) {
+      pixels[i + 3] = 0;
+    }
+  }
+  armCtx.putImageData(matte, matteX, matteY);
+
+  const renderer = new THREE.WebGLRenderer({
+    antialias: false,
+    alpha: false,
+    preserveDrawingBuffer: true
+  });
+  renderer.setPixelRatio(1);
+  renderer.setSize(WIDTH, HEIGHT);
+  renderer.setClearColor(0xffffff, 1);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NoToneMapping;
+  document.body.appendChild(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+
+  // World x equals image x; world y equals HEIGHT minus image y.
+  const camera = new THREE.OrthographicCamera(
+    0, WIDTH, HEIGHT, 0, 0.1, 100
+  );
+  camera.position.z = 10;
+
+  const originalTexture = new THREE.Texture(image);
+  const baseTexture = new THREE.CanvasTexture(baseCanvas);
+  const armTexture = new THREE.CanvasTexture(armCanvas);
+
+  for (const texture of [originalTexture, baseTexture, armTexture]) {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.generateMipmaps = false;
+    texture.flipY = true;
+    texture.needsUpdate = true;
+  }
+
+  function makeMaterial(map, transparent = false) {
+    const material = new THREE.MeshBasicMaterial({
+      map,
+      transparent,
+      depthTest: false,
+      depthWrite: false
+    });
+    material.toneMapped = false;
+    return material;
+  }
+
+  const fullGeometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+  const originalMesh = new THREE.Mesh(
+    fullGeometry,
+    makeMaterial(originalTexture)
+  );
+  originalMesh.position.set(WIDTH / 2, HEIGHT / 2, 0.1);
+  scene.add(originalMesh);
+
+  const baseMesh = new THREE.Mesh(
+    fullGeometry,
+    makeMaterial(baseTexture)
+  );
+  baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+  scene.add(baseMesh);
+
+  // Rotate the full-size cut-out around the elbow rather than its center.
+  const elbowImageX = 1101;
+  const elbowImageY = 292;
+  const elbowWorldX = elbowImageX;
+  const elbowWorldY = HEIGHT - elbowImageY;
+
+  const armGeometry = fullGeometry.clone();
+  armGeometry.translate(
+    WIDTH / 2 - elbowWorldX,
+    HEIGHT / 2 - elbowWorldY,
+    0
+  );
+
+  const armMesh = new THREE.Mesh(
+    armGeometry,
+    makeMaterial(armTexture, true)
+  );
+  armMesh.position.set(elbowWorldX, elbowWorldY, 0.2);
+  armMesh.renderOrder = 2;
+  scene.add(armMesh);
+
+  function renderAt(value) {
+    let t = Number(value);
+    if (!Number.isFinite(t)) t = 0;
+    t = Math.max(0, Math.min(2, t));
+
+    const theta = Math.PI * t;
+
+    // One smooth periodic wave. The slight outward bias keeps the hand
+    // clear of the adjacent earring throughout the motion.
+    const angle =
+      0.10 * Math.sin(theta) +
+      0.08 * (1 - Math.cos(theta));
+
+    const showOriginal =
+      t === 0 || t === 2 || Math.abs(angle) < 1e-8;
+
+    originalMesh.visible = showOriginal;
+    baseMesh.visible = !showOriginal;
+    armMesh.visible = !showOriginal;
+    armMesh.rotation.z = showOriginal ? 0 : -angle;
+
+    renderer.render(scene, camera);
+  }
+
+  let livePlayback = true;
+  let animationFrame = null;
+  let playbackStart = null;
+
+  window.setTime = (t) => {
+    livePlayback = false;
+    if (animationFrame !== null) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+    renderAt(t);
+  };
+
+  function tick(now) {
+    if (!livePlayback) return;
+
+    if (playbackStart === null) playbackStart = now;
+    const t = ((now - playbackStart) / 1000) % 2;
+    renderAt(t);
+    animationFrame = requestAnimationFrame(tick);
+  }
+
+  renderAt(0);
+  window.ANIM_READY = true;
+  animationFrame = requestAnimationFrame(tick);
+};
+
+image.src = './image.png';
+</script>
+</body>
+</html>

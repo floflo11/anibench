@@ -1,0 +1,261 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Toddler Arm Swing</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024;
+const H = 683;
+const PIVOT_X = 791;
+const PIVOT_Y = 263;
+const SWING_AMPLITUDE = 0.22;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.domElement.style.width = W + 'px';
+renderer.domElement.style.height = H + 'px';
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+const quadGeometry = new THREE.PlaneGeometry(W, H);
+
+function makeArmOutline() {
+  const p = new Path2D();
+
+  // Shoulder seam, then the inner/upper edge of the sleeve.
+  p.moveTo(787, 240);
+  p.bezierCurveTo(802, 228, 820, 216, 839, 207);
+  p.bezierCurveTo(849, 201, 855, 191, 864, 185);
+  p.lineTo(871, 188);
+  p.lineTo(876, 184);
+
+  // Thumb and left edge of the hand.
+  p.bezierCurveTo(874, 177, 870, 164, 867, 154);
+  p.bezierCurveTo(865, 147, 866, 141, 870, 139);
+  p.bezierCurveTo(875, 137, 879, 143, 882, 151);
+  p.lineTo(888, 164);
+
+  // Fingers, including the concave spaces between them.
+  p.bezierCurveTo(886, 155, 884, 143, 886, 135);
+  p.bezierCurveTo(888, 127, 894, 122, 900, 122);
+  p.bezierCurveTo(905, 122, 908, 127, 906, 134);
+  p.lineTo(901, 149);
+  p.bezierCurveTo(905, 141, 911, 131, 916, 128);
+  p.bezierCurveTo(921, 125, 926, 128, 928, 133);
+  p.bezierCurveTo(930, 138, 925, 145, 916, 154);
+  p.bezierCurveTo(923, 148, 932, 141, 937, 140);
+  p.bezierCurveTo(943, 139, 947, 144, 945, 150);
+  p.bezierCurveTo(944, 155, 936, 161, 929, 165);
+  p.bezierCurveTo(937, 161, 945, 158, 950, 160);
+  p.bezierCurveTo(955, 162, 957, 167, 955, 172);
+  p.bezierCurveTo(953, 177, 945, 181, 939, 184);
+
+  // Palm, wrist, cuff, and outer sleeve.
+  p.bezierCurveTo(929, 188, 922, 194, 914, 200);
+  p.bezierCurveTo(907, 204, 901, 206, 895, 207);
+  p.bezierCurveTo(905, 207, 913, 211, 917, 218);
+  p.bezierCurveTo(920, 226, 915, 238, 908, 247);
+  p.bezierCurveTo(902, 254, 894, 258, 886, 261);
+  p.bezierCurveTo(881, 280, 872, 301, 860, 318);
+  p.bezierCurveTo(848, 333, 831, 344, 814, 352);
+
+  // Underarm and shoulder seam back to the start.
+  p.bezierCurveTo(808, 349, 804, 337, 803, 323);
+  p.bezierCurveTo(803, 307, 800, 291, 795, 275);
+  p.bezierCurveTo(791, 260, 788, 249, 787, 240);
+  p.closePath();
+
+  return p;
+}
+
+function makeUnderarmBodyShape() {
+  const p = new Path2D();
+  p.moveTo(777, 236);
+  p.bezierCurveTo(790, 240, 799, 254, 803, 275);
+  p.bezierCurveTo(807, 299, 808, 328, 819, 351);
+  p.lineTo(817, 365);
+  p.bezierCurveTo(800, 358, 786, 344, 779, 325);
+  p.bezierCurveTo(771, 300, 769, 261, 777, 236);
+  p.closePath();
+  return p;
+}
+
+function prepareTexture(texture, nearest) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.generateMipmaps = false;
+  texture.minFilter = nearest ? THREE.NearestFilter : THREE.LinearFilter;
+  texture.magFilter = nearest ? THREE.NearestFilter : THREE.LinearFilter;
+  texture.anisotropy = 1;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+new THREE.TextureLoader().load('./image.png', (originalTexture) => {
+  const image = originalTexture.image;
+  prepareTexture(originalTexture, true);
+
+  const armOutline = makeArmOutline();
+  const underarmBodyShape = makeUnderarmBodyShape();
+
+  // Extract the complete raised arm, including the hand, into a transparent texture.
+  const armCanvas = document.createElement('canvas');
+  armCanvas.width = W;
+  armCanvas.height = H;
+  const armContext = armCanvas.getContext('2d', { willReadFrequently: true });
+  armContext.clearRect(0, 0, W, H);
+  armContext.save();
+  armContext.clip(armOutline);
+  armContext.drawImage(image, 0, 0);
+  armContext.restore();
+
+  // Remove the white matte, including the white spaces between the fingers.
+  // Near-white edge pixels are converted to partial alpha and unblended from white.
+  const armPixels = armContext.getImageData(0, 0, W, H);
+  const data = armPixels.data;
+  for (let i = 0; i < data.length; i += 4) {
+    const pathAlpha = data[i + 3] / 255;
+    if (pathAlpha === 0) continue;
+
+    const r = data[i];
+    const g = data[i + 1];
+    const b = data[i + 2];
+    const distanceFromWhite = 255 - Math.min(r, g, b);
+
+    let matteAlpha;
+    if (distanceFromWhite <= 2) {
+      matteAlpha = 0;
+    } else if (distanceFromWhite >= 18) {
+      matteAlpha = 1;
+    } else {
+      matteAlpha = (distanceFromWhite - 2) / 16;
+    }
+
+    if (matteAlpha === 0) {
+      data[i + 3] = 0;
+      continue;
+    }
+
+    if (matteAlpha < 1) {
+      data[i]     = Math.max(0, Math.min(255, Math.round((r - 255 * (1 - matteAlpha)) / matteAlpha)));
+      data[i + 1] = Math.max(0, Math.min(255, Math.round((g - 255 * (1 - matteAlpha)) / matteAlpha)));
+      data[i + 2] = Math.max(0, Math.min(255, Math.round((b - 255 * (1 - matteAlpha)) / matteAlpha)));
+    }
+
+    data[i + 3] = Math.round(255 * pathAlpha * matteAlpha);
+  }
+  armContext.putImageData(armPixels, 0, 0);
+
+  const armTexture = prepareTexture(new THREE.CanvasTexture(armCanvas), false);
+
+  // Remove the old arm position. Most of the revealed region is the white backdrop.
+  const backgroundCanvas = document.createElement('canvas');
+  backgroundCanvas.width = W;
+  backgroundCanvas.height = H;
+  const backgroundContext = backgroundCanvas.getContext('2d');
+  backgroundContext.imageSmoothingEnabled = false;
+  backgroundContext.drawImage(image, 0, 0);
+  backgroundContext.fillStyle = '#ffffff';
+  backgroundContext.fill(armOutline);
+
+  // Extend the existing navy jacket beneath the shoulder/underarm hole. The patch
+  // is clipped to the removed arm, so every pixel outside that region stays original.
+  backgroundContext.save();
+  backgroundContext.clip(armOutline);
+  backgroundContext.clip(underarmBodyShape);
+  backgroundContext.drawImage(image, 65, -55);
+  backgroundContext.restore();
+
+  const backgroundTexture = prepareTexture(new THREE.CanvasTexture(backgroundCanvas), true);
+
+  const restScene = new THREE.Scene();
+  restScene.background = new THREE.Color(0xffffff);
+
+  const restMaterial = new THREE.MeshBasicMaterial({
+    map: originalTexture,
+    toneMapped: false
+  });
+  const restMesh = new THREE.Mesh(quadGeometry, restMaterial);
+  restMesh.position.set(W / 2, H / 2, 0);
+  restMesh.frustumCulled = false;
+  restScene.add(restMesh);
+
+  const animationScene = new THREE.Scene();
+  animationScene.background = new THREE.Color(0xffffff);
+
+  const backgroundMaterial = new THREE.MeshBasicMaterial({
+    map: backgroundTexture,
+    toneMapped: false
+  });
+  const backgroundMesh = new THREE.Mesh(quadGeometry, backgroundMaterial);
+  backgroundMesh.position.set(W / 2, H / 2, 0);
+  backgroundMesh.frustumCulled = false;
+  animationScene.add(backgroundMesh);
+
+  const armMaterial = new THREE.MeshBasicMaterial({
+    map: armTexture,
+    transparent: true,
+    alphaTest: 0.003,
+    depthWrite: false,
+    premultipliedAlpha: false,
+    toneMapped: false
+  });
+
+  const armPivot = new THREE.Group();
+  armPivot.position.set(PIVOT_X, H - PIVOT_Y, 1);
+
+  const armMesh = new THREE.Mesh(quadGeometry, armMaterial);
+  armMesh.position.set(W / 2 - PIVOT_X, PIVOT_Y - H / 2, 0);
+  armMesh.frustumCulled = false;
+  armMesh.renderOrder = 2;
+
+  armPivot.add(armMesh);
+  animationScene.add(armPivot);
+
+  function renderAtTime(t) {
+    const angle = SWING_AMPLITUDE * Math.sin(Math.PI * t);
+
+    // Exact source-image frames at both loop endpoints and at the midpoint rest pose.
+    if (t === 0 || t === 2 || Math.abs(angle) < 1e-12) {
+      renderer.render(restScene, camera);
+      return;
+    }
+
+    armPivot.rotation.z = angle;
+    renderer.render(animationScene, camera);
+  }
+
+  window.setTime = renderAtTime;
+  window.setTime(0);
+  window.ANIM_READY = true;
+});
+</script>
+</body>
+</html>
+```

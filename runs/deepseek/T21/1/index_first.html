@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+window.ANIM_READY = false;
+
+const W = 1024;
+const H = 683;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.setClearColor(0xffffff, 1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+renderer.domElement.style.position = 'absolute';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.top = '0';
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+
+const camera = new THREE.OrthographicCamera(
+  -W / 2, W / 2,
+  H / 2, -H / 2,
+  0.1, 100
+);
+camera.position.set(W / 2, H / 2, 10);
+camera.lookAt(W / 2, H / 2, 0);
+
+const image = new Image();
+
+image.onload = function () {
+  const srcCanvas = document.createElement('canvas');
+  srcCanvas.width = W;
+  srcCanvas.height = H;
+  const srcCtx = srcCanvas.getContext('2d', { willReadFrequently: true });
+  srcCtx.drawImage(image, 0, 0, W, H);
+
+  const srcData = srcCtx.getImageData(0, 0, W, H);
+  const baseData = new Uint8ClampedArray(srcData.data);
+  const handData = new Uint8ClampedArray(W * H * 4);
+
+  // Region around the red-jacket toddler's raised right hand (viewer left).
+  const handPolygon = [
+    [58, 152],
+    [64, 132],
+    [77, 116],
+    [89, 113],
+    [98, 122],
+    [103, 134],
+    [110, 120],
+    [120, 120],
+    [126, 132],
+    [133, 126],
+    [140, 136],
+    [145, 149],
+    [150, 162],
+    [152, 178],
+    [150, 192],
+    [145, 204],
+    [137, 210],
+    [127, 214],
+    [114, 215],
+    [101, 210],
+    [88, 203],
+    [76, 194],
+    [66, 183],
+    [60, 170]
+  ];
+
+  function insidePolygon(x, y, poly) {
+    let inside = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+      const xi = poly[i][0];
+      const yi = poly[i][1];
+      const xj = poly[j][0];
+      const yj = poly[j][1];
+
+      const intersect =
+        ((yi > y) !== (yj > y)) &&
+        (x < ((xj - xi) * (y - yi)) / (yj - yi) + xi);
+
+      if (intersect) inside = !inside;
+    }
+    return inside;
+  }
+
+  let minX = W;
+  let maxX = 0;
+  let minY = H;
+  let maxY = 0;
+  for (const p of handPolygon) {
+    minX = Math.min(minX, p[0]);
+    maxX = Math.max(maxX, p[0]);
+    minY = Math.min(minY, p[1]);
+    maxY = Math.max(maxY, p[1]);
+  }
+
+  minX = Math.max(0, Math.floor(minX) - 2);
+  maxX = Math.min(W - 1, Math.ceil(maxX) + 2);
+  minY = Math.max(0, Math.floor(minY) - 2);
+  maxY = Math.min(H - 1, Math.ceil(maxY) + 2);
+
+  for (let y = minY; y <= maxY; y++) {
+    for (let x = minX; x <= maxX; x++) {
+      if (!insidePolygon(x + 0.5, y + 0.5, handPolygon)) continue;
+
+      const idx = (y * W + x) * 4;
+      const r = srcData.data[idx];
+      const g = srcData.data[idx + 1];
+      const b = srcData.data[idx + 2];
+
+      // Keep pure white background out of the moving cutout.
+      if (r > 250 && g > 250 && b > 250) continue;
+
+      // Keep strongly red jacket/cuff pixels fixed.
+      if (
+        r > 120 &&
+        g < 105 &&
+        b < 95 &&
+        r > g * 1.8 &&
+        r > b * 1.8
+      ) {
+        continue;
+      }
+
+      // Erase the hand from the base image.
+      baseData[idx] = 255;
+      baseData[idx + 1] = 255;
+      baseData[idx + 2] = 255;
+      baseData[idx + 3] = 255;
+
+      // Copy the hand into its own alpha cutout.
+      handData[idx] = srcData.data[idx];
+      handData[idx + 1] = srcData.data[idx + 1];
+      handData[idx + 2] = srcData.data[idx + 2];
+      handData[idx + 3] = srcData.data[idx + 3];
+    }
+  }
+
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W;
+  baseCanvas.height = H;
+  const baseCtx = baseCanvas.getContext('2d');
+  const baseImageData = new ImageData(baseData, W, H);
+  baseCtx.putImageData(baseImageData, 0, 0);
+
+  const handCanvas = document.createElement('canvas');
+  handCanvas.width = W;
+  handCanvas.height = H;
+  const handCtx = handCanvas.getContext('2d');
+  const handImageData = new ImageData(handData, W, H);
+  handCtx.putImageData(handImageData, 0, 0);
+
+  const baseTexture = new THREE.CanvasTexture(baseCanvas);
+  baseTexture.colorSpace = THREE.SRGBColorSpace;
+  baseTexture.minFilter = THREE.NearestFilter;
+  baseTexture.magFilter = THREE.NearestFilter;
+  baseTexture.generateMipmaps = false;
+  baseTexture.needsUpdate = true;
+
+  const handTexture = new THREE.CanvasTexture(handCanvas);
+  handTexture.colorSpace = THREE.SRGBColorSpace;
+  handTexture.minFilter = THREE.NearestFilter;
+  handTexture.magFilter = THREE.NearestFilter;
+  handTexture.generateMipmaps = false;
+  handTexture.needsUpdate = true;
+
+  const baseMaterial = new THREE.MeshBasicMaterial({
+    map: baseTexture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  const handMaterial = new THREE.MeshBasicMaterial({
+    map: handTexture,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  const baseGeometry = new THREE.PlaneGeometry(W, H);
+  const baseMesh = new THREE.Mesh(baseGeometry, baseMaterial);
+  baseMesh.position.set(W / 2, H / 2, 0);
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  // Pivot at the wrist of the raised right hand.
+  const pivotX = 128;
+  const pivotY = 204;
+
+  const handGeometry = new THREE.PlaneGeometry(W, H);
+  handGeometry.translate(
+    W / 2 - pivotX,
+    pivotY - H / 2,
+    0
+  );
+
+  const handMesh = new THREE.Mesh(handGeometry, handMaterial);
+  handMesh.position.set(pivotX, H - pivotY, 0.1);
+  handMesh.renderOrder = 1;
+  scene.add(handMesh);
+
+  window.setTime = function (t) {
+    let tt = Number(t);
+    if (!Number.isFinite(tt)) tt = 0;
+
+    tt = ((tt % 2) + 2) % 2;
+
+    const angle = 0.20 * Math.sin(Math.PI * tt);
+    handMesh.rotation.z = angle;
+
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+};
+
+image.onerror = function () {
+  console.error('Failed to load ./image.png');
+};
+
+image.src = './image.png';
+</script>
+</body>
+</html>

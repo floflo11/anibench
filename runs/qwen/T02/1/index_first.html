@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas{display:block;}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+// Bounding box (image pixels) of the cut-out region: the girl's raised forearm + hand
+const OFF = { x: 476, y: 138 };
+const CW = 90, CH = 144;
+
+// Elbow pivot (image pixels, y down)
+const PIVOT = { x: 493, y: 273 };
+
+// Wave amplitude (radians), one smooth out-and-back cycle per 2 s
+const AMPL = 0.22;
+
+// Polygon around the forearm + hand (image coords, y down).
+// Outer edges sit in the white background; the bottom edge is the cut
+// just below the yellow sleeve.
+const POLY = [
+  [480, 278], [506, 273],          // bottom cut (left, right)
+  [519, 246], [536, 232], [552, 216], [560, 193], [561, 169],
+  [552, 151], [533, 142], [514, 147],
+  [503, 163], [501, 191], [500, 219], [495, 247], [484, 266]
+];
+
+function polyPath(ctx, ox, oy) {
+  ctx.beginPath();
+  ctx.moveTo(POLY[0][0] - ox, POLY[0][1] - oy);
+  for (let i = 1; i < POLY.length; i++) ctx.lineTo(POLY[i][0] - ox, POLY[i][1] - oy);
+  ctx.closePath();
+}
+
+// ---------- Renderer / camera (1 image px = 1 canvas px) ----------
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0, 1000);
+camera.position.z = 10;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+function makeTex(canvas) {
+  const t = new THREE.CanvasTexture(canvas);
+  t.colorSpace = THREE.SRGBColorSpace;
+  t.magFilter = THREE.LinearFilter;
+  t.minFilter = THREE.LinearFilter;
+  t.generateMipmaps = false;
+  return t;
+}
+
+// ---------- Canvases ----------
+const baseCanvas  = document.createElement('canvas'); baseCanvas.width = W;  baseCanvas.height = H;
+const bctx = baseCanvas.getContext('2d');
+
+const patchCanvas = document.createElement('canvas'); patchCanvas.width = CW; patchCanvas.height = CH;
+const pctx = patchCanvas.getContext('2d');
+
+const pieceCanvas = document.createElement('canvas'); pieceCanvas.width = CW; pieceCanvas.height = CH;
+const ectx = pieceCanvas.getContext('2d', { willReadFrequently: true });
+
+// ---------- Meshes ----------
+const baseMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(W, H),
+  new THREE.MeshBasicMaterial({ map: makeTex(baseCanvas), depthTest: false, depthWrite: false })
+);
+baseMesh.renderOrder = 0;
+scene.add(baseMesh);
+
+const patchMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(CW, CH),
+  new THREE.MeshBasicMaterial({ map: makeTex(patchCanvas), transparent: true, depthTest: false, depthWrite: false })
+);
+patchMesh.position.set((OFF.x + CW/2) - W/2, H/2 - (OFF.y + CH/2), 0);
+patchMesh.renderOrder = 1;
+scene.add(patchMesh);
+
+const pivot = new THREE.Group();
+pivot.position.set(PIVOT.x - W/2, H/2 - PIVOT.y, 0);
+scene.add(pivot);
+
+const pieceMesh = new THREE.Mesh(
+  new THREE.PlaneGeometry(CW, CH),
+  new THREE.MeshBasicMaterial({ map: makeTex(pieceCanvas), transparent: true, depthTest: false, depthWrite: false })
+);
+pieceMesh.position.set(OFF.x + CW/2 - PIVOT.x, PIVOT.y - (OFF.y + CH/2), 0);
+pieceMesh.renderOrder = 2;
+pivot.add(pieceMesh);
+
+// ---------- Time control ----------
+let ready = false;
+
+window.setTime = function (t) {
+  if (!ready) return;
+  t = ((t % 2) + 2) % 2;
+  const ang = AMPL * Math.sin(Math.PI * t);   // 0 at t=0 and t=2
+  const moving = Math.abs(ang) > 1e-5;
+  patchMesh.visible = moving;
+  pieceMesh.visible = moving;
+  pivot.rotation.z = -ang;
+  renderer.render(scene, camera);
+};
+
+// ---------- Load image, build textures ----------
+const image = new Image();
+image.onload = function () {
+  // Base: the full original image (frame 0 shows this unchanged)
+  bctx.fillStyle = '#ffffff';
+  bctx.fillRect(0, 0, W, H);
+  bctx.drawImage(image, 0, 0, W, H);
+
+  // Patch: white fill of the cut polygon (hides the original arm when it moves)
+  pctx.clearRect(0, 0, CW, CH);
+  polyPath(pctx, OFF.x, OFF.y);
+  pctx.fillStyle = '#ffffff';
+  pctx.fill();
+
+  // Piece: original pixels inside the polygon; near-white background made transparent
+  ectx.clearRect(0, 0, CW, CH);
+  ectx.drawImage(image, -OFF.x, -OFF.y);
+  ectx.globalCompositeOperation = 'destination-in';
+  polyPath(ectx, OFF.x, OFF.y);
+  ectx.fillStyle = '#ffffff';
+  ectx.fill();
+  ectx.globalCompositeOperation = 'source-over';
+
+  const id = ectx.getImageData(0, 0, CW, CH);
+  const d = id.data;
+  for (let i = 0; i < d.length; i += 4) {
+    if (d[i+3] > 0 && d[i] > 244 && d[i+1] > 244 && d[i+2] > 244) d[i+3] = 0;
+  }
+  ectx.putImageData(id, 0, 0);
+
+  ready = true;
+  window.ANIM_READY = true;
+  window.setTime(0);
+
+  // Live playback (deterministic per t; correctness does not depend on this loop)
+  const t0 = performance.now();
+  (function loop () {
+    window.setTime(((performance.now() - t0) / 1000) % 2);
+    requestAnimationFrame(loop);
+  })();
+};
+image.src = './image.png';
+</script>
+</body>
+</html>

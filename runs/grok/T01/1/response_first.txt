@@ -1,0 +1,1 @@
+I'll inspect the image to locate the far-left boy's raised hand and wrist, then build a three.js loop that bends only that hand.

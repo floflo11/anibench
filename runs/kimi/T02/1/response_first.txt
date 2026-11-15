@@ -1,0 +1,296 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pigtail Girl Wave</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+renderer.domElement.style.width = '1200px';
+renderer.domElement.style.height = '600px';
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.set(0, 0, 10);
+
+// Image-space outline of the pigtailed girl's raised forearm, cuff, and hand.
+// The closing edge lies across the elbow; the small preserved elbow area below
+// keeps the joint connected to the unmoving upper arm.
+const forearmOutline = [
+  [485, 274],
+  [493, 261],
+  [502, 247],
+  [507, 236],
+  [510, 227],
+  [514, 223],
+  [509, 218],
+  [504, 212],
+  [500, 205],
+  [497, 198],
+  [498, 193],
+  [501, 190],
+  [505, 191],
+  [510, 196],
+  [514, 201],
+  [516, 201],
+  [515, 193],
+  [511, 181],
+  [511, 176],
+  [513, 172],
+  [517, 171],
+  [520, 174],
+  [524, 184],
+  [525, 188],
+  [524, 174],
+  [524, 167],
+  [527, 163],
+  [531, 163],
+  [534, 166],
+  [536, 173],
+  [537, 184],
+  [538, 184],
+  [538, 174],
+  [540, 169],
+  [544, 168],
+  [547, 170],
+  [549, 174],
+  [548, 182],
+  [547, 188],
+  [549, 187],
+  [552, 181],
+  [555, 178],
+  [558, 178],
+  [561, 181],
+  [561, 185],
+  [557, 193],
+  [558, 193],
+  [562, 189],
+  [565, 188],
+  [567, 190],
+  [568, 193],
+  [566, 198],
+  [562, 206],
+  [556, 215],
+  [549, 222],
+  [541, 228],
+  [537, 231],
+  [537, 235],
+  [541, 237],
+  [544, 241],
+  [545, 246],
+  [543, 253],
+  [539, 261],
+  [532, 270],
+  [522, 280],
+  [513, 287],
+  [506, 293],
+  [499, 296],
+  [493, 293],
+  [488, 286]
+];
+
+const pivotX = 496;
+const pivotY = 282;
+
+function traceOutline(ctx) {
+  ctx.beginPath();
+  ctx.moveTo(forearmOutline[0][0], forearmOutline[0][1]);
+  for (let i = 1; i < forearmOutline.length; i++) {
+    ctx.lineTo(forearmOutline[i][0], forearmOutline[i][1]);
+  }
+  ctx.closePath();
+}
+
+function configureTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.flipY = true;
+  texture.generateMipmaps = false;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function makeCutoutTexture(image) {
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  ctx.imageSmoothingEnabled = false;
+
+  ctx.save();
+  traceOutline(ctx);
+  ctx.clip();
+  ctx.drawImage(image, 0, 0);
+  ctx.restore();
+
+  return configureTexture(new THREE.CanvasTexture(canvas));
+}
+
+function makeEraserTexture() {
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Remove the original forearm wherever the waved copy may move away from it.
+  ctx.save();
+  traceOutline(ctx);
+  ctx.clip();
+  ctx.fillStyle = '#ffffff';
+  ctx.fillRect(0, 0, W, H);
+  ctx.restore();
+
+  // Preserve the elbow itself so the moving forearm remains attached and no
+  // white gap opens along the cut through the yellow sleeve.
+  ctx.save();
+  ctx.globalCompositeOperation = 'destination-out';
+  const radius = 25;
+  const joint = ctx.createRadialGradient(
+    pivotX, pivotY, 0,
+    pivotX, pivotY, radius
+  );
+  joint.addColorStop(0, 'rgba(0,0,0,1)');
+  joint.addColorStop(0.38, 'rgba(0,0,0,1)');
+  joint.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = joint;
+  ctx.fillRect(pivotX - radius, pivotY - radius, radius * 2, radius * 2);
+  ctx.restore();
+
+  return configureTexture(new THREE.CanvasTexture(canvas));
+}
+
+new THREE.TextureLoader().load('./image.png', (texture) => {
+  configureTexture(texture);
+
+  const base = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({
+      map: texture,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  base.position.set(W / 2, H / 2, 0);
+  base.renderOrder = 0;
+  base.frustumCulled = false;
+  scene.add(base);
+
+  const eraser = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({
+      map: makeEraserTexture(),
+      transparent: true,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  eraser.position.set(W / 2, H / 2, 1);
+  eraser.renderOrder = 1;
+  eraser.frustumCulled = false;
+  eraser.visible = false;
+  scene.add(eraser);
+
+  const cutout = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({
+      map: makeCutoutTexture(texture.image),
+      transparent: true,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  cutout.position.set(W - pivotX, pivotY - H / 2, 0);
+  cutout.renderOrder = 2;
+  cutout.frustumCulled = false;
+
+  const elbowPivot = new THREE.Group();
+  elbowPivot.position.set(pivotX, H - pivotY, 2);
+  elbowPivot.add(cutout);
+  elbowPivot.visible = false;
+  scene.add(elbowPivot);
+
+  let rafId = null;
+  let live = false;
+
+  function renderFrame(t) {
+    const time = Math.max(0, Math.min(2, t));
+    const phase = time === 2 ? 0 : time;
+
+    // One smooth back-and-forth wave per two-second period.
+    const angle = 0.18 * Math.sin(Math.PI * phase);
+    const resting = Math.abs(angle) < 1e-9;
+
+    elbowPivot.rotation.z = angle;
+    eraser.visible = !resting;
+    elbowPivot.visible = !resting;
+
+    renderer.render(scene, camera);
+  }
+
+  // Calling setTime also stops live playback, ensuring that a subsequently
+  // captured deterministic frame cannot be overwritten by a pending rAF.
+  window.setTime = function(t) {
+    live = false;
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    renderFrame(t);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  // Independent live playback; setTime itself never reads wall-clock time.
+  live = true;
+  const epoch = performance.now();
+  function tick(now) {
+    if (!live) return;
+    renderFrame(((now - epoch) / 1000) % 2);
+    rafId = requestAnimationFrame(tick);
+  }
+  rafId = requestAnimationFrame(tick);
+}, undefined, (error) => {
+  console.error('Unable to load ./image.png', error);
+});
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Veil flutter</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas{position:absolute;top:0;left:0;display:block;}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+/* ---------------- renderer / scene / camera ---------------- */
+const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.setClearColor(0xffffff, 1);
+if (THREE.NoToneMapping !== undefined) renderer.toneMapping = THREE.NoToneMapping;
+if ('outputColorSpace' in renderer && THREE.LinearSRGBColorSpace !== undefined)
+  renderer.outputColorSpace = THREE.LinearSRGBColorSpace; // we encode sRGB ourselves in the shader
+document.body.appendChild(renderer.domElement);
+
+const scene  = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-W/2, W/2, H/2, -H/2, 0.1, 10);
+camera.position.set(0, 0, 1);
+
+/* ---------------- texture ---------------- */
+const tex = new THREE.TextureLoader().load('./image.png', () => onReady());
+if (THREE.SRGBColorSpace !== undefined) tex.colorSpace = THREE.SRGBColorSpace;
+if (THREE.sRGBEncoding  !== undefined) tex.encoding   = THREE.sRGBEncoding; // legacy fallback
+tex.minFilter = THREE.LinearFilter;
+tex.magFilter = THREE.LinearFilter;
+tex.generateMipmaps = false;
+tex.flipY = true;
+
+// On WebGL2 with the modern colorSpace API, three uploads the texture as
+// SRGB8_ALPHA8, so the GPU decodes sRGB->linear at sample time. In that case
+// we re-encode in the shader (exact round-trip). Otherwise we pass bytes through.
+const isGL2   = renderer.getContext() instanceof WebGL2RenderingContext;
+const gpuDecodes = isGL2 &&
+  (THREE.SRGBColorSpace !== undefined || THREE.sRGBEncoding !== undefined);
+
+/* ---------------- veil mask (image pixels, y down) ---------------- */
+const pts = [
+  [934,130],[928,210],[920,300],[912,390],[898,468],
+  [882,440],[862,362],[852,275],[860,185],[880,128],[908,114]
+];
+
+/* ---------------- shaders ---------------- */
+const vert = `
+varying vec2 vUv;
+void main(){
+  vUv = uv;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+}
+`;
+
+const frag = `
+precision highp float;
+varying vec2 vUv;
+uniform sampler2D baseTex;
+uniform float t;
+uniform vec2 uP[11];
+#define PI 3.141592653589793
+
+float sdEdge(vec2 a, vec2 b, vec2 p){
+  vec2 e = b - a;
+  vec2 v = p - a;
+  float cr = e.x * v.y - e.y * v.x;
+  float s  = cr >= 0.0 ? 1.0 : -1.0;
+  float tt = clamp(dot(v, e) / dot(e, e), 0.0, 1.0);
+  return s * length(v - e * tt);
+}
+float sdPoly(vec2 p){
+  float d = -1e6;
+  d = max(d, sdEdge(uP[0],  uP[1],  p));
+  d = max(d, sdEdge(uP[1],  uP[2],  p));
+  d = max(d, sdEdge(uP[2],  uP[3],  p));
+  d = max(d, sdEdge(uP[3],  uP[4],  p));
+  d = max(d, sdEdge(uP[4],  uP[5],  p));
+  d = max(d, sdEdge(uP[5],  uP[6],  p));
+  d = max(d, sdEdge(uP[6],  uP[7],  p));
+  d = max(d, sdEdge(uP[7],  uP[8],  p));
+  d = max(d, sdEdge(uP[8],  uP[9],  p));
+  d = max(d, sdEdge(uP[9],  uP[10], p));
+  d = max(d, sdEdge(uP[10], uP[0],  p));
+  return d;
+}
+vec3 lin2srgb(vec3 c){
+  vec3 lo = 12.92 * c;
+  vec3 hi = 1.055 * pow(c, vec3(1.0 / 2.4)) - 0.055;
+  return mix(lo, hi, step(0.0031308, c));
+}
+void main(){
+  // pixel coordinates, top-left origin
+  vec2 p = vec2(vUv.x * 1200.0, (1.0 - vUv.y) * 600.0);
+
+  float mask   = smoothstep(-7.0, 7.0, sdPoly(p));           // veil region
+  float attach = smoothstep(140.0, 275.0, p.y);               // pinned at hat, free at bottom
+  float env    = 0.5 * (1.0 - cos(PI * t));                   // 0 at t=0,2 -> seamless + original at t=0
+
+  float ph = p.y * 0.012 + p.x * 0.010;
+  float w1 = sin(PI * t - ph);
+  float w2 = sin(2.0 * PI * t + 1.7 * ph + 1.3);
+  float w3 = sin(3.0 * PI * t - 0.8 * ph + 0.5);
+
+  float amp = 9.0 * env * attach * mask;
+  vec2 D = vec2(
+    (w1 * 0.65 + w2 * 0.30 + w3 * 0.25 - 0.30) * amp,
+    (w2 * 0.50 + w3 * 0.35) * amp * 0.35
+  );
+
+  vec2 q  = p - D;
+  vec2 uv = vec2(q.x / 1200.0, 1.0 - q.y / 600.0);
+  vec4 c  = texture2D(baseTex, uv);
+#ifdef DECODE
+  c.rgb = lin2srgb(c.rgb);
+#endif
+  gl_FragColor = c;
+}
+`;
+
+const mat = new THREE.ShaderMaterial({
+  uniforms: {
+    baseTex: { value: tex },
+    t:       { value: 0 },
+    uP:      { value: pts.map(p => new THREE.Vector2(p[0], p[1])) }
+  },
+  vertexShader: vert,
+  fragmentShader: frag,
+  defines: gpuDecodes ? { DECODE: 1 } : {}
+});
+scene.add(new THREE.Mesh(new THREE.PlaneGeometry(W, H), mat));
+
+/* ---------------- contract ---------------- */
+window.setTime = function (t) {
+  mat.uniforms.t.value = t;
+  renderer.render(scene, camera);
+};
+
+function onReady() {
+  renderer.render(scene, camera); // force shader compile
+  window.ANIM_READY = true;
+}
+
+/* optional live playback (determinism lives in setTime, not here) */
+(function loop(now) {
+  if (window.ANIM_READY) window.setTime(((now || 0) % 2000) / 1000);
+  requestAnimationFrame(loop);
+})(0);
+</script>
+</body>
+</html>

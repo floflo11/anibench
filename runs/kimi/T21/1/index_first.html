@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <title>Toddler Waving</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024;
+const H = 683;
+const DURATION = 2;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.domElement.style.width = W + 'px';
+renderer.domElement.style.height = H + 'px';
+renderer.domElement.style.position = 'absolute';
+renderer.domElement.style.left = '0';
+renderer.domElement.style.top = '0';
+renderer.setClearColor(0xffffff, 1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 10);
+camera.position.z = 2;
+
+let material = null;
+let rafId = null;
+let liveStart = null;
+
+function traceHand(ctx) {
+  ctx.moveTo(99, 213);
+  ctx.bezierCurveTo(89, 206, 77, 198, 70, 188);
+  ctx.bezierCurveTo(64, 180, 62, 170, 66, 163);
+  ctx.bezierCurveTo(69, 158, 75, 157, 82, 162);
+  ctx.lineTo(88, 166);
+  ctx.lineTo(76, 149);
+  ctx.bezierCurveTo(71, 141, 72, 135, 77, 132);
+  ctx.bezierCurveTo(82, 129, 86, 133, 90, 138);
+  ctx.lineTo(99, 150);
+  ctx.lineTo(88, 135);
+  ctx.bezierCurveTo(83, 128, 85, 122, 91, 121);
+  ctx.bezierCurveTo(97, 120, 100, 125, 104, 132);
+  ctx.lineTo(112, 146);
+  ctx.lineTo(104, 131);
+  ctx.bezierCurveTo(100, 123, 103, 119, 109, 120);
+  ctx.bezierCurveTo(115, 120, 119, 127, 121, 133);
+  ctx.lineTo(127, 149);
+  ctx.lineTo(123, 134);
+  ctx.bezierCurveTo(121, 126, 124, 121, 130, 123);
+  ctx.bezierCurveTo(136, 125, 138, 134, 138, 141);
+  ctx.lineTo(140, 151);
+  ctx.bezierCurveTo(143, 148, 147, 149, 149, 154);
+  ctx.bezierCurveTo(151, 161, 144, 171, 140, 177);
+  ctx.bezierCurveTo(136, 183, 134, 188, 134, 193);
+  ctx.lineTo(142, 199);
+  ctx.bezierCurveTo(138, 211, 130, 220, 121, 224);
+  ctx.bezierCurveTo(112, 226, 104, 221, 99, 213);
+  ctx.closePath();
+}
+
+function traceCuff(ctx) {
+  ctx.moveTo(88, 190);
+  ctx.bezierCurveTo(98, 192, 106, 201, 115, 204);
+  ctx.bezierCurveTo(123, 207, 130, 200, 133, 191);
+  ctx.lineTo(146, 187);
+  ctx.bezierCurveTo(150, 198, 144, 211, 135, 218);
+  ctx.lineTo(124, 226);
+  ctx.bezierCurveTo(112, 230, 99, 221, 94, 212);
+  ctx.closePath();
+}
+
+function traceWristFill(ctx) {
+  ctx.moveTo(86, 186);
+  ctx.lineTo(150, 183);
+  ctx.lineTo(153, 210);
+  ctx.lineTo(132, 230);
+  ctx.lineTo(98, 230);
+  ctx.lineTo(87, 211);
+  ctx.closePath();
+}
+
+function makeCanvas() {
+  const canvas = document.createElement('canvas');
+  canvas.width = W;
+  canvas.height = H;
+  return canvas;
+}
+
+function makeMask(tracer) {
+  const canvas = makeCanvas();
+  const ctx = canvas.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#ffffff';
+  ctx.beginPath();
+  tracer(ctx);
+  ctx.fill();
+  return canvas;
+}
+
+function configureCanvasTexture(texture, sRGB, filter) {
+  texture.magFilter = filter;
+  texture.minFilter = filter;
+  texture.generateMipmaps = false;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  if (sRGB) texture.colorSpace = THREE.SRGBColorSpace;
+  return texture;
+}
+
+function renderTime(t) {
+  if (!material) return;
+
+  const safeTime = Number.isFinite(t) ? t : 0;
+  let phase = safeTime % DURATION;
+  if (phase < 0) phase += DURATION;
+
+  let angle =
+    0.260 * Math.sin(Math.PI * phase) +
+    0.035 * Math.sin(2 * Math.PI * phase);
+
+  if (Math.abs(angle) < 1e-7) angle = 0;
+
+  material.uniforms.uAngle.value = angle;
+  renderer.render(scene, camera);
+}
+
+window.setTime = function(t) {
+  if (rafId !== null) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+  renderTime(t);
+};
+
+function play(now) {
+  if (liveStart === null) liveStart = now;
+  renderTime((now - liveStart) / 1000);
+  rafId = requestAnimationFrame(play);
+}
+
+new THREE.TextureLoader().load('./image.png', function(baseTexture) {
+  baseTexture.colorSpace = THREE.SRGBColorSpace;
+  baseTexture.magFilter = THREE.NearestFilter;
+  baseTexture.minFilter = THREE.NearestFilter;
+  baseTexture.generateMipmaps = false;
+  baseTexture.wrapS = THREE.ClampToEdgeWrapping;
+  baseTexture.wrapT = THREE.ClampToEdgeWrapping;
+
+  const sourceTexture = baseTexture.clone();
+  sourceTexture.colorSpace = THREE.SRGBColorSpace;
+  sourceTexture.magFilter = THREE.LinearFilter;
+  sourceTexture.minFilter = THREE.LinearFilter;
+  sourceTexture.generateMipmaps = false;
+  sourceTexture.needsUpdate = true;
+
+  const image = baseTexture.image;
+
+  const handMask = configureCanvasTexture(
+    new THREE.CanvasTexture(makeMask(traceHand)),
+    false,
+    THREE.LinearFilter
+  );
+
+  const cuffMask = configureCanvasTexture(
+    new THREE.CanvasTexture(makeMask(traceCuff)),
+    false,
+    THREE.LinearFilter
+  );
+
+  const fillCanvas = makeCanvas();
+  const fillCtx = fillCanvas.getContext('2d');
+  fillCtx.fillStyle = '#ffffff';
+  fillCtx.fillRect(0, 0, W, H);
+
+  fillCtx.save();
+  fillCtx.beginPath();
+  traceWristFill(fillCtx);
+  fillCtx.clip();
+  fillCtx.drawImage(image, -32, -38);
+  fillCtx.restore();
+
+  const fillTexture = configureCanvasTexture(
+    new THREE.CanvasTexture(fillCanvas),
+    true,
+    THREE.LinearFilter
+  );
+
+  material = new THREE.ShaderMaterial({
+    depthTest: false,
+    depthWrite: false,
+    uniforms: {
+      uBase: { value: baseTexture },
+      uSource: { value: sourceTexture },
+      uMask: { value: handMask },
+      uFill: { value: fillTexture },
+      uCuff: { value: cuffMask },
+      uResolution: { value: new THREE.Vector2(W, H) },
+      uPivot: { value: new THREE.Vector2(118, 207) },
+      uAngle: { value: 0 }
+    },
+    vertexShader: `
+      varying vec2 vUv;
+
+      void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D uBase;
+      uniform sampler2D uSource;
+      uniform sampler2D uMask;
+      uniform sampler2D uFill;
+      uniform sampler2D uCuff;
+      uniform vec2 uResolution;
+      uniform vec2 uPivot;
+      uniform float uAngle;
+
+      varying vec2 vUv;
+
+      void main() {
+        vec4 base = texture2D(uBase, vUv);
+        vec3 color = base.rgb;
+
+        if (abs(uAngle) >= 0.0000001) {
+          vec2 p = vec2(
+            vUv.x * uResolution.x,
+            (1.0 - vUv.y) * uResolution.y
+          );
+
+          float oldMask = texture2D(uMask, vUv).a;
+          vec3 revealed = texture2D(uFill, vUv).rgb;
+          color = mix(color, revealed, oldMask);
+
+          float c = cos(uAngle);
+          float s = sin(uAngle);
+          vec2 d = p - uPivot;
+
+          vec2 sourcePoint = uPivot + vec2(
+            c * d.x + s * d.y,
+            -s * d.x + c * d.y
+          );
+
+          vec2 sourceUv = vec2(
+            sourcePoint.x / uResolution.x,
+            1.0 - sourcePoint.y / uResolution.y
+          );
+
+          float movingMask = texture2D(uMask, sourceUv).a;
+          vec3 movingColor = texture2D(uSource, sourceUv).rgb;
+          color = mix(color, movingColor, movingMask);
+
+          float cuff = texture2D(uCuff, vUv).a;
+          color = mix(color, base.rgb, cuff);
+        }
+
+        gl_FragColor = vec4(color, 1.0);
+
+        #include <tonemapping_fragment>
+        #include <colorspace_fragment>
+      }
+    `
+  });
+
+  const quad = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    material
+  );
+  quad.position.set(W / 2, H / 2, 0);
+  quad.frustumCulled = false;
+  scene.add(quad);
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+  rafId = requestAnimationFrame(play);
+});
+</script>
+</body>
+</html>

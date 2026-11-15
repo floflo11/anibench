@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Gently Swinging Earrings</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+const PERIOD = 2;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  powerPreference: 'high-performance'
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, true);
+renderer.setClearColor(0xffffff, 1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.domElement.style.width = W + 'px';
+renderer.domElement.style.height = H + 'px';
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+const animatedItems = [];
+
+function makeCanvasTexture(canvas, filter) {
+  const texture = new THREE.CanvasTexture(canvas);
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = filter;
+  texture.magFilter = filter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function dilateMask(source, width, height) {
+  const result = new Uint8Array(source);
+  for (let y = 0; y < height; y++) {
+    for (let x = 0; x < width; x++) {
+      if (!source[y * width + x]) continue;
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
+            result[ny * width + nx] = 1;
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function buildEarring(image, cfg) {
+  const { x, y, w, h } = cfg.bounds;
+  const count = w * h;
+
+  const sourceCanvas = document.createElement('canvas');
+  sourceCanvas.width = w;
+  sourceCanvas.height = h;
+  const sourceContext = sourceCanvas.getContext('2d', { willReadFrequently: true });
+  sourceContext.drawImage(image, x, y, w, h, 0, 0, w, h);
+  const source = sourceContext.getImageData(0, 0, w, h);
+
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = w;
+  maskCanvas.height = h;
+  const maskContext = maskCanvas.getContext('2d', { willReadFrequently: true });
+  maskContext.fillStyle = '#ffffff';
+  maskContext.strokeStyle = '#ffffff';
+  maskContext.lineCap = 'round';
+  maskContext.lineJoin = 'round';
+  maskContext.save();
+  maskContext.translate(-x, -y);
+  cfg.paintMask(maskContext);
+  maskContext.restore();
+
+  const maskPixels = maskContext.getImageData(0, 0, w, h).data;
+  const coreMask = new Uint8Array(count);
+  for (let i = 0; i < count; i++) {
+    coreMask[i] = maskPixels[i * 4 + 3] > 32 ? 1 : 0;
+  }
+  const mask = dilateMask(coreMask, w, h);
+
+  // Diffuse neighboring background colors into the removed earring area.
+  let current = new Float32Array(count * 3);
+  let next = new Float32Array(count * 3);
+  let averageR = 255;
+  let averageG = 255;
+  let averageB = 255;
+  let outsideCount = 0;
+  let sumR = 0;
+  let sumG = 0;
+  let sumB = 0;
+
+  for (let i = 0; i < count; i++) {
+    const p = i * 4;
+    const q = i * 3;
+    current[q] = source.data[p];
+    current[q + 1] = source.data[p + 1];
+    current[q + 2] = source.data[p + 2];
+    if (!mask[i]) {
+      sumR += source.data[p];
+      sumG += source.data[p + 1];
+      sumB += source.data[p + 2];
+      outsideCount++;
+    }
+  }
+
+  if (outsideCount) {
+    averageR = sumR / outsideCount;
+    averageG = sumG / outsideCount;
+    averageB = sumB / outsideCount;
+  }
+
+  for (let i = 0; i < count; i++) {
+    if (!mask[i]) continue;
+    const q = i * 3;
+    current[q] = averageR;
+    current[q + 1] = averageG;
+    current[q + 2] = averageB;
+  }
+
+  for (let iteration = 0; iteration < 180; iteration++) {
+    next.set(current);
+    for (let py = 0; py < h; py++) {
+      for (let px = 0; px < w; px++) {
+        const index = py * w + px;
+        if (!mask[index]) continue;
+
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        let neighbors = 0;
+
+        for (let k = 0; k < 4; k++) {
+          const nx = px + (k === 0 ? -1 : k === 1 ? 1 : 0);
+          const ny = py + (k === 2 ? -1 : k === 3 ? 1 : 0);
+          if (nx < 0 || nx >= w || ny < 0 || ny >= h) continue;
+          const q = (ny * w + nx) * 3;
+          r += current[q];
+          g += current[q + 1];
+          b += current[q + 2];
+          neighbors++;
+        }
+
+        if (neighbors) {
+          const q = index * 3;
+          next[q] = r / neighbors;
+          next[q + 1] = g / neighbors;
+          next[q + 2] = b / neighbors;
+        }
+      }
+    }
+    const swap = current;
+    current = next;
+    next = swap;
+  }
+
+  const patchCanvas = document.createElement('canvas');
+  patchCanvas.width = w;
+  patchCanvas.height = h;
+  const patchContext = patchCanvas.getContext('2d');
+  const patchData = patchContext.createImageData(w, h);
+  patchData.data.set(source.data);
+
+  const spriteCanvas = document.createElement('canvas');
+  spriteCanvas.width = w;
+  spriteCanvas.height = h;
+  const spriteContext = spriteCanvas.getContext('2d');
+  const spriteData = spriteContext.createImageData(w, h);
+  spriteData.data.set(source.data);
+
+  for (let i = 0; i < count; i++) {
+    const p = i * 4;
+    if (mask[i]) {
+      const q = i * 3;
+      patchData.data[p] = Math.round(current[q]);
+      patchData.data[p + 1] = Math.round(current[q + 1]);
+      patchData.data[p + 2] = Math.round(current[q + 2]);
+      spriteData.data[p + 3] = 255;
+    } else {
+      spriteData.data[p + 3] = 0;
+    }
+  }
+
+  patchContext.putImageData(patchData, 0, 0);
+  spriteContext.putImageData(spriteData, 0, 0);
+
+  const patchTexture = makeCanvasTexture(patchCanvas, THREE.NearestFilter);
+  const spriteTexture = makeCanvasTexture(spriteCanvas, THREE.LinearFilter);
+
+  const geometry = new THREE.PlaneGeometry(w, h);
+  const centerX = x + w / 2;
+  const centerY = y + h / 2;
+
+  const patchMaterial = new THREE.MeshBasicMaterial({
+    map: patchTexture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+  const patch = new THREE.Mesh(geometry, patchMaterial);
+  patch.position.set(centerX, H - centerY, 0.1);
+  patch.renderOrder = 10;
+  patch.frustumCulled = false;
+  patch.visible = false;
+  scene.add(patch);
+
+  const spriteMaterial = new THREE.MeshBasicMaterial({
+    map: spriteTexture,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+  const sprite = new THREE.Mesh(geometry, spriteMaterial);
+  sprite.position.set(
+    centerX - cfg.pivot[0],
+    cfg.pivot[1] - centerY,
+    0
+  );
+  sprite.renderOrder = 11;
+  sprite.frustumCulled = false;
+
+  const pivot = new THREE.Group();
+  pivot.position.set(cfg.pivot[0], H - cfg.pivot[1], 0.2);
+  pivot.add(sprite);
+  pivot.visible = false;
+  scene.add(pivot);
+
+  return {
+    patch,
+    pivot,
+    primaryAmplitude: cfg.primaryAmplitude,
+    secondaryAmplitude: cfg.secondaryAmplitude
+  };
+}
+
+const earringConfigurations = [
+  {
+    // Earring on the viewer's left.
+    bounds: { x: 952, y: 181, w: 29, h: 52 },
+    pivot: [961.5, 188.5],
+    primaryAmplitude: 0.115,
+    secondaryAmplitude: 0.018,
+    paintMask(ctx) {
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(961.5, 188.5);
+      ctx.bezierCurveTo(961.5, 196.5, 966.0, 205.0, 968.6, 212.8);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(968.6, 212.2, 2.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(969.0, 219.5, 6.5, 7.7, -0.08, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  },
+  {
+    // Earring on the viewer's right.
+    bounds: { x: 1053, y: 168, w: 22, h: 48 },
+    pivot: [1064.0, 174.5],
+    primaryAmplitude: 0.095,
+    secondaryAmplitude: -0.014,
+    paintMask(ctx) {
+      ctx.lineWidth = 2.6;
+      ctx.beginPath();
+      ctx.moveTo(1064.0, 174.5);
+      ctx.bezierCurveTo(1064.5, 182.5, 1061.5, 190.5, 1062.6, 198.5);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(1062.6, 197.8, 2.6, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.ellipse(1063.1, 204.1, 6.0, 7.1, 0.08, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+];
+
+new THREE.TextureLoader().load('./image.png', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.NearestFilter;
+  texture.magFilter = THREE.NearestFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+
+  const baseMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(W, H), baseMaterial);
+  base.position.set(W / 2, H / 2, 0);
+  base.renderOrder = 0;
+  base.frustumCulled = false;
+  scene.add(base);
+
+  for (const configuration of earringConfigurations) {
+    animatedItems.push(buildEarring(texture.image, configuration));
+  }
+
+  function renderTime(value) {
+    let t = Number(value);
+    if (!Number.isFinite(t)) t = 0;
+    t = Math.max(0, Math.min(PERIOD, t));
+
+    const atRestFrame = t === 0 || t === PERIOD;
+    const angle = Math.PI * t;
+    const primary = Math.sin(angle);
+    const secondary = Math.sin(angle * 2);
+
+    for (const item of animatedItems) {
+      item.patch.visible = !atRestFrame;
+      item.pivot.visible = !atRestFrame;
+      item.pivot.rotation.z = atRestFrame
+        ? 0
+        : item.primaryAmplitude * primary +
+          item.secondaryAmplitude * secondary;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  let livePlayback = true;
+
+  // Manual scrubbing also pauses live playback, so rendered frames remain stable.
+  window.setTime = function(t) {
+    livePlayback = false;
+    renderTime(t);
+  };
+
+  // Upload and compile all resources, then leave the exact original image visible.
+  renderTime(0.5);
+  renderTime(0);
+  window.ANIM_READY = true;
+
+  let playbackStart = null;
+  function playback(now) {
+    if (playbackStart === null) playbackStart = now;
+    if (livePlayback) {
+      renderTime(((now - playbackStart) / 1000) % PERIOD);
+    }
+    requestAnimationFrame(playback);
+  }
+  requestAnimationFrame(playback);
+});
+</script>
+</body>
+</html>

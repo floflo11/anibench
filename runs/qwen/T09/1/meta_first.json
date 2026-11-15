@@ -1,0 +1,33 @@
+{
+ "id": "qwen__T09__1",
+ "stage": "first",
+ "model": "qwen/qwen3.8-27b",
+ "provider": "Wafer",
+ "finish": "stop",
+ "usage": {
+  "prompt_tokens": 1223,
+  "completion_tokens": 16847,
+  "total_tokens": 18070,
+  "cost": 0.03713678,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.03713678,
+   "upstream_inference_prompt_cost": 7.338e-05,
+   "upstream_inference_completions_cost": 0.0370634
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 15091,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 66.247,
+ "attempts": 1,
+ "has_html": true
+}

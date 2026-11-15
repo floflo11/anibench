@@ -9,4 +9,4 @@ Built overnight for Vals Hacks Track 1.
 - Harbor tasks for Valkyrie: [`harbor/`](harbor/)
 - Morning checklist: [MORNING.md](MORNING.md)
 
-Headline: Nemotron 3.5 Super VL passed 0/33 scored runs; Qwen 3.8 27B solved the T01 wave in a smoke test.
+Headline: Nemotron 3.5 Super VL passed 0/21 scored runs; Qwen 3.8 27B solved the T01 wave in a smoke test.

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Wave</title>
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden}
+  canvas{display:block;width:1024px;height:683px}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+// Orthographic camera: one image pixel == one canvas pixel, (0,0) top-left.
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.01, 100);
+camera.position.set(0, 0, 10);
+camera.lookAt(0, 0, 0);
+
+window.ANIM_READY = false;
+window.setTime = function (t) { /* replaced after texture build */ };
+
+const img = new Image();
+img.onload = function () { init(img); };
+img.src = './image.png';
+
+function init(imageEl) {
+  // ---- 1. Split the raised hand (skin) from the rest of the image. ----
+  // ROI around the toddler-in-red's raised hand (top-left of picture).
+  const ROI = { x0: 56, x1: 170, y0: 100, y1: 228 };
+
+  const baseCv = document.createElement('canvas'); baseCv.width = W; baseCv.height = H;
+  const bctx = baseCv.getContext('2d');
+  bctx.drawImage(imageEl, 0, 0);
+  const bimg = bctx.getImageData(0, 0, W, H);
+
+  const handCv = document.createElement('canvas'); handCv.width = W; handCv.height = H;
+  const himg = new ImageData(W, H); // transparent by default
+
+  const skin = []; // [x, y]
+  let maxY = -1;
+
+  for (let y = ROI.y0; y < ROI.y1; y++) {
+    for (let x = ROI.x0; x < ROI.x1; x++) {
+      const i = (y * W + x) * 4;
+      const r = bimg.data[i], g = bimg.data[i+1], b = bimg.data[i+2];
+      const white = (r > 235 && g > 235 && b > 235);          // paper background
+      const red   = ((r - g) > 80 && (r - b) > 50);           // jacket / hat lines
+      const skinPix = !white && !red && (g >= b) && (r > 170); // hand flesh
+      if (skinPix) {
+        // blank it out of the base layer (revealed area is white background)
+        bimg.data[i] = 255; bimg.data[i+1] = 255; bimg.data[i+2] = 255; bimg.data[i+3] = 255;
+        // keep original pixels in the hand layer
+        himg.data[i] = r; himg.data[i+1] = g; himg.data[i+2] = b; himg.data[i+3] = 255;
+        skin.push(x, y);
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+
+  let pivotX = 112, pivotY = 204;
+  if (maxY > 0 && skin.length >= 20) {
+    // Wrist pivot: centroid of the lower part of the hand, just above its bottom edge.
+    let cx = 0, n = 0;
+    for (let k = 0; k < skin.length; k += 2) {
+      if (skin[k+1] >= maxY - 16) { cx += skin[k]; n++; }
+    }
+    pivotX = n ? cx / n : 112;
+    pivotY = maxY - 3;
+
+    // Small "collar" band of the red cuff just below the wrist, added to the hand
+    // layer ONLY (base keeps its intact cuff underneath), so the seam never opens
+    // when the hand rotates.
+    for (let y = Math.max(ROI.y0, maxY - 3); y <= Math.min(ROI.y1 - 1, maxY + 9); y++) {
+      for (let x = ROI.x0; x < ROI.x1; x++) {
+        const i = (y * W + x) * 4;
+        const r = bimg.data[i], g = bimg.data[i+1], b = bimg.data[i+2];
+        const white = (r > 235 && g > 235 && b > 235);
+        if (!white && himg.data[i+3] === 0) {
+          himg.data[i] = r; himg.data[i+1] = g; himg.data[i+2] = b; himg.data[i+3] = 255;
+        }
+      }
+    }
+  }
+
+  bctx.putImageData(bimg, 0, 0);
+  handCv.getContext('2d').putImageData(himg, 0, 0);
+
+  // ---- 2. Textures and meshes. ----
+  function makeTex(cv) {
+    const t = new THREE.CanvasTexture(cv);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.generateMipmaps = false;
+    t.minFilter = THREE.LinearFilter;
+    t.magFilter = THREE.LinearFilter;
+    t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+    return t;
+  }
+
+  const baseGeo = new THREE.PlaneGeometry(W, H);
+  const baseMesh = new THREE.Mesh(baseGeo, new THREE.MeshBasicMaterial({ map: makeTex(baseCv) }));
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  // Hand layer: full-size plane re-centered on the wrist pivot so that
+  // rotation.z swings the hand around the wrist.
+  const handGeo = new THREE.PlaneGeometry(W, H);
+  handGeo.translate(W / 2 - pivotX, pivotY - H / 2, 0);
+  const handMat = new THREE.MeshBasicMaterial({
+    map: makeTex(handCv), transparent: true, depthWrite: false
+  });
+  const handMesh = new THREE.Mesh(handGeo, handMat);
+  handMesh.position.z = 0.5;
+  handMesh.renderOrder = 1;
+  scene.add(handMesh);
+
+  // ---- 3. Deterministic 2-second loop: 2 full wave cycles per loop. ----
+  const AMP = 0.12;      // ~7 degrees
+  const HZ  = 1.0;       // 1 cycle/second -> exactly 2 cycles in 2 s
+  window.setTime = function (t) {
+    const theta = AMP * Math.sin(2 * Math.PI * HZ * t);
+    handMesh.rotation.z = theta;
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0); // frame 0 == original image
+  window.ANIM_READY = true;
+
+  // Live playback (playback only; correctness does not depend on it).
+  let t0 = performance.now();
+  (function loop() {
+    const t = ((performance.now() - t0) / 1000) % 2;
+    window.setTime(t);
+    requestAnimationFrame(loop);
+  })();
+}
+</script>
+</body>
+</html>

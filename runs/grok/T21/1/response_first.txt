@@ -1,0 +1,1 @@
+I'll inspect the image and isolate the red-jacket toddler's raised hand so only that hand waves. Let me map its pixels first.

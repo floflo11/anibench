@@ -9,10 +9,17 @@ anibench gives a model a still image of cartoon characters plus one instruction 
 "make her earrings swing", "lift her hat") and asks for a three.js page that animates only that part. We render the page
 to 25 frames and score it with **six image-math checks**, not a model judge.
 
-- **Nemotron 3.5 Super VL passed 0 of 33 scored runs (0%).**
-  Of those runs, 17 flipped or shifted the image, 6 left the canvas blank,
-  0 never ran, and in the 10 runs that showed the image correctly, the animation was wrong every time.
-- The tasks are solvable: in a smoke test, Qwen 3.8 27B produced a correct wrist wave on T01 that passes every check (T01: PASS, T07: RUNTIME).
+- **Kimi K3.1 Pro: 8/13 first-try runs passed (62%).**
+- **Qwen 3.8 27B: 6/15 first-try runs passed (40%).**
+- **DeepSeek V4 Flash Vision: 1/12 first-try runs passed (8%).**
+- **Gemini 4 Carbon: 0/8 first-try runs passed (0%).**
+- **Grok 4.7: 0/12 first-try runs passed (0%).**
+- **Nemotron 3.5 Super VL: 0/21 first-try runs passed (0%).**
+- In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
+  Nemotron flipped or shifted the image in 9 of 33 runs and left the canvas blank in 4;
+  Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
+- On Valkyrie, the reference solutions score **21/21**, and Claude Sonnet 5.5 running as a Claude Code agent passed the T01 wave (all six checks). The full Sonnet and GPT-6.1 Sol Valkyrie runs were still in progress at submission time.
+- Gemini 4 Carbon is left out of the table: in 8 of 8 completed runs it used the whole 32k-token budget reasoning and returned no file.
 - Every check is validated before use: a reference animation must pass it, and deliberately broken copies must fail it.
 
 ## Why this benchmark
@@ -72,18 +79,22 @@ The weakest check is **G2 on small fragments**: a leftover piece that keeps touc
 
 | Model | Scored runs | Passed | Tier 1 | Tier 2 | Didn't run | Cost |
 | --- | --- | --- | --- | --- | --- | --- |
-| Nemotron 3.5 Super VL | 33 | 0 (0%) | 0/24 | 0/9 | 0 | $0 |
+| DeepSeek V4 Flash Vision | 12 | 1 (8%) | 0/8 | 1/4 | 11 | $0.506 |
+| Grok 4.7 | 12 | 0 (0%) | 0/9 | 0/3 | 12 | $0.287 |
+| Kimi K3.1 Pro | 13 | 8 (62%) | 5/9 | 3/4 | 0 | $2.721 |
+| Nemotron 3.5 Super VL | 21 | 0 (0%) | 0/12 | 0/9 | 0 | $0 |
+| Qwen 3.8 27B | 15 | 6 (40%) | 4/10 | 2/5 | 1 | $0.458 |
 
 ## Failure rate per check
 
-| Check | Nemotron 3.5 Super VL |
-| --- | --- |
-| G1 Isolation | 29/33 |
-| G2 Integrity | 2/19 |
-| G3 Area | 23/33 |
-| G4 Motion | 2/33 |
-| G5 Pivot | 17/23 |
-| G6 Loop/fidelity | 27/33 |
+| Check | DeepSeek V4 Flash Vision | Grok 4.7 | Kimi K3.1 Pro | Nemotron 3.5 Super VL | Qwen 3.8 27B |
+| --- | --- | --- | --- | --- | --- |
+| G1 Isolation | 0/1 | 0/0 | 2/13 | 17/21 | 5/14 |
+| G2 Integrity | 0/0 | 0/0 | 4/8 | 2/12 | 1/8 |
+| G3 Area | 0/1 | 0/0 | 1/13 | 13/21 | 4/14 |
+| G4 Motion | 0/1 | 0/0 | 0/13 | 1/21 | 3/14 |
+| G5 Pivot | 0/1 | 0/0 | 2/11 | 9/13 | 4/11 |
+| G6 Loop/fidelity | 0/1 | 0/0 | 1/13 | 17/21 | 4/14 |
 
 ![pass rate](results/charts/pass_rate.png)
 
@@ -96,12 +107,12 @@ Per-run detail: `results/runs.csv`. Every run's animation: `results/library/`.
 
 | Check | Runs failing |
 | --- | --- |
-| G1 Isolation | 29/33 (88%) |
-| G2 Integrity | 2/19 (11%) |
-| G3 Area | 23/33 (70%) |
-| G4 Motion | 2/33 (6%) |
-| G5 Pivot | 17/23 (74%) |
-| G6 Loop and fidelity | 27/33 (82%) |
+| G1 Isolation | 17/21 (81%) |
+| G2 Integrity | 2/12 (17%) |
+| G3 Area | 13/21 (62%) |
+| G4 Motion | 1/21 (5%) |
+| G5 Pivot | 9/13 (69%) |
+| G6 Loop and fidelity | 17/21 (81%) |
 
 ### What the failures look like
 

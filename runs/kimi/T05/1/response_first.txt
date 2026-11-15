@@ -1,0 +1,251 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toddler Waving</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    canvas {
+      display: block;
+      width: 1024px;
+      height: 683px;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1024;
+const HEIGHT = 683;
+const LOOP_SECONDS = 2;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(WIDTH, HEIGHT);
+renderer.setClearColor(0xffffff, 1);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(
+  0, WIDTH, HEIGHT, 0, 0.1, 100
+);
+camera.position.z = 10;
+
+const fullImageGeometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+function configureColorTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function makeHandPath() {
+  const path = new Path2D();
+
+  // Wrist and lower-left palm.
+  path.moveTo(107, 220);
+  path.bezierCurveTo(103, 214, 99, 207, 96, 201);
+  path.bezierCurveTo(92, 196, 90, 192, 86, 188);
+  path.bezierCurveTo(79, 184, 72, 181, 67, 177);
+  path.bezierCurveTo(63, 173, 63, 167, 66, 163);
+  path.bezierCurveTo(69, 160, 74, 162, 80, 166);
+
+  // Left-most raised finger.
+  path.bezierCurveTo(77, 159, 72, 151, 73, 146);
+  path.bezierCurveTo(74, 140, 79, 138, 84, 141);
+  path.bezierCurveTo(88, 145, 91, 152, 94, 157);
+
+  // Next finger.
+  path.bezierCurveTo(91, 149, 85, 138, 86, 133);
+  path.bezierCurveTo(87, 127, 92, 124, 97, 127);
+  path.bezierCurveTo(102, 131, 105, 140, 108, 148);
+
+  // Tallest central finger.
+  path.bezierCurveTo(106, 139, 106, 131, 110, 126);
+  path.bezierCurveTo(114, 121, 121, 121, 125, 126);
+  path.bezierCurveTo(129, 132, 126, 141, 128, 148);
+
+  // Right finger and outer palm.
+  path.bezierCurveTo(132, 143, 138, 141, 143, 145);
+  path.bezierCurveTo(149, 149, 151, 155, 148, 161);
+  path.bezierCurveTo(146, 166, 142, 169, 138, 173);
+  path.bezierCurveTo(142, 181, 142, 189, 138, 197);
+  path.bezierCurveTo(138, 202, 140, 207, 138, 212);
+
+  // Skin/cuff separation line.
+  path.lineTo(107, 220);
+  path.closePath();
+
+  return path;
+}
+
+const handPath = makeHandPath();
+const wristPivot = { x: 122, y: 207 };
+
+let originalBase;
+let cleanBase;
+let handMesh;
+let handPivotGroup;
+let autoPlay = true;
+
+function renderAt(t) {
+  // Wrapping explicitly makes both 0 and 2 use exactly the same phase.
+  const wrapped = ((t % LOOP_SECONDS) + LOOP_SECONDS) % LOOP_SECONDS;
+
+  // Two smooth wrist oscillations per two-second loop.
+  const angle = 0.18 * Math.sin(2 * Math.PI * wrapped);
+  const atRest = Math.abs(angle) < 1e-12;
+
+  handPivotGroup.rotation.z = angle;
+
+  // The untouched source is used at the neutral pose, guaranteeing an
+  // unchanged original image at both ends of the loop.
+  originalBase.visible = atRest;
+  cleanBase.visible = !atRest;
+  handMesh.visible = !atRest;
+
+  renderer.render(scene, camera);
+}
+
+window.setTime = function(t) {
+  // Manual deterministic positioning also prevents live playback from
+  // overwriting a subsequently inspected frame.
+  autoPlay = false;
+  renderAt(t);
+};
+
+new THREE.TextureLoader().load('./image.png', (sourceTexture) => {
+  configureColorTexture(sourceTexture);
+
+  const image = sourceTexture.image;
+
+  // Clean plate: only the cut-out hand area is removed. A small original
+  // wrist/joint area is retained to keep the rotating hand connected.
+  const cleanCanvas = document.createElement('canvas');
+  cleanCanvas.width = WIDTH;
+  cleanCanvas.height = HEIGHT;
+  const cleanContext = cleanCanvas.getContext('2d');
+  cleanContext.imageSmoothingEnabled = false;
+  cleanContext.drawImage(image, 0, 0, WIDTH, HEIGHT);
+
+  cleanContext.fillStyle = '#ffffff';
+  cleanContext.fill(handPath);
+
+  cleanContext.save();
+  cleanContext.beginPath();
+  cleanContext.ellipse(
+    wristPivot.x, wristPivot.y, 20, 18, 0, 0, Math.PI * 2
+  );
+  cleanContext.clip();
+  cleanContext.drawImage(image, 0, 0, WIDTH, HEIGHT);
+  cleanContext.restore();
+
+  const cleanTexture = configureColorTexture(
+    new THREE.CanvasTexture(cleanCanvas)
+  );
+
+  // A separate matte isolates the hand while its RGB always comes directly
+  // from the original texture, avoiding dark fringes in transparent pixels.
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = WIDTH;
+  maskCanvas.height = HEIGHT;
+  const maskContext = maskCanvas.getContext('2d');
+  maskContext.fillStyle = '#000000';
+  maskContext.fillRect(0, 0, WIDTH, HEIGHT);
+  maskContext.fillStyle = '#ffffff';
+  maskContext.fill(handPath);
+
+  const maskTexture = new THREE.CanvasTexture(maskCanvas);
+  maskTexture.minFilter = THREE.LinearFilter;
+  maskTexture.magFilter = THREE.LinearFilter;
+  maskTexture.generateMipmaps = false;
+
+  const originalMaterial = new THREE.MeshBasicMaterial({
+    map: sourceTexture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  const cleanMaterial = new THREE.MeshBasicMaterial({
+    map: cleanTexture,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  const handMaterial = new THREE.MeshBasicMaterial({
+    map: sourceTexture,
+    alphaMap: maskTexture,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  originalBase = new THREE.Mesh(fullImageGeometry, originalMaterial);
+  originalBase.position.set(WIDTH / 2, HEIGHT / 2, 0);
+  originalBase.renderOrder = 0;
+  scene.add(originalBase);
+
+  cleanBase = new THREE.Mesh(fullImageGeometry, cleanMaterial);
+  cleanBase.position.set(WIDTH / 2, HEIGHT / 2, 0);
+  cleanBase.renderOrder = 0;
+  scene.add(cleanBase);
+
+  // Offset a full-image plane so that the group's origin is exactly the wrist.
+  handPivotGroup = new THREE.Group();
+  handPivotGroup.position.set(
+    wristPivot.x,
+    HEIGHT - wristPivot.y,
+    1
+  );
+  scene.add(handPivotGroup);
+
+  handMesh = new THREE.Mesh(fullImageGeometry, handMaterial);
+  handMesh.position.set(
+    WIDTH / 2 - wristPivot.x,
+    wristPivot.y - HEIGHT / 2,
+    0
+  );
+  handMesh.renderOrder = 1;
+  handMesh.frustumCulled = false;
+  handPivotGroup.add(handMesh);
+
+  renderAt(0);
+  window.ANIM_READY = true;
+
+  let playbackStart = null;
+  function playbackFrame(now) {
+    if (playbackStart === null) playbackStart = now;
+    if (autoPlay) {
+      renderAt(((now - playbackStart) / 1000) % LOOP_SECONDS);
+    }
+    requestAnimationFrame(playbackFrame);
+  }
+  requestAnimationFrame(playbackFrame);
+});
+</script>
+</body>
+</html>
+```

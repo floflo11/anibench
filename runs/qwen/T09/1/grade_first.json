@@ -1,0 +1,61 @@
+{
+ "stage": "first",
+ "task": "T09",
+ "model": "qwen",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1223,
+  "completion_tokens": 16847,
+  "total_tokens": 18070,
+  "cost": 0.03713678,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.03713678,
+   "upstream_inference_prompt_cost": 7.338e-05,
+   "upstream_inference_completions_cost": 0.0370634
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 15091,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 66.247,
+ "status": "FAIL",
+ "grades": {
+  "G1": {
+   "ok": false,
+   "value": 0.41609
+  },
+  "G2": {
+   "ok": true,
+   "value": 0,
+   "base": 2
+  },
+  "G3": {
+   "ok": false,
+   "value": 1.074
+  },
+  "G4": {
+   "ok": true,
+   "value": 1.0
+  },
+  "G5": {
+   "ok": false,
+   "value": 1.0
+  },
+  "G6": {
+   "ok": false,
+   "loop": 0.0,
+   "first_vs_orig": 0.42425
+  },
+  "pass": false
+ }
+}

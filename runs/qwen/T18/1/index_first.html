@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Knee bounce</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1024" height="683"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024, H = 683;
+const T = 2.0;          // loop period (seconds)
+const AMP = 16.0;       // max vertical displacement of the lower legs (px)
+const CYCLES = 2;       // bounces per loop
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 10);
+camera.position.z = 1;
+
+const uniforms = {
+  tex:  { value: null },
+  uOff: { value: 0.0 }
+};
+
+const material = new THREE.ShaderMaterial({
+  uniforms,
+  vertexShader: `
+    varying vec2 vUv;
+    void main() {
+      vUv = uv;
+      gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+  `,
+  fragmentShader: `
+    precision highp float;
+    uniform sampler2D tex;
+    uniform float uOff;
+    varying vec2 vUv;
+
+    vec3 lin2srgb(vec3 c) {
+      return mix(c * 12.92,
+                 1.055 * pow(max(c, vec3(0.0)), vec3(1.0 / 2.4)) - 0.055,
+                 step(0.0031308, c));
+    }
+
+    void main() {
+      float px = vUv.x * ${W}.0;
+      float py = (1.0 - vUv.y) * ${H}.0;   // 0 at top of image
+
+      // Region mask: only the right toddler's legs, ramping in below the hip
+      // so the displacement reads as the knee flexing (C1 continuous edges).
+      float my = smoothstep(515.0, 555.0, py);
+      float mx = smoothstep(585.0, 615.0, px) * (1.0 - smoothstep(795.0, 825.0, px));
+      float m  = my * mx;
+
+      // Sample the texture shifted upward by (uOff * m): the shank and shoes
+      // lift, the knee band compresses, everything else is untouched.
+      float v = 1.0 - (py + uOff * m) / ${H}.0;
+      v = clamp(v, 0.0, 1.0);
+
+      vec3 c = texture2D(tex, vec2(vUv.x, v)).rgb;
+      gl_FragColor = vec4(lin2srgb(c), 1.0);
+    }
+  `
+});
+
+const mesh = new THREE.Mesh(new THREE.PlaneGeometry(W, H), material);
+mesh.position.set(W / 2, H / 2, 0);
+scene.add(mesh);
+
+// Offset at time t: starts and ends at 0 with zero slope -> seamless loop.
+function offsetAt(t) {
+  const ph = (t / T) * CYCLES * Math.PI * 2.0;
+  return AMP * 0.5 * (1.0 - Math.cos(ph));
+}
+
+let ready = false;
+
+window.setTime = function (t) {
+  if (!ready) return;
+  if (t < 0) t = 0; else if (t > T) t = T;
+  uniforms.uOff.value = offsetAt(t);
+  renderer.render(scene, camera);
+};
+
+new THREE.TextureLoader().load('./image.png', function (tex) {
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.minFilter = THREE.LinearFilter;
+  tex.magFilter = THREE.LinearFilter;
+  tex.generateMipmaps = false;
+  uniforms.tex.value = tex;
+
+  window.setTime(0);          // verify a synchronous render works
+  ready = true;
+  window.ANIM_READY = true;
+});
+
+// Live playback (optional; correctness does not depend on it).
+let t0 = null;
+function loop(now) {
+  if (t0 === null) t0 = now;
+  window.setTime(((now - t0) / 1000) % T);
+  requestAnimationFrame(loop);
+}
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

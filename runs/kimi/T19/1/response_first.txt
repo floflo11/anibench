@@ -1,0 +1,377 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200, initial-scale=1">
+<title>Fluttering Lace Veil</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+    width: 1200px;
+    height: 600px;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+const LOOP_SECONDS = 2;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+function configureColorTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+/*
+ * Visible portion of the long veil. The right/bottom contour stays just
+ * outside the girl's hair, arm, and dress, which therefore remain untouched.
+ */
+function traceVeil(ctx) {
+  ctx.beginPath();
+  ctx.moveTo(909, 141);
+  ctx.bezierCurveTo(919, 146, 929, 145, 938, 139);
+  ctx.bezierCurveTo(935, 162, 934, 187, 936, 210);
+  ctx.bezierCurveTo(938, 225, 935, 238, 932, 251);
+  ctx.bezierCurveTo(929, 269, 929, 284, 930, 300);
+  ctx.bezierCurveTo(928, 327, 927, 353, 925, 379);
+  ctx.bezierCurveTo(925, 395, 920, 407, 913, 417);
+  ctx.bezierCurveTo(910, 425, 904, 435, 895, 443);
+  ctx.bezierCurveTo(889, 451, 883, 457, 878, 459);
+  ctx.bezierCurveTo(871, 454, 866, 447, 862, 438);
+  ctx.bezierCurveTo(856, 430, 858, 421, 853, 413);
+  ctx.bezierCurveTo(849, 401, 851, 389, 852, 377);
+  ctx.bezierCurveTo(843, 371, 838, 361, 841, 349);
+  ctx.bezierCurveTo(847, 331, 853, 314, 858, 296);
+  ctx.bezierCurveTo(869, 258, 878, 221, 887, 187);
+  ctx.bezierCurveTo(894, 160, 900, 145, 909, 141);
+  ctx.closePath();
+}
+
+function createVeilGeometry() {
+  const x0 = 832;
+  const x1 = 946;
+  const y0 = 132;
+  const y1 = 468;
+  const columns = 24;
+  const rows = 64;
+
+  const positions = [];
+  const uvs = [];
+  const params = [];
+  const indices = [];
+
+  for (let row = 0; row <= rows; row++) {
+    const v = row / rows;
+    const sourceY = y0 + (y1 - y0) * v;
+
+    for (let column = 0; column <= columns; column++) {
+      const u = column / columns;
+      const sourceX = x0 + (x1 - x0) * u;
+
+      positions.push(sourceX, H - sourceY, 1);
+      uvs.push(sourceX / W, 1 - sourceY / H);
+      params.push(u, v);
+    }
+  }
+
+  const stride = columns + 1;
+  for (let row = 0; row < rows; row++) {
+    for (let column = 0; column < columns; column++) {
+      const a = row * stride + column;
+      const b = a + 1;
+      const c = a + stride;
+      const d = c + 1;
+      indices.push(a, c, b, b, c, d);
+    }
+  }
+
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    'position',
+    new THREE.Float32BufferAttribute(positions, 3)
+  );
+  geometry.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+  geometry.setAttribute(
+    'aParam',
+    new THREE.Float32BufferAttribute(params, 2)
+  );
+  geometry.setIndex(indices);
+  geometry.computeBoundingSphere();
+  return geometry;
+}
+
+const loader = new THREE.TextureLoader();
+
+loader.load('./image.png', (originalTexture) => {
+  configureColorTexture(originalTexture);
+
+  const image = originalTexture.image;
+
+  // A binary alpha cutout of the exposed veil.
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = W;
+  maskCanvas.height = H;
+  const maskContext = maskCanvas.getContext('2d', {
+    willReadFrequently: true
+  });
+  maskContext.clearRect(0, 0, W, H);
+  maskContext.fillStyle = '#ffffff';
+  traceVeil(maskContext);
+  maskContext.fill();
+
+  const maskPixels = maskContext.getImageData(0, 0, W, H);
+
+  // Remove the original veil and replace only that cutout with the white
+  // background it reveals when blown sideways.
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W;
+  baseCanvas.height = H;
+  const baseContext = baseCanvas.getContext('2d', {
+    willReadFrequently: true
+  });
+  baseContext.drawImage(image, 0, 0, W, H);
+  const basePixels = baseContext.getImageData(0, 0, W, H);
+
+  for (let i = 0; i < maskPixels.data.length; i += 4) {
+    const inside = maskPixels.data[i + 3] >= 128;
+
+    maskPixels.data[i] = 255;
+    maskPixels.data[i + 1] = 255;
+    maskPixels.data[i + 2] = 255;
+    maskPixels.data[i + 3] = inside ? 255 : 0;
+
+    if (inside) {
+      basePixels.data[i] = 255;
+      basePixels.data[i + 1] = 255;
+      basePixels.data[i + 2] = 255;
+      basePixels.data[i + 3] = 255;
+    }
+  }
+
+  maskContext.putImageData(maskPixels, 0, 0);
+  baseContext.putImageData(basePixels, 0, 0);
+
+  const baseTexture = configureColorTexture(
+    new THREE.CanvasTexture(baseCanvas)
+  );
+
+  const maskTexture = new THREE.CanvasTexture(maskCanvas);
+  maskTexture.colorSpace = THREE.NoColorSpace;
+  maskTexture.wrapS = THREE.ClampToEdgeWrapping;
+  maskTexture.wrapT = THREE.ClampToEdgeWrapping;
+  maskTexture.minFilter = THREE.NearestFilter;
+  maskTexture.magFilter = THREE.NearestFilter;
+  maskTexture.generateMipmaps = false;
+  maskTexture.needsUpdate = true;
+
+  const fullScreenGeometry = new THREE.PlaneGeometry(W, H);
+
+  const originalMesh = new THREE.Mesh(
+    fullScreenGeometry,
+    new THREE.MeshBasicMaterial({
+      map: originalTexture,
+      color: 0xffffff,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  originalMesh.position.set(W / 2, H / 2, 0);
+  originalMesh.renderOrder = 0;
+  scene.add(originalMesh);
+
+  const clearedMesh = new THREE.Mesh(
+    fullScreenGeometry,
+    new THREE.MeshBasicMaterial({
+      map: baseTexture,
+      color: 0xffffff,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  clearedMesh.position.set(W / 2, H / 2, 0);
+  clearedMesh.renderOrder = 0;
+  clearedMesh.visible = false;
+  scene.add(clearedMesh);
+
+  const veilUniforms = {
+    uImage: { value: originalTexture },
+    uMask: { value: maskTexture },
+    uPhase: { value: 0 }
+  };
+
+  const veilMaterial = new THREE.ShaderMaterial({
+    uniforms: veilUniforms,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    toneMapped: false,
+    vertexShader: `
+      uniform float uPhase;
+
+      attribute vec2 aParam;
+
+      varying vec2 vImageUv;
+
+      void main() {
+        float across = aParam.x;
+        float down = aParam.y;
+
+        // The attachment under the hat is fixed. Motion grows toward the
+        // free hem, with the occluded right side moving less than the left.
+        float attachment = smoothstep(0.025, 0.27, down);
+        float lengthWeight = attachment * (0.52 + 0.48 * down);
+        float freeEdge = mix(
+          1.18,
+          0.43,
+          smoothstep(0.48, 1.0, across)
+        );
+        float weight = lengthWeight * freeEdge;
+
+        float p = uPhase;
+        float billow = 1.0 - cos(p);
+
+        // Nonnegative leftward billowing prevents the lace from crossing
+        // onto the girl. The phase-dependent terms travel through the net.
+        float travellingFold = 0.5 + 0.5 * sin(
+          3.0 * p - 9.0 * down + 3.0 * across
+        );
+        float fineFold = 0.5 + 0.5 * sin(
+          5.0 * p + 13.0 * down - 4.0 * across
+        );
+
+        float displacementX = -weight * (
+          8.0 * billow +
+          4.0 * billow * travellingFold +
+          2.0 * sin(p) * sin(p) * fineFold
+        );
+
+        float verticalWave =
+          sin(p) * sin(5.0 * down - 2.0 * across + 0.7) +
+          0.65 * billow * sin(
+            2.0 * p - 8.0 * down + 2.5 * across
+          );
+
+        float displacementY = weight * 2.2 * verticalWave;
+
+        vec3 transformed = position;
+        transformed.x += displacementX;
+        transformed.y -= displacementY;
+
+        vImageUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix *
+          vec4(transformed, 1.0);
+      }
+    `,
+    fragmentShader: `
+      uniform sampler2D uImage;
+      uniform sampler2D uMask;
+
+      varying vec2 vImageUv;
+
+      void main() {
+        float cutoutAlpha = texture2D(uMask, vImageUv).a;
+
+        if (cutoutAlpha < 0.5) {
+          discard;
+        }
+
+        vec4 lace = texture2D(uImage, vImageUv);
+        gl_FragColor = vec4(lace.rgb, lace.a);
+
+        #include <colorspace_fragment>
+      }
+    `
+  });
+
+  const veilMesh = new THREE.Mesh(createVeilGeometry(), veilMaterial);
+  veilMesh.frustumCulled = false;
+  veilMesh.renderOrder = 2;
+  veilMesh.visible = false;
+  scene.add(veilMesh);
+
+  function renderFrame(t) {
+    const atOriginalFrame = t === 0 || t === LOOP_SECONDS;
+
+    originalMesh.visible = atOriginalFrame;
+    clearedMesh.visible = !atOriginalFrame;
+    veilMesh.visible = !atOriginalFrame;
+
+    if (!atOriginalFrame) {
+      veilUniforms.uPhase.value =
+        (t / LOOP_SECONDS) * Math.PI * 2;
+    } else {
+      veilUniforms.uPhase.value = 0;
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  let autoPlay = true;
+  let playbackStart = null;
+
+  // External deterministic control also pauses live playback, so a rendered
+  // test frame cannot be overwritten by a later requestAnimationFrame.
+  window.setTime = function(t) {
+    autoPlay = false;
+    renderFrame(t);
+  };
+
+  function playback(nowMilliseconds) {
+    if (!autoPlay) return;
+
+    if (playbackStart === null) {
+      playbackStart = nowMilliseconds;
+    }
+
+    const elapsed = (nowMilliseconds - playbackStart) / 1000;
+    renderFrame(elapsed % LOOP_SECONDS);
+    requestAnimationFrame(playback);
+  }
+
+  window.setTime(0);
+  autoPlay = true;
+  window.ANIM_READY = true;
+  requestAnimationFrame(playback);
+});
+</script>
+</body>
+</html>
+```

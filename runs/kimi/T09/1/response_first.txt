@@ -1,0 +1,247 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    canvas {
+      display: block;
+      width: 1200px;
+      height: 600px;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+const DURATION = 2;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.toneMappingExposure = 1;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+// This outline follows the far-left boy's hair, ears, face, and chin.
+// Its lower edge leaves the neck and shirt stationary.
+const headOutline = [
+  [103, 9], [119, 4], [151, 3], [176, 9], [191, 20],
+  [200, 35], [205, 54], [204, 78], [199, 96],
+  [205, 91], [209, 96], [208, 110], [203, 122],
+  [194, 129], [187, 130], [183, 140], [175, 149],
+  [164, 157], [153, 163], [141, 166], [128, 163],
+  [116, 158], [106, 150], [100, 141], [96, 132],
+  [86, 131], [79, 124], [75, 114], [75, 103],
+  [79, 96], [77, 83], [75, 68], [77, 50],
+  [82, 34], [91, 21]
+];
+
+function traceHeadPath(ctx) {
+  ctx.beginPath();
+  ctx.moveTo(headOutline[0][0], headOutline[0][1]);
+  for (let i = 1; i < headOutline.length; i++) {
+    ctx.lineTo(headOutline[i][0], headOutline[i][1]);
+  }
+  ctx.closePath();
+}
+
+function prepareTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.premultiplyAlpha = false;
+  texture.needsUpdate = true;
+  return texture;
+}
+
+function configureOriginalTexture(texture) {
+  texture.flipY = true;
+  return prepareTexture(texture);
+}
+
+new THREE.TextureLoader().load('./image.png', (originalTexture) => {
+  configureOriginalTexture(originalTexture);
+  const image = originalTexture.image;
+
+  // A static plate with the original head removed. Every pixel outside
+  // the tightly localized head outline is copied directly from the source.
+  const backgroundCanvas = document.createElement('canvas');
+  backgroundCanvas.width = W;
+  backgroundCanvas.height = H;
+  const backgroundContext = backgroundCanvas.getContext('2d');
+  backgroundContext.imageSmoothingEnabled = false;
+  backgroundContext.drawImage(image, 0, 0);
+  traceHeadPath(backgroundContext);
+  backgroundContext.fillStyle = '#ffffff';
+  backgroundContext.fill();
+
+  // The moving layer contains only the selected head pixels.
+  const headCanvas = document.createElement('canvas');
+  headCanvas.width = W;
+  headCanvas.height = H;
+  const headContext = headCanvas.getContext('2d');
+  headContext.imageSmoothingEnabled = false;
+  headContext.drawImage(image, 0, 0);
+  headContext.globalCompositeOperation = 'destination-in';
+  traceHeadPath(headContext);
+  headContext.fillStyle = '#ffffff';
+  headContext.fill();
+  headContext.globalCompositeOperation = 'source-over';
+
+  const backgroundTexture = prepareTexture(
+    new THREE.CanvasTexture(backgroundCanvas)
+  );
+  const headTexture = prepareTexture(
+    new THREE.CanvasTexture(headCanvas)
+  );
+
+  const fullImageGeometry = new THREE.PlaneGeometry(W, H);
+
+  const originalBase = new THREE.Mesh(
+    fullImageGeometry,
+    new THREE.MeshBasicMaterial({
+      map: originalTexture,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  originalBase.position.set(W / 2, H / 2, 0);
+  originalBase.renderOrder = 0;
+  scene.add(originalBase);
+
+  const revealedBase = new THREE.Mesh(
+    fullImageGeometry,
+    new THREE.MeshBasicMaterial({
+      map: backgroundTexture,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  revealedBase.position.set(W / 2, H / 2, 0);
+  revealedBase.renderOrder = 0;
+  scene.add(revealedBase);
+
+  // Place the geometry origin at the base of the skull so the projected
+  // pitch compresses the head toward the neck instead of moving the body.
+  const PIVOT_X = 141;
+  const PIVOT_Y = 158;
+  const pivotWorldY = H - PIVOT_Y;
+
+  const headGeometry = new THREE.PlaneGeometry(W, H);
+  headGeometry.translate(
+    W / 2 - PIVOT_X,
+    H / 2 - pivotWorldY,
+    0
+  );
+
+  const head = new THREE.Mesh(
+    headGeometry,
+    new THREE.MeshBasicMaterial({
+      map: headTexture,
+      transparent: true,
+      opacity: 1,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    })
+  );
+  head.position.set(PIVOT_X, pivotWorldY, 1);
+  head.renderOrder = 1;
+  scene.add(head);
+
+  let manuallyControlled = false;
+
+  function renderTime(value) {
+    let t = Number(value);
+    if (!Number.isFinite(t)) t = 0;
+    t = Math.max(0, Math.min(DURATION, t));
+
+    // Canonical neutral endpoints make frames 0 and 2 bit-for-bit identical
+    // and ensure frame 0 uses only the untouched source texture.
+    const neutral = (t === 0 || t === DURATION);
+
+    originalBase.visible = neutral;
+    revealedBase.visible = !neutral;
+    head.visible = !neutral;
+
+    if (neutral) {
+      head.scale.set(1, 1, 1);
+      head.position.set(PIVOT_X, pivotWorldY, 1);
+    } else {
+      // One smooth forward nod and return. Both position and velocity meet
+      // cleanly at the loop boundary.
+      const amount = 0.5 - 0.5 * Math.cos(Math.PI * t);
+
+      // An orthographic projection of a forward head pitch, combined with
+      // a small downward translation and slight horizontal broadening.
+      const pitch = 0.30 * amount;
+      head.scale.set(
+        1 + 0.018 * amount,
+        Math.cos(pitch),
+        1
+      );
+      head.position.set(
+        PIVOT_X,
+        pivotWorldY - 7 * amount,
+        1
+      );
+    }
+
+    renderer.render(scene, camera);
+  }
+
+  window.setTime = function(t) {
+    manuallyControlled = true;
+    renderTime(t);
+  };
+
+  renderTime(0);
+  window.ANIM_READY = true;
+
+  // Live playback is independent of deterministic manual frame rendering.
+  // Calling window.setTime switches to manual mode so rendered test frames
+  // cannot be overwritten by a subsequent animation callback.
+  let playbackStart = null;
+  function play(now) {
+    if (!manuallyControlled) {
+      if (playbackStart === null) playbackStart = now;
+      const seconds = (now - playbackStart) / 1000;
+      renderTime(seconds % DURATION);
+    }
+    requestAnimationFrame(play);
+  }
+  requestAnimationFrame(play);
+});
+</script>
+</body>
+</html>
+```

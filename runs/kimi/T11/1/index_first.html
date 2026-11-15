@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+window.ANIM_READY = false;
+
+const W = 1200;
+const H = 600;
+const PERIOD = 2;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: true,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+document.body.appendChild(renderer.domElement);
+renderer.clear();
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, 0, H, 0.1, 100);
+camera.position.z = 10;
+
+new THREE.TextureLoader().load('./image.png', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.minFilter = THREE.LinearFilter;
+  texture.magFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+
+  const imageMaterial = new THREE.MeshBasicMaterial({
+    map: texture,
+    side: THREE.DoubleSide,
+    depthTest: false,
+    depthWrite: false,
+    toneMapped: false
+  });
+
+  const base = new THREE.Mesh(new THREE.PlaneGeometry(W, H), imageMaterial);
+  base.position.set(W / 2, H / 2, 0);
+  base.renderOrder = 0;
+  base.frustumCulled = false;
+  scene.add(base);
+
+  // Silhouette of the striped-shirt boy's head, including a narrow
+  // white fringe so the original antialiased edge is retained.
+  const outline = [
+    [696,109], [674,111], [655,117], [642,127], [634,141],
+    [630,158], [631,178], [635,191], [630,194], [629,204],
+    [632,214], [638,221], [647,226], [651,234], [659,242],
+    [669,248], [679,251], [685,254], [695,256], [705,255],
+    [715,251], [723,247], [732,241], [739,232], [744,222],
+    [747,219], [753,216], [757,209], [758,200], [756,193],
+    [752,189], [755,176], [755,158], [752,143], [746,131],
+    [737,122], [724,116], [710,111]
+  ];
+
+  function polygonGeometry(points, pivotX = 0, pivotY = 0) {
+    const shape = new THREE.Shape();
+    shape.moveTo(points[0][0] - pivotX, points[0][1] - pivotY);
+    for (let i = 1; i < points.length; i++) {
+      shape.lineTo(points[i][0] - pivotX, points[i][1] - pivotY);
+    }
+    shape.closePath();
+
+    const geometry = new THREE.ShapeGeometry(shape);
+    const positions = geometry.attributes.position;
+    const uv = new Float32Array(positions.count * 2);
+
+    for (let i = 0; i < positions.count; i++) {
+      const imageX = positions.getX(i) + pivotX;
+      const imageY = positions.getY(i) + pivotY;
+      uv[i * 2] = imageX / W;
+      uv[i * 2 + 1] = 1 - imageY / H;
+    }
+
+    geometry.setAttribute('uv', new THREE.BufferAttribute(uv, 2));
+    return geometry;
+  }
+
+  // Remove only the original head while it is being animated.
+  const erase = new THREE.Mesh(
+    polygonGeometry(outline),
+    new THREE.MeshBasicMaterial({
+      color: 0xffffff,
+      side: THREE.DoubleSide,
+      depthTest: false,
+      depthWrite: false,
+      toneMapped: false
+    })
+  );
+  erase.position.z = 1;
+  erase.renderOrder = 1;
+  erase.frustumCulled = false;
+  scene.add(erase);
+
+  const pivotX = 696;
+  const pivotY = 254;
+  const headGroup = new THREE.Group();
+  headGroup.position.set(pivotX, pivotY, 2);
+
+  const head = new THREE.Mesh(
+    polygonGeometry(outline, pivotX, pivotY),
+    imageMaterial
+  );
+  head.renderOrder = 2;
+  head.frustumCulled = false;
+  headGroup.add(head);
+  scene.add(headGroup);
+
+  function renderFrame(t) {
+    let angle = 0;
+
+    if (t > 0 && t < PERIOD) {
+      angle = 0.12 * Math.sin(Math.PI * t);
+    }
+
+    // Rendering the untouched quad at the zero crossings also guarantees
+    // that frames 0 and 2 are pixel-identical to the source image.
+    const unchanged = Math.abs(angle) < 1e-12;
+    erase.visible = !unchanged;
+    headGroup.visible = !unchanged;
+    headGroup.rotation.z = angle;
+
+    renderer.render(scene, camera);
+  }
+
+  let rafId = null;
+  let playbackStart = null;
+
+  function stopPlayback() {
+    if (rafId !== null) {
+      cancelAnimationFrame(rafId);
+      rafId = null;
+    }
+    playbackStart = null;
+  }
+
+  // Scrubbing is synchronous and pauses live playback so a subsequently
+  // scheduled animation frame cannot overwrite the requested frame.
+  window.setTime = function(t) {
+    stopPlayback();
+    renderFrame(t);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  function tick(timestamp) {
+    if (playbackStart === null) playbackStart = timestamp;
+    const elapsed = (timestamp - playbackStart) / 1000;
+    renderFrame(elapsed % PERIOD);
+    rafId = requestAnimationFrame(tick);
+  }
+
+  rafId = requestAnimationFrame(tick);
+});
+</script>
+</body>
+</html>

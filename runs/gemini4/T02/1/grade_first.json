@@ -1,0 +1,33 @@
+{
+ "stage": "first",
+ "task": "T02",
+ "model": "gemini4",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1575,
+  "completion_tokens": 32000,
+  "total_tokens": 33575,
+  "cost": 0.32315,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.32315,
+   "upstream_inference_prompt_cost": 0.00315,
+   "upstream_inference_completions_cost": 0.32
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 31997,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 573.113,
+ "status": "NO_HTML",
+ "finish": "length"
+}
