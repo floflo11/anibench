@@ -27,16 +27,18 @@ Adding credits is a payment, so I left it for you.
 
 Alternative: run the Harbor tasks on Valkyrie with the hackathon's Claude/OpenAI credits (next section).
 
-## Upload to Valkyrie (from your Terminal)
+## Run on Valkyrie (from your Terminal, repo root)
 ```bash
-git clone https://github.com/floflo11/anibench && cd anibench/harbor
-valkyrie login                 # if not already
-valkyrie org use <team org>
-# then follow quickstart step 3 to upload this folder as a dataset (Harbor task format)
+git clone https://github.com/floflo11/anibench && cd anibench
+valkyrie login && valkyrie org use hackathon-arena-horses-10639006c9
+valkyrie agent install https://github.com/vals-ai/public-agent-registry/tree/main/examples/claude_code-v1.0.0
+valkyrie agent install https://github.com/vals-ai/public-agent-registry/tree/main/examples/codex-v1.0.0
+scripts/run.sh checks     # push + oracle (must be all 1s) + Sonnet smoke on T01
+scripts/run.sh full       # Sonnet 5.5 + GPT-6.1 Sol, 21 tasks x 3 tries
 ```
-Tested without Docker: the verifier (`tests/grade_app.py`) gives reward 1 for the oracle on T01, T07 and T13,
-and 0 for Nemotron's T01. Not tested: the Docker build itself (no Docker in my sandbox). Build one task first and
-check its oracle scores 1 before uploading all 21.
+Secrets `anthropic-api-key` and `openai-api-key` are the ones already saved in Valkyrie for Please Hold.
+If a model name is rejected, rerun with e.g. `CLAUDE_MODEL=anthropic/claude-sonnet-5-5 OPENAI_MODEL=gpt-6.1-sol`.
+Results land in `out/`; send them to Claude to merge into the write-up, deck and video.
 
 ## Submit (hackathon.vals.ai)
 - Code repository: https://github.com/floflo11/anibench (private; add judges or make it public if required)
