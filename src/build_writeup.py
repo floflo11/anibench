@@ -142,10 +142,12 @@ python3 src/export_harbor.py                      # Harbor tasks for Valkyrie
 ```
 """
     (ROOT / "WRITEUP.md").write_text(w)
+    overview = (ROOT / "OVERVIEW.md").read_text().strip()
     readme = f"""# anibench
 
-A benchmark for animating one part of a still image with three.js, scored with six pixel checks.
-Built overnight for Vals Hacks Track 1.
+{overview}
+
+Built for Vals Hacks Track 1.
 
 - Write-up: [WRITEUP.md](WRITEUP.md)
 - Results: [results/README.md](results/README.md), GIFs in `results/library/`, demo video `results/demo.mp4`
