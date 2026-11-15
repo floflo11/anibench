@@ -1,12 +1,12 @@
 {
  "deepseek": {
   "label": "DeepSeek V4 Flash Vision",
-  "n": 12,
+  "n": 13,
   "passed": 1,
-  "pass_rate": 0.083,
+  "pass_rate": 0.077,
   "by_tier": {
    "1": {
-    "n": 8,
+    "n": 9,
     "passed": 0
    },
    "2": {
@@ -14,7 +14,7 @@
     "passed": 1
    }
   },
-  "runtime_fail": 11,
+  "runtime_fail": 12,
   "grader_fail": {
    "G1": {
     "n": 1,
@@ -41,7 +41,7 @@
     "failed": 0
    }
   },
-  "cost": 0.506
+  "cost": 0.549
  },
  "gemini4": {
   "label": "Gemini 4 Carbon",
@@ -89,35 +89,35 @@
  },
  "grok": {
   "label": "Grok 4.7",
-  "n": 12,
-  "passed": 0,
-  "pass_rate": 0.0,
+  "n": 14,
+  "passed": 2,
+  "pass_rate": 0.143,
   "by_tier": {
    "1": {
-    "n": 9,
-    "passed": 0
+    "n": 10,
+    "passed": 1
    },
    "2": {
-    "n": 3,
-    "passed": 0
+    "n": 4,
+    "passed": 1
    }
   },
   "runtime_fail": 12,
   "grader_fail": {
    "G1": {
-    "n": 0,
+    "n": 2,
     "failed": 0
    },
    "G2": {
-    "n": 0,
+    "n": 1,
     "failed": 0
    },
    "G3": {
-    "n": 0,
+    "n": 2,
     "failed": 0
    },
    "G4": {
-    "n": 0,
+    "n": 2,
     "failed": 0
    },
    "G5": {
@@ -125,21 +125,21 @@
     "failed": 0
    },
    "G6": {
-    "n": 0,
+    "n": 2,
     "failed": 0
    }
   },
-  "cost": 0.287
+  "cost": 1.415
  },
  "kimi": {
   "label": "Kimi K3.1 Pro",
-  "n": 13,
-  "passed": 8,
-  "pass_rate": 0.615,
+  "n": 15,
+  "passed": 9,
+  "pass_rate": 0.6,
   "by_tier": {
    "1": {
-    "n": 9,
-    "passed": 5
+    "n": 11,
+    "passed": 6
    },
    "2": {
     "n": 4,
@@ -149,31 +149,31 @@
   "runtime_fail": 0,
   "grader_fail": {
    "G1": {
-    "n": 13,
+    "n": 15,
     "failed": 2
    },
    "G2": {
-    "n": 8,
+    "n": 9,
     "failed": 4
    },
    "G3": {
-    "n": 13,
+    "n": 15,
     "failed": 1
    },
    "G4": {
-    "n": 13,
+    "n": 15,
     "failed": 0
    },
    "G5": {
-    "n": 11,
-    "failed": 2
+    "n": 13,
+    "failed": 3
    },
    "G6": {
-    "n": 13,
+    "n": 15,
     "failed": 1
    }
   },
-  "cost": 2.721
+  "cost": 3.113
  },
  "nemotron": {
   "label": "Nemotron 3.5 Super VL",

@@ -1,0 +1,501 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Knee Bounce</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; overflow: hidden; }
+  canvas { position: absolute; left: 0; top: 0; display: block; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024;
+const H = 683;
+const DROP = 52;
+const SPREAD = 18;
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  alpha: false,
+  antialias: false,
+  premultipliedAlpha: false,
+  preserveDrawingBuffer: true,
+  stencil: false
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, true);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+renderer.domElement.style.margin = '0';
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.set(0, 0, 10);
+
+function smoothstep(t) {
+  t = t < 0 ? 0 : t > 1 ? 1 : t;
+  return t * t * (3 - 2 * t);
+}
+
+function crouchAt(t) {
+  if (t <= 0 || t >= 2) return 0;
+  const u = t - Math.floor(t);
+  const s = Math.sin(Math.PI * u);
+  return Math.pow(s, 1.35);
+}
+
+function buildMask(data) {
+  const N = W * H;
+  const bgR = 255, bgG = 255, bgB = 255;
+  let cornerD = 0;
+  const corners = [[2, 2], [W - 3, 2], [2, H - 3], [W - 3, H - 3]];
+  for (let c = 0; c < corners.length; c++) {
+    const x = corners[c][0], y = corners[c][1];
+    const p = (y * W + x) * 4;
+    const dr = data[p] - bgR, dg = data[p + 1] - bgG, db = data[p + 2] - bgB;
+    const d = Math.sqrt(dr * dr + dg * dg + db * db);
+    if (d > cornerD) cornerD = d;
+  }
+  const strong2 = Math.max(22, cornerD + 14) ** 2;
+  const strong = new Uint8Array(N);
+  for (let i = 0; i < N; i++) {
+    const p = i * 4;
+    const dr = data[p] - bgR, dg = data[p + 1] - bgG, db = data[p + 2] - bgB;
+    if (dr * dr + dg * dg + db * db > strong2) strong[i] = 1;
+  }
+
+  const col = new Int32Array(W);
+  for (let y = 0; y < H; y++) {
+    const row = y * W;
+    for (let x = 0; x < W; x++) if (strong[row + x]) col[x]++;
+  }
+  let last = -1, bestGap = 0, splitX = (W / 2) | 0;
+  for (let x = 0; x < W; x++) {
+    if (col[x] > 12) {
+      if (last >= 0 && x - last > bestGap) {
+        bestGap = x - last;
+        splitX = ((last + x) / 2) | 0;
+      }
+      last = x;
+    }
+  }
+  if (splitX < W * 0.3 || splitX > W * 0.7) splitX = (W / 2) | 0;
+
+  const barrier = new Uint8Array(N);
+  const RAD = 2;
+  for (let y = 0; y < H; y++) {
+    for (let x = splitX + 1; x < W; x++) {
+      if (!strong[y * W + x]) continue;
+      const y0 = Math.max(0, y - RAD), y1 = Math.min(H - 1, y + RAD);
+      const x0 = Math.max(splitX + 1, x - RAD), x1 = Math.min(W - 1, x + RAD);
+      for (let yy = y0; yy <= y1; yy++) {
+        const row = yy * W;
+        for (let xx = x0; xx <= x1; xx++) barrier[row + xx] = 1;
+      }
+    }
+  }
+
+  const flooded = new Uint8Array(N);
+  const stack = new Int32Array(N);
+  let sp = 0;
+  function seed(x, y) {
+    if (x <= splitX || x >= W || y < 0 || y >= H) return;
+    const i = y * W + x;
+    if (flooded[i] || barrier[i]) return;
+    flooded[i] = 1;
+    stack[sp++] = i;
+  }
+  for (let y = 0; y < H; y++) seed(splitX + 1, y);
+  for (let x = splitX + 1; x < W; x++) { seed(x, 0); seed(x, H - 1); }
+  for (let y = 0; y < H; y++) seed(W - 1, y);
+  while (sp > 0) {
+    const i = stack[--sp];
+    const x = i % W;
+    const y = (i / W) | 0;
+    if (x + 1 < W) {
+      const j = i + 1;
+      if (!flooded[j] && !barrier[j]) { flooded[j] = 1; stack[sp++] = j; }
+    }
+    if (x - 1 > splitX) {
+      const j = i - 1;
+      if (!flooded[j] && !barrier[j]) { flooded[j] = 1; stack[sp++] = j; }
+    }
+    if (y + 1 < H) {
+      const j = i + W;
+      if (!flooded[j] && !barrier[j]) { flooded[j] = 1; stack[sp++] = j; }
+    }
+    if (y - 1 >= 0) {
+      const j = i - W;
+      if (!flooded[j] && !barrier[j]) { flooded[j] = 1; stack[sp++] = j; }
+    }
+  }
+
+  const figure = new Uint8Array(N);
+  for (let y = 0; y < H; y++) {
+    for (let x = splitX + 1; x < W; x++) {
+      const i = y * W + x;
+      if (!flooded[i]) figure[i] = 1;
+    }
+  }
+
+  const DIL = 4;
+  const mask = new Uint8Array(N);
+  for (let y = 0; y < H; y++) {
+    for (let x = splitX + 1; x < W; x++) {
+      if (!figure[y * W + x]) continue;
+      const y0 = Math.max(0, y - DIL), y1 = Math.min(H - 1, y + DIL);
+      const x0 = Math.max(splitX + 1, x - DIL), x1 = Math.min(W - 1, x + DIL);
+      for (let yy = y0; yy <= y1; yy++) {
+        const row = yy * W;
+        for (let xx = x0; xx <= x1; xx++) mask[row + xx] = 1;
+      }
+    }
+  }
+  return mask;
+}
+
+function isNavy(r, g, b) {
+  if (b < 40 || r > 170) return false;
+  if (b < r + 6) return false;
+  if (b + 18 < g) return false;
+  const lum = 0.3 * r + 0.59 * g + 0.11 * b;
+  return lum < 185;
+}
+
+function findJoints(data, mask) {
+  let minX = W, maxX = 0, minY = H, maxY = 0, count = 0;
+  for (let y = 0; y < H; y++) {
+    const row = y * W;
+    for (let x = 0; x < W; x++) {
+      if (!mask[row + x]) continue;
+      count++;
+      if (x < minX) minX = x;
+      if (x > maxX) maxX = x;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  const figH = Math.max(1, maxY - minY);
+  const fbHip = minY + figH * 0.64;
+  const fbAnkle = minY + figH * 0.90;
+
+  const navyRows = new Int32Array(H);
+  const totRows = new Int32Array(H);
+  for (let y = minY; y <= maxY; y++) {
+    const row = y * W;
+    for (let x = minX; x <= maxX; x++) {
+      if (!mask[row + x]) continue;
+      totRows[y]++;
+      const p = (row + x) * 4;
+      if (isNavy(data[p], data[p + 1], data[p + 2])) navyRows[y]++;
+    }
+  }
+
+  let ankleY = fbAnkle;
+  let foundShoe = false;
+  let topShoe = maxY;
+  let gap = 0;
+  for (let y = maxY; y > minY + figH * 0.5; y--) {
+    if (totRows[y] < 8) continue;
+    const frac = navyRows[y] / totRows[y];
+    if (frac > 0.16) {
+      foundShoe = true;
+      topShoe = y;
+      gap = 0;
+    } else if (foundShoe) {
+      gap++;
+      if (gap > 5 && frac < 0.08) break;
+    }
+  }
+  if (foundShoe) ankleY = topShoe - 2;
+
+  let bestN = 0;
+  let bestY = minY + figH * 0.5;
+  for (let y = minY; y < ankleY - 24; y++) {
+    if (navyRows[y] > bestN) {
+      bestN = navyRows[y];
+      bestY = y;
+    }
+  }
+  let hipY = bestY;
+  for (let y = bestY; y < ankleY - 16; y++) {
+    if (totRows[y] < 8) continue;
+    const frac = navyRows[y] / totRows[y];
+    if (frac < 0.12) {
+      hipY = y;
+      break;
+    }
+    hipY = y;
+  }
+
+  if (Math.abs(hipY - fbHip) > figH * 0.16) hipY = fbHip;
+  if (Math.abs(ankleY - fbAnkle) > figH * 0.12) ankleY = fbAnkle;
+  if (ankleY - hipY < 36) {
+    hipY = fbHip;
+    ankleY = fbAnkle;
+  }
+
+  let compressTop = hipY + 5;
+  let kneeY = hipY + (ankleY - hipY) * 0.47;
+  if (compressTop > kneeY - 18) compressTop = hipY;
+  if (kneeY > ankleY - 16) kneeY = (compressTop + ankleY) * 0.5;
+  if (kneeY < compressTop + 12) kneeY = compressTop + (ankleY - compressTop) * 0.45;
+
+  let sx = 0, sc = 0;
+  const yScan = Math.max(minY, Math.floor(kneeY));
+  for (let y = yScan; y <= maxY; y++) {
+    const row = y * W;
+    for (let x = minX; x <= maxX; x++) {
+      if (!mask[row + x]) continue;
+      sx += x;
+      sc++;
+    }
+  }
+  const centerX = sc ? sx / sc : (minX + maxX) / 2;
+
+  return { minX, maxX, minY, maxY, compressTop, kneeY, ankleY, centerX, count };
+}
+
+function makeTexture(canvas) {
+  const tex = new THREE.CanvasTexture(canvas);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.flipY = true;
+  tex.generateMipmaps = false;
+  tex.minFilter = THREE.NearestFilter;
+  tex.magFilter = THREE.NearestFilter;
+  tex.wrapS = THREE.ClampToEdgeWrapping;
+  tex.wrapT = THREE.ClampToEdgeWrapping;
+  tex.premultiplyAlpha = false;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function init(img) {
+  const srcCanvas = document.createElement('canvas');
+  srcCanvas.width = W;
+  srcCanvas.height = H;
+  const srcCtx = srcCanvas.getContext('2d', { willReadFrequently: true });
+  srcCtx.drawImage(img, 0, 0, W, H);
+  const imageData = srcCtx.getImageData(0, 0, W, H);
+  const data = imageData.data;
+
+  const mask = buildMask(data);
+  const joints = findJoints(data, mask);
+  const compressTop = joints.compressTop;
+  const kneeY = joints.kneeY;
+  const ankleY = joints.ankleY;
+  const centerX = joints.centerX;
+
+  const bgCanvas = document.createElement('canvas');
+  bgCanvas.width = W;
+  bgCanvas.height = H;
+  const bgCtx = bgCanvas.getContext('2d', { willReadFrequently: true });
+  const bgImage = srcCtx.getImageData(0, 0, W, H);
+  const bgData = bgImage.data;
+  for (let i = 0; i < mask.length; i++) {
+    if (!mask[i]) continue;
+    const p = i * 4;
+    bgData[p] = 255;
+    bgData[p + 1] = 255;
+    bgData[p + 2] = 255;
+    bgData[p + 3] = 255;
+  }
+  bgCtx.putImageData(bgImage, 0, 0);
+
+  const fgCanvas = document.createElement('canvas');
+  fgCanvas.width = W;
+  fgCanvas.height = H;
+  const fgCtx = fgCanvas.getContext('2d', { willReadFrequently: true });
+  const fgImage = srcCtx.getImageData(0, 0, W, H);
+  const fgData = fgImage.data;
+  for (let i = 0; i < mask.length; i++) {
+    fgData[i * 4 + 3] = mask[i] ? 255 : 0;
+  }
+  fgCtx.putImageData(fgImage, 0, 0);
+
+  const bgTex = makeTexture(bgCanvas);
+  const fgTex = makeTexture(fgCanvas);
+
+  const bgGeo = new THREE.PlaneGeometry(W, H);
+  bgGeo.translate(W / 2, H / 2, 0);
+  const bgMat = new THREE.MeshBasicMaterial({
+    map: bgTex,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+  const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+  bgMesh.renderOrder = 0;
+  bgMesh.frustumCulled = false;
+  scene.add(bgMesh);
+
+  const pad = 2;
+  const x0 = Math.max(0, joints.minX - pad);
+  const y0 = Math.max(0, joints.minY - pad);
+  const x1 = Math.min(W - 1, joints.maxX + pad);
+  const y1 = Math.min(H - 1, joints.maxY + pad);
+  const step = 2;
+  const cols = Math.ceil((x1 - x0) / step) + 1;
+  const rows = Math.ceil((y1 - y0) / step) + 1;
+  const count = cols * rows;
+
+  const origX = new Float32Array(count);
+  const origY = new Float32Array(count);
+  const positions = new Float32Array(count * 3);
+  const uvs = new Float32Array(count * 2);
+
+  function gx(i) { return Math.min(x1, x0 + i * step); }
+  function gy(j) { return Math.min(y1, y0 + j * step); }
+
+  for (let j = 0; j < rows; j++) {
+    for (let i = 0; i < cols; i++) {
+      const ix = gx(i);
+      const iy = gy(j);
+      const idx = j * cols + i;
+      origX[idx] = ix;
+      origY[idx] = iy;
+      positions[idx * 3] = ix;
+      positions[idx * 3 + 1] = H - iy;
+      positions[idx * 3 + 2] = 0;
+      uvs[idx * 2] = ix / W;
+      uvs[idx * 2 + 1] = 1 - iy / H;
+    }
+  }
+
+  const cellCols = cols - 1;
+  const cellRows = rows - 1;
+  const indices = new Uint32Array(cellCols * cellRows * 6);
+  let k = 0;
+  for (let j = 0; j < cellRows; j++) {
+    for (let i = 0; i < cellCols; i++) {
+      const a = j * cols + i;
+      const b = a + 1;
+      const c = a + cols;
+      const d = c + 1;
+      indices[k++] = a;
+      indices[k++] = c;
+      indices[k++] = d;
+      indices[k++] = a;
+      indices[k++] = d;
+      indices[k++] = b;
+    }
+  }
+
+  const fgGeo = new THREE.BufferGeometry();
+  const posAttr = new THREE.BufferAttribute(positions, 3);
+  posAttr.setUsage(THREE.DynamicDrawUsage);
+  fgGeo.setAttribute('position', posAttr);
+  fgGeo.setAttribute('uv', new THREE.BufferAttribute(uvs, 2));
+  fgGeo.setIndex(new THREE.BufferAttribute(indices, 1));
+
+  const fgMat = new THREE.MeshBasicMaterial({
+    map: fgTex,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false,
+    premultipliedAlpha: false,
+    side: THREE.DoubleSide
+  });
+  const fgMesh = new THREE.Mesh(fgGeo, fgMat);
+  fgMesh.position.z = 0.2;
+  fgMesh.renderOrder = 1;
+  fgMesh.frustumCulled = false;
+  scene.add(fgMesh);
+
+  const thighLen = Math.max(12, kneeY - compressTop);
+  const shinLen = Math.max(12, ankleY - kneeY);
+  const maxAmp = Math.max(8, thighLen - 8);
+
+  function applyPose(crouch) {
+    const ampWanted = Math.max(0, crouch) * DROP;
+    const amp = ampWanted > maxAmp ? maxAmp : ampWanted;
+    if (amp === 0) {
+      for (let idx = 0; idx < count; idx++) {
+        positions[idx * 3] = origX[idx];
+        positions[idx * 3 + 1] = H - origY[idx];
+        positions[idx * 3 + 2] = 0;
+      }
+      posAttr.needsUpdate = true;
+      return;
+    }
+
+    const kneeDrop = amp * 0.1;
+    const hipN = compressTop + amp;
+    let kneeN = kneeY + kneeDrop;
+    if (kneeN < hipN + 3) kneeN = hipN + 3;
+    if (kneeN > ankleY - 3) kneeN = ankleY - 3;
+    const spread = (amp / DROP) * SPREAD;
+
+    for (let idx = 0; idx < count; idx++) {
+      const ix = origX[idx];
+      const iy = origY[idx];
+      let ny = iy;
+      let nx = ix;
+      if (iy <= compressTop) {
+        ny = iy + amp;
+      } else if (iy >= ankleY) {
+        ny = iy;
+      } else if (iy <= kneeY) {
+        const t = (iy - compressTop) / thighLen;
+        const s = smoothstep(t);
+        ny = hipN + (kneeN - hipN) * s;
+        const bulge = t * t;
+        const dir = ix < centerX ? -1 : 1;
+        nx = ix + dir * spread * bulge;
+      } else {
+        const t = (iy - kneeY) / shinLen;
+        const s = smoothstep(t);
+        ny = kneeN + (ankleY - kneeN) * s;
+        const bulge = 1 - t;
+        const dir = ix < centerX ? -1 : 1;
+        nx = ix + dir * spread * bulge;
+      }
+      positions[idx * 3] = nx;
+      positions[idx * 3 + 1] = H - ny;
+      positions[idx * 3 + 2] = 0;
+    }
+    posAttr.needsUpdate = true;
+  }
+
+  window.setTime = function (t) {
+    const c = crouchAt(t);
+    applyPose(c);
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  let t0 = null;
+  function tick(now) {
+    if (t0 === null) t0 = now;
+    const t = ((now - t0) / 1000) % 2;
+    window.setTime(t);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+let started = false;
+const img = new Image();
+function start() {
+  if (started) return;
+  if (!img.naturalWidth) return;
+  started = true;
+  init(img);
+}
+img.onload = start;
+img.src = './image.png';
+if (img.complete && img.naturalWidth) start();
+</script>
+</body>
+</html>
+```

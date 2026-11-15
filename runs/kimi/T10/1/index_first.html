@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Toddler Nod</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #ffffff;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+window.ANIM_READY = false;
+
+const W = 1024;
+const H = 683;
+
+async function init() {
+  const renderer = new THREE.WebGLRenderer({
+    antialias: false,
+    alpha: false,
+    preserveDrawingBuffer: true
+  });
+
+  renderer.setPixelRatio(1);
+  renderer.setSize(W, H);
+  renderer.domElement.style.width = W + 'px';
+  renderer.domElement.style.height = H + 'px';
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.setClearColor(0xffffff, 1);
+  document.body.appendChild(renderer.domElement);
+
+  const camera = new THREE.OrthographicCamera(0, W, 0, -H, 0.1, 1000);
+  camera.position.set(0, 0, 100);
+  camera.lookAt(0, 0, 0);
+
+  const originalTexture = await new THREE.TextureLoader().loadAsync('./image.png');
+  const image = originalTexture.image;
+
+  function configureTexture(texture) {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.minFilter = THREE.LinearFilter;
+    texture.magFilter = THREE.LinearFilter;
+    texture.generateMipmaps = false;
+    texture.needsUpdate = true;
+  }
+
+  configureTexture(originalTexture);
+
+  // Outline of the right toddler's hat, head, ears, and chin.
+  // The lower edge follows the chin so the neck, jacket, and all other
+  // parts of the illustration remain fixed.
+  const outline = [
+    [687, 3], [724, 5], [748, 12], [763, 27], [772, 40],
+    [801, 46], [824, 57], [838, 74], [846, 94], [848, 115],
+    [842, 137], [829, 158], [814, 176], [810, 193],
+    [800, 207], [787, 214], [779, 225], [765, 239],
+    [746, 252], [725, 262], [704, 268], [681, 265],
+    [660, 257], [643, 246], [629, 232], [619, 216],
+    [608, 207], [598, 204], [591, 194], [574, 180],
+    [561, 161], [553, 140], [550, 119], [554, 99],
+    [564, 81], [580, 65], [595, 50], [607, 35],
+    [626, 25], [648, 17], [670, 11]
+  ];
+
+  const minX = 544;
+  const minY = 0;
+  const maxX = 854;
+  const maxY = 274;
+  const headW = maxX - minX;
+  const headH = maxY - minY;
+
+  function makeLocalPath() {
+    const path = new Path2D();
+    outline.forEach(([x, y], index) => {
+      const px = x - minX;
+      const py = y - minY;
+      if (index === 0) path.moveTo(px, py);
+      else path.lineTo(px, py);
+    });
+    path.closePath();
+    return path;
+  }
+
+  // Antialiased cutout mask.
+  const maskCanvas = document.createElement('canvas');
+  maskCanvas.width = headW;
+  maskCanvas.height = headH;
+  const maskContext = maskCanvas.getContext('2d', { willReadFrequently: true });
+  maskContext.fillStyle = '#ffffff';
+  maskContext.fill(makeLocalPath());
+  const maskPixels = maskContext.getImageData(0, 0, headW, headH).data;
+
+  // Moving head texture: original pixels with the cutout mask as alpha.
+  const headCanvas = document.createElement('canvas');
+  headCanvas.width = headW;
+  headCanvas.height = headH;
+  const headContext = headCanvas.getContext('2d', { willReadFrequently: true });
+  headContext.drawImage(
+    image,
+    minX, minY, headW, headH,
+    0, 0, headW, headH
+  );
+  const headPixels = headContext.getImageData(0, 0, headW, headH);
+  for (let i = 0; i < headPixels.data.length; i += 4) {
+    headPixels.data[i + 3] = maskPixels[i + 3];
+  }
+  headContext.putImageData(headPixels, 0, 0);
+
+  // Static plate. Only the fully interior portion of the cutout is erased;
+  // retaining the antialiased boundary makes the identity transform
+  // reconstruct the original illustration without a visible cut line.
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W;
+  baseCanvas.height = H;
+  const baseContext = baseCanvas.getContext('2d', { willReadFrequently: true });
+  baseContext.drawImage(image, 0, 0);
+
+  const basePixels = baseContext.getImageData(minX, minY, headW, headH);
+  for (let i = 0; i < basePixels.data.length; i += 4) {
+    if (maskPixels[i + 3] === 255) {
+      basePixels.data[i] = 255;
+      basePixels.data[i + 1] = 255;
+      basePixels.data[i + 2] = 255;
+      basePixels.data[i + 3] = 255;
+    }
+  }
+  baseContext.putImageData(basePixels, minX, minY);
+
+  const baseTexture = new THREE.CanvasTexture(baseCanvas);
+  const headTexture = new THREE.CanvasTexture(headCanvas);
+  configureTexture(baseTexture);
+  configureTexture(headTexture);
+
+  function makeFullImageMesh(texture) {
+    const material = new THREE.MeshBasicMaterial({
+      map: texture,
+      toneMapped: false,
+      depthTest: false,
+      depthWrite: false
+    });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(W, H), material);
+    mesh.position.set(W / 2, -H / 2, 0);
+    mesh.frustumCulled = false;
+    return mesh;
+  }
+
+  const originalScene = new THREE.Scene();
+  originalScene.add(makeFullImageMesh(originalTexture));
+
+  const animatedScene = new THREE.Scene();
+  const baseMesh = makeFullImageMesh(baseTexture);
+  baseMesh.renderOrder = 0;
+  animatedScene.add(baseMesh);
+
+  const pivotX = 701;
+  const pivotY = 264;
+
+  const headGeometry = new THREE.PlaneGeometry(headW, headH);
+  headGeometry.translate(
+    (minX + maxX) / 2 - pivotX,
+    pivotY - (minY + maxY) / 2,
+    0
+  );
+
+  const headMaterial = new THREE.MeshBasicMaterial({
+    map: headTexture,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide
+  });
+
+  const headMesh = new THREE.Mesh(headGeometry, headMaterial);
+  headMesh.position.set(pivotX, -pivotY, 2);
+  headMesh.renderOrder = 1;
+  headMesh.frustumCulled = false;
+  animatedScene.add(headMesh);
+
+  function renderAt(time) {
+    const t = Math.max(0, Math.min(2, time));
+
+    // Exact endpoint frames, including the unchanged source image at zero.
+    if (t === 0 || t === 2) {
+      renderer.render(originalScene, camera);
+      return;
+    }
+
+    // A smooth, periodic forward nod. The hat and head are one cutout,
+    // so they remain attached throughout the motion.
+    const nod = 0.5 - 0.5 * Math.cos(Math.PI * t);
+
+    headMesh.position.set(
+      pivotX,
+      -pivotY - 3.0 * nod,
+      2
+    );
+    headMesh.rotation.set(
+      -0.30 * nod,
+      0,
+      0.018 * nod
+    );
+    headMesh.scale.set(1, 1 - 0.008 * nod, 1);
+
+    renderer.render(animatedScene, camera);
+  }
+
+  let animationFrame = null;
+
+  window.setTime = function(t) {
+    // External deterministic seeking takes precedence over live playback.
+    if (animationFrame !== null) {
+      cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+
+    const numericTime = Number(t);
+    renderAt(Number.isFinite(numericTime) ? numericTime : 0);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  // Optional live playback; all actual frame generation remains deterministic.
+  const playbackStart = performance.now();
+  function playback(now) {
+    const seconds = ((now - playbackStart) / 1000) % 2;
+    renderAt(seconds);
+    animationFrame = requestAnimationFrame(playback);
+  }
+  animationFrame = requestAnimationFrame(playback);
+}
+
+init().catch(error => {
+  console.error(error);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Wave</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #fff; overflow: hidden; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+
+// Raised-hand search windows. Seeds are palm targets; extraction is adaptive.
+const HANDS = [
+  { seedX: 232, seedY: 170, wristY: 216, minX: 145, maxX: 325, minY: 40, maxY: 350 },
+  { seedX: 536, seedY: 200, wristY: 238, minX: 445, maxX: 655, minY: 55, maxY: 400 },
+  { seedX: 788, seedY: 230, wristY: 276, minX: 675, maxX: 895, minY: 95, maxY: 460 },
+  { seedX: 1126, seedY: 200, wristY: 244, minX: 985, maxX: 1198, minY: 55, maxY: 420 }
+];
+
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  premultipliedAlpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, true);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+renderer.domElement.style.width = W + 'px';
+renderer.domElement.style.height = H + 'px';
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, 0, -H, 0.1, 100);
+camera.position.set(0, 0, 10);
+camera.updateProjectionMatrix();
+
+const pivots = [];
+
+function isBackground(r, g, b) {
+  return r >= 250 && g >= 250 && b >= 250;
+}
+
+function isSkin(r, g, b) {
+  if (r < 158 || g < 108 || b < 92) return false;
+  if (g > r + 8) return false;
+  if (b > g + 18) return false;
+  const rb = r - b;
+  const rg = r - g;
+  if (rb < 22 || rb > 140) return false;
+  if (rg > 80) return false;
+  if (g > 185 && b < 162 && (g - b) > 48) return false;
+  if (rb < 38 && r > 215 && g > 198) return false;
+  return true;
+}
+
+function canGrowInto(r, g, b) {
+  if (r >= 250 && g >= 250 && b >= 250) return false;
+  if (b < 80 && r > 160 && g > 120) return false;
+  if (b > r + 25 && b > 150) return false;
+  if (r > 160 && g < 90 && b < 100) return false;
+  if (r < 70 && g < 70 && b < 70) return false;
+  return true;
+}
+
+function flood(src, visited, x0, y0, spec, skinFn) {
+  const stack = [[x0, y0]];
+  const pixels = [];
+  let sumX = 0;
+  let sumY = 0;
+  const yLimit = spec.wristY + 48;
+  const yTop = spec.seedY - 100;
+  while (stack.length) {
+    const cur = stack.pop();
+    const x = cur[0];
+    const y = cur[1];
+    if (x < spec.minX || x > spec.maxX || y < spec.minY || y > spec.maxY) continue;
+    if (y > yLimit || y < yTop) continue;
+    if (Math.abs(x - spec.seedX) > 120) continue;
+    if (x < 0 || y < 0 || x >= W || y >= H) continue;
+    const id = y * W + x;
+    if (visited[id]) continue;
+    visited[id] = 1;
+    const o = id * 4;
+    if (!skinFn(src[o], src[o + 1], src[o + 2])) continue;
+    pixels.push(id);
+    sumX += x;
+    sumY += y;
+    stack.push(
+      [x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1],
+      [x + 1, y + 1], [x - 1, y + 1], [x + 1, y - 1], [x - 1, y - 1]
+    );
+  }
+  return { count: pixels.length, sumX: sumX, sumY: sumY, pixels: pixels };
+}
+
+function extractComponent(src, spec, skinFn) {
+  const visited = new Uint8Array(W * H);
+  let best = null;
+  let bestDist = 1e9;
+  for (let y = spec.minY; y <= spec.maxY; y++) {
+    for (let x = spec.minX; x <= spec.maxX; x++) {
+      const id = y * W + x;
+      if (visited[id]) continue;
+      const o = id * 4;
+      if (!skinFn(src[o], src[o + 1], src[o + 2])) {
+        visited[id] = 1;
+        continue;
+      }
+      const comp = flood(src, visited, x, y, spec, skinFn);
+      if (comp.count < 450 || comp.count > 18000) continue;
+      const cx = comp.sumX / comp.count;
+      const cy = comp.sumY / comp.count;
+      const dist = Math.hypot(cx - spec.seedX, cy - spec.seedY);
+      if (dist < bestDist && dist < 88) {
+        bestDist = dist;
+        best = comp;
+      }
+    }
+  }
+  return best;
+}
+
+function pixelsToMask(pixels) {
+  const mask = new Uint8Array(W * H);
+  for (let i = 0; i < pixels.length; i++) mask[pixels[i]] = 1;
+  return mask;
+}
+
+function fallbackMask(src, spec) {
+  let sx = -1;
+  let sy = -1;
+  let best = 1e9;
+  const rMax = 42;
+  for (let y = spec.seedY - rMax; y <= spec.seedY + rMax; y++) {
+    if (y < 0 || y >= H) continue;
+    for (let x = spec.seedX - rMax; x <= spec.seedX + rMax; x++) {
+      if (x < 0 || x >= W) continue;
+      const o = (y * W + x) * 4;
+      if (isBackground(src[o], src[o + 1], src[o + 2])) continue;
+      const d = (x - spec.seedX) * (x - spec.seedX) + (y - spec.seedY) * (y - spec.seedY);
+      if (d < best) {
+        best = d;
+        sx = x;
+        sy = y;
+      }
+    }
+  }
+  if (sx < 0) return null;
+  const mask = new Uint8Array(W * H);
+  const visited = new Uint8Array(W * H);
+  const stack = [[sx, sy]];
+  let count = 0;
+  const rad2 = 76 * 76;
+  while (stack.length) {
+    const cur = stack.pop();
+    const x = cur[0];
+    const y = cur[1];
+    if (x < 1 || y < 1 || x >= W - 1 || y >= H - 1) continue;
+    if (y > spec.wristY + 12 || y < spec.seedY - 90) continue;
+    const dx = x - spec.seedX;
+    const dy = y - spec.seedY;
+    if (dx * dx + dy * dy > rad2) continue;
+    const id = y * W + x;
+    if (visited[id]) continue;
+    visited[id] = 1;
+    const o = id * 4;
+    const r = src[o];
+    const g = src[o + 1];
+    const b = src[o + 2];
+    if (isBackground(r, g, b)) continue;
+    if (b > r + 28 && b > 150) continue;
+    if (r > 150 && g < 85 && b < 100) continue;
+    if (r < 55 && g < 55 && b < 55) continue;
+    if (b < 70 && g > 150 && r > 180) continue;
+    mask[id] = 1;
+    count++;
+    stack.push(
+      [x + 1, y], [x - 1, y], [x, y + 1], [x, y - 1],
+      [x + 1, y + 1], [x - 1, y - 1], [x + 1, y - 1], [x - 1, y + 1]
+    );
+  }
+  if (count < 400) return null;
+  return mask;
+}
+
+function pickWristY(mask, hint) {
+  let minY = H;
+  let maxY = -1;
+  const span = new Int16Array(H);
+  const count = new Int16Array(H);
+  for (let y = 0; y < H; y++) {
+    let left = -1;
+    let right = -1;
+    let c = 0;
+    const row = y * W;
+    for (let x = 0; x < W; x++) {
+      if (mask[row + x]) {
+        if (left < 0) left = x;
+        right = x;
+        c++;
+      }
+    }
+    count[y] = c;
+    if (c) {
+      span[y] = right - left + 1;
+      if (y < minY) minY = y;
+      if (y > maxY) maxY = y;
+    }
+  }
+  if (maxY < 0) return 0;
+
+  let bestY = -1;
+  let bestSpan = 9999;
+  const y0 = Math.max(minY, hint - 28);
+  const y1 = Math.min(maxY, hint + 28);
+  for (let y = y0; y <= y1; y++) {
+    if (count[y] >= 8 && span[y] < bestSpan) {
+      bestSpan = span[y];
+      bestY = y;
+    }
+  }
+  if (bestY < 0) bestY = maxY;
+
+  if (bestY < minY + (maxY - minY) * 0.45 && (maxY - minY) > 36) {
+    bestSpan = 9999;
+    bestY = maxY;
+    const low = Math.floor(minY + (maxY - minY) * 0.5);
+    for (let y = low; y <= maxY; y++) {
+      if (count[y] >= 8 && span[y] < bestSpan) {
+        bestSpan = span[y];
+        bestY = y;
+      }
+    }
+  }
+  return bestY;
+}
+
+function trimBelow(mask, cutY) {
+  for (let y = cutY + 1; y < H; y++) {
+    const row = y * W;
+    for (let x = 0; x < W; x++) mask[row + x] = 0;
+  }
+}
+
+function fillInterior(mask, src, minY, maxY) {
+  if (maxY >= H) maxY = H - 1;
+  if (minY < 0) minY = 0;
+  for (let y = minY; y <= maxY; y++) {
+    const row = y * W;
+    let left = -1;
+    let right = -1;
+    for (let x = 0; x < W; x++) {
+      if (mask[row + x]) {
+        if (left < 0) left = x;
+        right = x;
+      }
+    }
+    if (left < 0) continue;
+    for (let x = left + 1; x < right; x++) {
+      if (mask[row + x]) continue;
+      const o = (row + x) * 4;
+      const r = src[o];
+      const g = src[o + 1];
+      const b = src[o + 2];
+      if (r >= 250 && g >= 250 && b >= 250) continue;
+      if (b > r + 25 && b > 150) continue;
+      if (r > 160 && g < 90) continue;
+      if (b < 80 && g > 140 && r > 160) continue;
+      mask[row + x] = 1;
+    }
+  }
+}
+
+function dilateHand(mask, src, bounds, cutY) {
+  const minX = Math.max(0, bounds.minX - 2);
+  const maxX = Math.min(W - 1, bounds.maxX + 2);
+  const minY = Math.max(0, bounds.minY - 2);
+  const maxY = Math.min(cutY, H - 1);
+  for (let pass = 0; pass < 2; pass++) {
+    const add = [];
+    for (let y = minY; y <= maxY; y++) {
+      for (let x = minX; x <= maxX; x++) {
+        const id = y * W + x;
+        if (mask[id]) continue;
+        let near = false;
+        for (let dy = -1; dy <= 1 && !near; dy++) {
+          const yy = y + dy;
+          if (yy < 0 || yy >= H || yy > cutY) continue;
+          for (let dx = -1; dx <= 1; dx++) {
+            const xx = x + dx;
+            if (xx < 0 || xx >= W) continue;
+            if (mask[yy * W + xx]) {
+              near = true;
+              break;
+            }
+          }
+        }
+        if (!near) continue;
+        const o = id * 4;
+        if (canGrowInto(src[o], src[o + 1], src[o + 2])) add.push(id);
+      }
+    }
+    for (let i = 0; i < add.length; i++) mask[add[i]] = 1;
+  }
+}
+
+function boundsOf(mask) {
+  let minX = W;
+  let minY = H;
+  let maxX = -1;
+  let maxY = -1;
+  for (let y = 0; y < H; y++) {
+    const row = y * W;
+    for (let x = 0; x < W; x++) {
+      if (mask[row + x]) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+      }
+    }
+  }
+  if (maxX < 0) return null;
+  return { minX: minX, minY: minY, maxX: maxX, maxY: maxY };
+}
+
+function centroidX(mask, y) {
+  let sum = 0;
+  let n = 0;
+  const y0 = y > 0 ? y - 1 : y;
+  for (let yy = y0; yy <= y; yy++) {
+    const row = yy * W;
+    for (let x = 0; x < W; x++) {
+      if (mask[row + x]) {
+        sum += x + 0.5;
+        n++;
+      }
+    }
+  }
+  return n ? sum / n : 0;
+}
+
+function makeHandMask(src, spec) {
+  let mask = null;
+  const comp = extractComponent(src, spec, isSkin);
+  if (comp && comp.count >= 450) mask = pixelsToMask(comp.pixels);
+  else mask = fallbackMask(src, spec);
+  if (!mask) return null;
+
+  const cutY = pickWristY(mask, spec.wristY);
+  trimBelow(mask, cutY);
+
+  let b = boundsOf(mask);
+  if (!b) return null;
+  fillInterior(mask, src, b.minY, Math.min(b.maxY, cutY));
+  dilateHand(mask, src, b, cutY);
+  b = boundsOf(mask);
+  if (!b) return null;
+  const bw = b.maxX - b.minX + 1;
+  const bh = b.maxY - b.minY + 1;
+  if (bw < 26 || bh < 30 || bw > 160 || bh > 180) return null;
+  b.pivotX = centroidX(mask, b.maxY);
+  b.pivotY = b.maxY + 0.5;
+  return { mask: mask, info: b };
+}
+
+function waveAngle(t) {
+  if (t <= 0 || t >= 2) return 0;
+  // Two waves over 2s, plus a slower term so t=0.5 / t=1.5 still move.
+  // Position and velocity match at the loop endpoints.
+  return 0.27 * Math.sin(2 * Math.PI * t) + 0.15 * Math.sin(Math.PI * t);
+}
+
+function makeScreenQuad() {
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+    0, 0, 0,
+    W, 0, 0,
+    W, -H, 0,
+    0, -H, 0
+  ]), 3));
+  geom.setAttribute('uv', new THREE.BufferAttribute(new Float32Array([
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0
+  ]), 2));
+  geom.setIndex([0, 1, 2, 0, 2, 3]);
+  return geom;
+}
+
+function makeHandGeom(info) {
+  const pivotX = info.pivotX;
+  const pivotY = info.pivotY;
+  const x0 = info.minX;
+  const y0 = info.minY;
+  const x1 = info.maxX + 1;
+  const y1 = info.maxY + 1;
+  const geom = new THREE.BufferGeometry();
+  geom.setAttribute('position', new THREE.BufferAttribute(new Float32Array([
+    x0 - pivotX, pivotY - y0, 0,
+    x1 - pivotX, pivotY - y0, 0,
+    x1 - pivotX, pivotY - y1, 0,
+    x0 - pivotX, pivotY - y1, 0
+  ]), 3));
+  geom.setAttribute('uv', new THREE.BufferAttribute(new Float32Array([
+    x0 / W, 1 - y0 / H,
+    x1 / W, 1 - y0 / H,
+    x1 / W, 1 - y1 / H,
+    x0 / W, 1 - y1 / H
+  ]), 2));
+  geom.setIndex([0, 1, 2, 0, 2, 3]);
+  return geom;
+}
+
+function onImage() {
+  const srcCanvas = document.createElement('canvas');
+  srcCanvas.width = W;
+  srcCanvas.height = H;
+  const sctx = srcCanvas.getContext('2d', { willReadFrequently: true });
+  sctx.imageSmoothingEnabled = false;
+  sctx.drawImage(img, 0, 0, W, H);
+  const src = sctx.getImageData(0, 0, W, H).data;
+
+  const combined = new Uint8Array(W * H);
+  const built = [];
+  for (let i = 0; i < HANDS.length; i++) {
+    const result = makeHandMask(src, HANDS[i]);
+    if (!result) continue;
+    built.push(result);
+    const m = result.mask;
+    for (let p = 0; p < m.length; p++) if (m[p]) combined[p] = 1;
+  }
+
+  const alphaCanvas = document.createElement('canvas');
+  alphaCanvas.width = W;
+  alphaCanvas.height = H;
+  const actx = alphaCanvas.getContext('2d');
+  const aimg = actx.createImageData(W, H);
+  const ad = aimg.data;
+  for (let i = 0; i < W * H; i++) {
+    const v = combined[i] ? 255 : 0;
+    const o = i * 4;
+    ad[o] = v;
+    ad[o + 1] = v;
+    ad[o + 2] = v;
+    ad[o + 3] = 255;
+  }
+  actx.putImageData(aimg, 0, 0);
+
+  const imageTex = new THREE.Texture(img);
+  imageTex.colorSpace = THREE.SRGBColorSpace;
+  imageTex.flipY = true;
+  imageTex.magFilter = THREE.LinearFilter;
+  imageTex.minFilter = THREE.LinearFilter;
+  imageTex.generateMipmaps = false;
+  imageTex.wrapS = THREE.ClampToEdgeWrapping;
+  imageTex.wrapT = THREE.ClampToEdgeWrapping;
+  imageTex.needsUpdate = true;
+
+  const alphaTex = new THREE.CanvasTexture(alphaCanvas);
+  alphaTex.colorSpace = THREE.NoColorSpace;
+  alphaTex.flipY = true;
+  alphaTex.magFilter = THREE.LinearFilter;
+  alphaTex.minFilter = THREE.LinearFilter;
+  alphaTex.generateMipmaps = false;
+  alphaTex.wrapS = THREE.ClampToEdgeWrapping;
+  alphaTex.wrapT = THREE.ClampToEdgeWrapping;
+  alphaTex.needsUpdate = true;
+
+  const screen = makeScreenQuad();
+
+  const bg = new THREE.Mesh(screen, new THREE.MeshBasicMaterial({
+    map: imageTex,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide
+  }));
+  bg.renderOrder = 0;
+  bg.frustumCulled = false;
+  scene.add(bg);
+
+  const white = new THREE.Mesh(screen, new THREE.MeshBasicMaterial({
+    color: 0xffffff,
+    alphaMap: alphaTex,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    premultipliedAlpha: false
+  }));
+  white.renderOrder = 1;
+  white.frustumCulled = false;
+  scene.add(white);
+
+  const handMat = new THREE.MeshBasicMaterial({
+    map: imageTex,
+    alphaMap: alphaTex,
+    transparent: true,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false,
+    side: THREE.DoubleSide,
+    premultipliedAlpha: false
+  });
+
+  for (let i = 0; i < built.length; i++) {
+    const info = built[i].info;
+    const group = new THREE.Group();
+    group.position.set(info.pivotX, -info.pivotY, 0);
+    const mesh = new THREE.Mesh(makeHandGeom(info), handMat);
+    mesh.renderOrder = 2;
+    mesh.frustumCulled = false;
+    group.add(mesh);
+    group.renderOrder = 2;
+    scene.add(group);
+    pivots.push(group);
+  }
+
+  window.setTime = function setTime(t) {
+    const angle = waveAngle(t);
+    for (let i = 0; i < pivots.length; i++) pivots[i].rotation.z = angle;
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  let playT0 = null;
+  function play(now) {
+    if (playT0 === null) playT0 = now;
+    window.setTime(((now - playT0) / 1000) % 2);
+    requestAnimationFrame(play);
+  }
+  requestAnimationFrame(play);
+}
+
+const img = new Image();
+img.onload = onImage;
+img.src = './image.png';
+</script>
+</body>
+</html>
+```

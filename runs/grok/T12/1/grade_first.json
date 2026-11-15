@@ -1,0 +1,52 @@
+{
+ "stage": "first",
+ "task": "T12",
+ "model": "grok",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 2448,
+  "completion_tokens": 109195,
+  "total_tokens": 111643,
+  "cost": 0.658338,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 1152,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.658338,
+   "upstream_inference_prompt_cost": 0.003168,
+   "upstream_inference_completions_cost": 0.65517
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 103522,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 1308.598,
+ "status": "PASS",
+ "grades": {
+  "G1": {
+   "ok": true,
+   "value": 0.0012
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.1285
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.489
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": true
+ }
+}

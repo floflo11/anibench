@@ -1,0 +1,278 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Pigtail Swing</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: #ffffff;
+  }
+  canvas {
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1200px;
+    height: 600px;
+  }
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200;
+const H = 600;
+window.ANIM_READY = false;
+
+const renderer = new THREE.WebGLRenderer({
+  antialias: false,
+  alpha: false,
+  preserveDrawingBuffer: true
+});
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+renderer.autoClear = true;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.z = 10;
+
+function configureTexture(texture) {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  texture.magFilter = THREE.LinearFilter;
+  texture.minFilter = THREE.LinearFilter;
+  texture.generateMipmaps = false;
+  texture.wrapS = THREE.ClampToEdgeWrapping;
+  texture.wrapT = THREE.ClampToEdgeWrapping;
+  texture.flipY = true;
+  texture.anisotropy = 1;
+  return texture;
+}
+
+function basicMaterial(map, transparent = false) {
+  return new THREE.MeshBasicMaterial({
+    map,
+    transparent,
+    toneMapped: false,
+    depthTest: false,
+    depthWrite: false
+  });
+}
+
+new THREE.TextureLoader().load('./image.png', (loadedTexture) => {
+  const originalTexture = configureTexture(loadedTexture);
+
+  const sourceCanvas = document.createElement('canvas');
+  sourceCanvas.width = W;
+  sourceCanvas.height = H;
+  const sourceCtx = sourceCanvas.getContext('2d', { willReadFrequently: true });
+  sourceCtx.drawImage(loadedTexture.image, 0, 0, W, H);
+  const sourcePixels = sourceCtx.getImageData(0, 0, W, H).data;
+
+  // These paths include the pigtails and a small margin of their white background.
+  const leftPath = new Path2D(
+    'M 351 101 ' +
+    'C 332 104 317 119 309 138 ' +
+    'C 301 160 305 185 316 207 ' +
+    'C 325 225 340 238 353 244 ' +
+    'C 361 238 366 230 373 224 ' +
+    'C 374 215 369 206 364 195 ' +
+    'C 359 181 357 166 358 151 ' +
+    'C 358 138 362 128 361 116 ' +
+    'C 360 108 357 103 351 101 Z'
+  );
+
+  const rightPath = new Path2D(
+    'M 480 98 ' +
+    'C 496 98 511 108 519 124 ' +
+    'C 527 143 528 166 520 186 ' +
+    'C 515 202 503 215 487 224 ' +
+    'C 480 228 473 229 468 226 ' +
+    'C 473 215 478 204 481 192 ' +
+    'C 485 175 487 157 485 139 ' +
+    'C 484 126 478 119 476 111 ' +
+    'C 475 105 476 101 480 98 Z'
+  );
+
+  // The raised hand is kept stationary and remains in front of the right pigtail.
+  const handPath = new Path2D(
+    'M 501 184 ' +
+    'C 505 180 510 183 515 190 ' +
+    'L 514 176 C 513 169 517 165 521 168 ' +
+    'L 527 181 L 526 166 ' +
+    'C 526 160 532 159 535 165 ' +
+    'L 538 180 L 540 169 ' +
+    'C 542 163 547 165 548 171 ' +
+    'L 547 186 L 554 177 ' +
+    'C 558 172 563 176 560 182 ' +
+    'L 554 195 ' +
+    'C 565 191 568 196 563 204 ' +
+    'C 557 215 548 221 543 229 ' +
+    'L 537 244 L 516 244 L 511 221 ' +
+    'C 504 213 499 201 498 193 ' +
+    'C 497 189 498 186 501 184 Z'
+  );
+
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W;
+  baseCanvas.height = H;
+  const baseCtx = baseCanvas.getContext('2d');
+  baseCtx.drawImage(sourceCanvas, 0, 0);
+
+  function removeFromBase(path, protectPath = null) {
+    baseCtx.save();
+    baseCtx.clip(path);
+    baseCtx.fillStyle = '#ffffff';
+    baseCtx.fillRect(0, 0, W, H);
+    baseCtx.restore();
+
+    if (protectPath) {
+      baseCtx.save();
+      baseCtx.clip(protectPath);
+      baseCtx.drawImage(sourceCanvas, 0, 0);
+      baseCtx.restore();
+    }
+  }
+
+  removeFromBase(leftPath);
+  removeFromBase(rightPath, handPath);
+
+  const cleanedBaseTexture = configureTexture(new THREE.CanvasTexture(baseCanvas));
+
+  function createCutoutTexture(path, protectPath = null) {
+    const maskCanvas = document.createElement('canvas');
+    maskCanvas.width = W;
+    maskCanvas.height = H;
+    const maskCtx = maskCanvas.getContext('2d', { willReadFrequently: true });
+    maskCtx.fillStyle = '#ffffff';
+    maskCtx.fill(path);
+
+    if (protectPath) {
+      maskCtx.globalCompositeOperation = 'destination-out';
+      maskCtx.fill(protectPath);
+      maskCtx.globalCompositeOperation = 'source-over';
+    }
+
+    const maskPixels = maskCtx.getImageData(0, 0, W, H).data;
+    const outputCanvas = document.createElement('canvas');
+    outputCanvas.width = W;
+    outputCanvas.height = H;
+    const outputCtx = outputCanvas.getContext('2d');
+    const outputImage = outputCtx.createImageData(W, H);
+    const out = outputImage.data;
+
+    for (let i = 0; i < out.length; i += 4) {
+      const r = sourcePixels[i];
+      const g = sourcePixels[i + 1];
+      const b = sourcePixels[i + 2];
+      const distanceFromWhite = 255 - Math.min(r, g, b);
+
+      if (maskPixels[i + 3] !== 0 && distanceFromWhite > 3) {
+        // Preserve the original, already antialiased edge colors.
+        out[i] = r;
+        out[i + 1] = g;
+        out[i + 2] = b;
+        out[i + 3] = maskPixels[i + 3];
+      } else {
+        out[i] = 255;
+        out[i + 1] = 255;
+        out[i + 2] = 255;
+        out[i + 3] = 0;
+      }
+    }
+
+    outputCtx.putImageData(outputImage, 0, 0);
+    return configureTexture(new THREE.CanvasTexture(outputCanvas));
+  }
+
+  const baseMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    basicMaterial(originalTexture)
+  );
+  baseMesh.position.set(W / 2, H / 2, 0);
+  baseMesh.renderOrder = 0;
+  scene.add(baseMesh);
+
+  const originalBaseMaterial = baseMesh.material;
+  const cleanedBaseMaterial = basicMaterial(cleanedBaseTexture);
+
+  function createTail(path, pivot, protectPath = null) {
+    const texture = createCutoutTexture(path, protectPath);
+    const geometry = new THREE.PlaneGeometry(W, H);
+    geometry.translate(W / 2 - pivot.x, pivot.y - H / 2, 0);
+
+    const mesh = new THREE.Mesh(geometry, basicMaterial(texture, true));
+    mesh.position.set(pivot.x, H - pivot.y, 1);
+    mesh.visible = false;
+    scene.add(mesh);
+    return mesh;
+  }
+
+  const leftTail = createTail(leftPath, { x: 354, y: 115 });
+  leftTail.renderOrder = 1;
+
+  const rightTail = createTail(
+    rightPath,
+    { x: 482, y: 109 },
+    handPath
+  );
+  rightTail.position.z = 2;
+  rightTail.renderOrder = 2;
+
+  const handMesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(W, H),
+    basicMaterial(createCutoutTexture(handPath), true)
+  );
+  handMesh.position.set(W / 2, H / 2, 3);
+  handMesh.renderOrder = 3;
+  handMesh.visible = false;
+  scene.add(handMesh);
+
+  window.setTime = function (t) {
+    t = Number(t);
+    if (!Number.isFinite(t)) t = 0;
+    t = Math.max(0, Math.min(2, t));
+
+    const phase = Math.PI * t;
+    const swing = Math.sin(phase);
+    const atRest = t === 0 || t === 2 || Math.abs(swing) < 1e-12;
+
+    leftTail.rotation.z = 0;
+    rightTail.rotation.z = 0;
+
+    if (atRest) {
+      baseMesh.material = originalBaseMaterial;
+      leftTail.visible = false;
+      rightTail.visible = false;
+      handMesh.visible = false;
+    } else {
+      baseMesh.material = cleanedBaseMaterial;
+      leftTail.visible = true;
+      rightTail.visible = true;
+      handMesh.visible = true;
+
+      // Symmetric outward/inward swings, with the hair ties as pivots.
+      leftTail.rotation.z = -0.09 * swing;
+      rightTail.rotation.z = 0.08 * swing;
+    }
+
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+});
+</script>
+</body>
+</html>
+```

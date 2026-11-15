@@ -6,6 +6,7 @@ deepseek,T04,1,1,NO_HTML,first,0.04264744,32000,,,,,,
 deepseek,T05,1,1,NO_HTML,first,0.04264216,32000,,,,,,
 deepseek,T06,1,1,NO_HTML,first,0.0426426,32000,,,,,,
 deepseek,T07,1,1,NO_HTML,first,0.04265008,32000,,,,,,
+deepseek,T08,1,1,NO_HTML,first,0.04264568,32000,,,,,,
 deepseek,T09,1,1,NO_HTML,first,0.042534864,32000,,,,,,
 deepseek,T18,1,2,NO_HTML,first,0.04264084,32000,,,,,,
 deepseek,T19,1,2,NO_HTML,first,0.04264788,32000,,,,,,
@@ -28,6 +29,8 @@ grok,T06,1,1,NO_HTML,first,0.042924,6631,,,,,,
 grok,T07,1,1,NO_HTML,first,0.003652,397,,,,,,
 grok,T08,1,1,NO_HTML,first,0.01334,1694,,,,,,
 grok,T09,1,1,NO_HTML,first,0.010274,1185,,,,,,
+grok,T12,1,1,PASS,first,0.658338,109195,ok,,ok,ok,,ok
+grok,T18,1,2,PASS,first,0.46891,77630,ok,ok,ok,ok,,ok
 grok,T19,1,2,NO_HTML,first,0.019202,2670,,,,,,
 grok,T20,1,2,NO_HTML,first,0.01764,2412,,,,,,
 grok,T21,1,2,NO_HTML,first,0.014718,1931,,,,,,
@@ -38,7 +41,9 @@ kimi,T04,1,1,PASS,first,0.3796956,27830,ok,,ok,ok,ok,ok
 kimi,T05,1,1,PASS,first,0.1473529772,17496,ok,,ok,ok,ok,ok
 kimi,T06,1,1,PASS,first,0.1760454,19270,ok,,ok,ok,ok,ok
 kimi,T07,1,1,PASS,first,0.1582915785,18797,ok,ok,ok,ok,ok,ok
+kimi,T08,1,1,PASS,first,0.221602,21865,ok,,ok,ok,ok,ok
 kimi,T09,1,1,FAIL,first,0.225464,22252,ok,ok,ok,ok,FAIL,ok
+kimi,T10,1,1,FAIL,first,0.170203443,19300,ok,ok,ok,ok,FAIL,ok
 kimi,T11,1,1,FAIL,first,0.15286572,16702,FAIL,FAIL,ok,ok,FAIL,FAIL
 kimi,T18,1,2,PASS,first,0.175308,17241,ok,ok,ok,ok,,ok
 kimi,T19,1,2,PASS,first,0.185872,18291,ok,,ok,ok,ok,ok

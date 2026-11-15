@@ -9,11 +9,11 @@ anibench gives a model a still image of cartoon characters plus one instruction 
 "make her earrings swing", "lift her hat") and asks for a three.js page that animates only that part. We render the page
 to 25 frames and score it with **six image-math checks**, not a model judge.
 
-- **Kimi K3.1 Pro: 8/13 first-try runs passed (62%).**
+- **Kimi K3.1 Pro: 9/15 first-try runs passed (60%).**
 - **Qwen 3.8 27B: 6/15 first-try runs passed (40%).**
-- **DeepSeek V4 Flash Vision: 1/12 first-try runs passed (8%).**
+- **Grok 4.7: 2/14 first-try runs passed (14%).**
+- **DeepSeek V4 Flash Vision: 1/13 first-try runs passed (8%).**
 - **Gemini 4 Carbon: 0/8 first-try runs passed (0%).**
-- **Grok 4.7: 0/12 first-try runs passed (0%).**
 - **Nemotron 3.5 Super VL: 0/21 first-try runs passed (0%).**
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
   Nemotron flipped or shifted the image in 9 of 21 first-try runs and left the canvas blank in 4;
@@ -79,9 +79,9 @@ The weakest check is **G2 on small fragments**: a leftover piece that keeps touc
 
 | Model | Scored runs | Passed | Tier 1 | Tier 2 | Didn't run | Cost |
 | --- | --- | --- | --- | --- | --- | --- |
-| DeepSeek V4 Flash Vision | 12 | 1 (8%) | 0/8 | 1/4 | 11 | $0.506 |
-| Grok 4.7 | 12 | 0 (0%) | 0/9 | 0/3 | 12 | $0.287 |
-| Kimi K3.1 Pro | 13 | 8 (62%) | 5/9 | 3/4 | 0 | $2.721 |
+| DeepSeek V4 Flash Vision | 13 | 1 (8%) | 0/9 | 1/4 | 12 | $0.549 |
+| Grok 4.7 | 14 | 2 (14%) | 1/10 | 1/4 | 12 | $1.415 |
+| Kimi K3.1 Pro | 15 | 9 (60%) | 6/11 | 3/4 | 0 | $3.113 |
 | Nemotron 3.5 Super VL | 21 | 0 (0%) | 0/12 | 0/9 | 0 | $0 |
 | Qwen 3.8 27B | 15 | 6 (40%) | 4/10 | 2/5 | 1 | $0.458 |
 
@@ -89,12 +89,12 @@ The weakest check is **G2 on small fragments**: a leftover piece that keeps touc
 
 | Check | DeepSeek V4 Flash Vision | Grok 4.7 | Kimi K3.1 Pro | Nemotron 3.5 Super VL | Qwen 3.8 27B |
 | --- | --- | --- | --- | --- | --- |
-| G1 Isolation | 0/1 | 0/0 | 2/13 | 17/21 | 5/14 |
-| G2 Integrity | 0/0 | 0/0 | 4/8 | 2/12 | 1/8 |
-| G3 Area | 0/1 | 0/0 | 1/13 | 13/21 | 4/14 |
-| G4 Motion | 0/1 | 0/0 | 0/13 | 1/21 | 3/14 |
-| G5 Pivot | 0/1 | 0/0 | 2/11 | 9/13 | 4/11 |
-| G6 Loop/fidelity | 0/1 | 0/0 | 1/13 | 17/21 | 4/14 |
+| G1 Isolation | 0/1 | 0/2 | 2/15 | 17/21 | 5/14 |
+| G2 Integrity | 0/0 | 0/1 | 4/9 | 2/12 | 1/8 |
+| G3 Area | 0/1 | 0/2 | 1/15 | 13/21 | 4/14 |
+| G4 Motion | 0/1 | 0/2 | 0/15 | 1/21 | 3/14 |
+| G5 Pivot | 0/1 | 0/0 | 3/13 | 9/13 | 4/11 |
+| G6 Loop/fidelity | 0/1 | 0/2 | 1/15 | 17/21 | 4/14 |
 
 ![pass rate](results/charts/pass_rate.png)
 
