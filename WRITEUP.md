@@ -16,7 +16,7 @@ to 25 frames and score it with **six image-math checks**, not a model judge.
 - **Grok 4.7: 0/12 first-try runs passed (0%).**
 - **Nemotron 3.5 Super VL: 0/21 first-try runs passed (0%).**
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
-  Nemotron flipped or shifted the image in 9 of 33 runs and left the canvas blank in 4;
+  Nemotron flipped or shifted the image in 9 of 21 first-try runs and left the canvas blank in 4;
   Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
 - On Valkyrie, the reference solutions score **21/21**, and Claude Sonnet 5.5 running as a Claude Code agent passed the T01 wave (all six checks). The full Sonnet and GPT-6.1 Sol Valkyrie runs were still in progress at submission time.
 - Gemini 4 Carbon is left out of the table: in 8 of 8 completed runs it used the whole 32k-token budget reasoning and returned no file.
