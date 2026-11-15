@@ -34,8 +34,9 @@ valkyrie login                 # if not already
 valkyrie org use <team org>
 # then follow quickstart step 3 to upload this folder as a dataset (Harbor task format)
 ```
-Not tested here: I couldn't build Docker images in my sandbox. Check that one task builds and its oracle
-(`solution/solve.sh`) scores 1 before uploading all 21.
+Tested without Docker: the verifier (`tests/grade_app.py`) gives reward 1 for the oracle on T01, T07 and T13,
+and 0 for Nemotron's T01. Not tested: the Docker build itself (no Docker in my sandbox). Build one task first and
+check its oracle scores 1 before uploading all 21.
 
 ## Submit (hackathon.vals.ai)
 - Code repository: https://github.com/floflo11/anibench (private; add judges or make it public if required)
