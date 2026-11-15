@@ -52,3 +52,11 @@ Toddlers:
 4. Smoke test (open-source model, 2 tasks) -> pilot (T01,T07,T13 x Sonnet, Sol) -> full 24 x 3 tries.
 5. Results: pass rates per model/tier, failure rate per grader, GIF library, charts.
 6. Harbor task export for Valkyrie (vendor three.js), write-up, slide deck, README.
+
+## Status at handoff (session 1, ~3:10 AM PT)
+- Repo: github.com/floflo11/anibench (private), branch main. Mirror folder: ~/Projects/animbench.
+- vendor/ holds three.js r188dev (three.module.js imports ./three.core.js).
+- Done: design doc, images prepared, foreground masks, rough coordinates above.
+- Not done: everything in "Build order". Start at step 1.
+- Network in session 1 was blocked for openrouter.ai, pypi, npm. First thing: test
+  `curl -s -o /dev/null -w '%{http_code}' https://openrouter.ai/api/v1/models` (expect 200).
