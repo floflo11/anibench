@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Earring Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+            display: block;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// Configuration
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 600;
+const IMAGE_PATH = './image.png';
+
+// Approximate coordinates of the red earrings on the girl (far right)
+// Image coordinates: (0,0) top-left
+const EARRING_1 = { x: 878, y: 218 };
+const EARRING_2 = { x: 1092, y: 218 };
+const EARRING_RADIUS = 14.0;
+const SWING_AMPLITUDE = 4.0; // pixels
+const LOOP_DURATION = 2.0; // seconds
+
+// Globals
+let renderer, scene, camera, mesh, texture;
+let uniforms;
+
+function init() {
+    // 1. Renderer
+    const canvas = document.createElement('canvas');
+    canvas.width = IMAGE_WIDTH;
+    canvas.height = IMAGE_HEIGHT;
+    document.body.appendChild(canvas);
+
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+    renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+
+    // 2. Camera (Orthographic, 1 pixel = 1 unit)
+    // left, right, top, bottom, near, far
+    // We set top=0, bottom=IMAGE_HEIGHT so Y=0 is top, matching image coordinates
+    camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, IMAGE_HEIGHT, 0, -1, 1);
+    camera.position.z = 1;
+
+    // 3. Scene
+    scene = new THREE.Scene();
+
+    // 4. Texture
+    const textureLoader = new THREE.TextureLoader();
+    texture = textureLoader.load(IMAGE_PATH, onTextureLoaded);
+    texture.colorSpace = THREE.SRGBColorSpace;
+    texture.flipY = false; // Image (0,0) is top-left, matches our camera setup
+
+    // 5. Material (Shader to animate only earring regions)
+    uniforms = {
+        uMap: { value: texture },
+        uTime: { value: 0.0 },
+        uResolution: { value: new THREE.Vector2(IMAGE_WIDTH, IMAGE_HEIGHT) }
+    };
+
+    const material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: `
+            varying vec2 vUv;
+            void main() {
+                vUv = uv;
+                gl_Position = vec4(position, 1.0);
+            }
+        `,
+        fragmentShader: `
+            uniform sampler2D uMap;
+            uniform float uTime;
+            uniform vec2 uResolution;
+            varying vec2 vUv;
+
+            void main() {
+                // Convert UV to pixel coordinates (0,0 at top-left)
+                vec2 pixel = vec2(
+                    vUv.x * uResolution.x,
+                    (1.0 - vUv.y) * uResolution.y
+                );
+
+                // Define earring centers
+                vec2 center1 = vec2(878.0, 218.0);
+                vec2 center2 = vec2(1092.0, 218.0);
+
+                // Calculate swing offset based on time (0 to 2 seconds loop)
+                // sin(t * PI) goes 0 -> 1 -> 0 -> -1 -> 0 over 2 seconds
+                float swing = sin(uTime * 3.141592653589793) * 4.0;
+
+                // Calculate influence for each earring (1.0 at center, 0.0 at radius edge)
+                float d1 = distance(pixel, center1);
+                float d2 = distance(pixel, center2);
+                
+                float influence1 = smoothstep(14.0, 0.0, d1);
+                float influence2 = smoothstep(14.0, 0.0, d2);
+                
+                float totalInfluence = influence1 + influence2;
+
+                // Apply horizontal offset to UVs where influence > 0
+                // We offset the UV lookup so the texture content appears to move
+                vec2 offset = vec2(swing * totalInfluence, 0.0);
+                
+                vec2 newUv = vUv;
+                newUv.x += offset.x / uResolution.x;
+                // Y stays same because swing is horizontal
+                
+                vec4 color = texture2D(uMap, newUv);
+                gl_FragColor = color;
+            }
+        `,
+        transparent: false,
+        depthWrite: false
+    });
+
+    // 6. Mesh
+    const geometry = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+    // Position plane so its top-left corner is at (0,0)
+    // Geometry is centered at 0,0, so we shift by half size
+    mesh = new THREE.Mesh(geometry, material);
+    mesh.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+    scene.add(mesh);
+}
+
+function onTextureLoaded() {
+    // Initial render
+    renderFrame(0.0);
+    window.ANIM_READY = true;
+}
+
+function renderFrame(t) {
+    // Clamp t to valid range for deterministic behavior if needed, but contract says 0<=t<=2
+    uniforms.uTime.value = t;
+    renderer.render(scene, camera);
+}
+
+// Expose API
+window.setTime = function(t) {
+    if (texture && texture.isTexture) {
+        renderFrame(t);
+    }
+};
+
+// Start
+init();
+
+</script>
+</body>
+</html>

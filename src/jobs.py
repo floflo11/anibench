@@ -13,6 +13,8 @@ MODELS = {
     "sonnet": "anthropic/claude-sonnet-5.5",
     "sol": "openai/gpt-6.1-sol",
     "qwen": "qwen/qwen3.8-27b",
+    "nemotron": "nvidia/nemotron-3.5-super-vl:free",
+    "gemma": "google/gemma-4-31b-it:free",
 }
 
 
@@ -51,11 +53,10 @@ def extract_html(text):
 def ingest(path):
     raw = json.loads(Path(path).read_text())
     if isinstance(raw, list) and raw and isinstance(raw[0], dict) and "type" in raw[0]:
-        # saved tool result: [{type:'text', text:'<json>'}...]
-        txt = raw[0]["text"]
-        txt = txt[: txt.rfind("}") + 1] if not txt.rstrip().endswith("]") else txt
-        start = txt.find("{")
-        raw = json.loads(txt[start:]) if txt.lstrip()[0] != "[" else json.loads(txt)
+        # saved browser tool result: [{type:'text', text:'"<json string>"\n\n(captured ...)'}]
+        txt = raw[0]["text"].lstrip()
+        val, _ = json.JSONDecoder().raw_decode(txt)
+        raw = json.loads(val) if isinstance(val, str) else val
     results = raw["results"] if isinstance(raw, dict) and "results" in raw else raw
     n = 0
     for r in results.values() if isinstance(results, dict) else results:

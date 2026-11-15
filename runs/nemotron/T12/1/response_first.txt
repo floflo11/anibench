@@ -1,0 +1,149 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three.js Hand Wave Animation</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; display: block; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// Configuration
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 600;
+const IMAGE_SRC = './image.png';
+
+// Hand definition: [name, left, top, width, height, pivotX, pivotY]
+// Coordinates are in image pixel space (0,0 top-left)
+const HANDS_DATA = [
+  ['child1', 185, 190, 75, 160, 200, 310],   // Boy in plaid
+  ['child2', 420, 280, 130, 150, 440, 410],  // Girl in yellow
+  ['child3', 610, 330, 75, 140, 630, 450],   // Boy in stripes
+  ['child4', 880, 280, 60, 110, 890, 380]    // Girl in white
+];
+
+let renderer, camera, scene, baseTexture;
+let handMeshes = [];
+let ocMeshes = [];
+
+const canvas = document.getElementById('canvas');
+
+function init() {
+  // Renderer setup
+  renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+  renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+  renderer.setPixelRatio(1);
+  renderer.toneMapping = THREE.NoToneMapping;
+
+  // Camera setup: Orthographic, 1 pixel = 1 unit, Y down (0 at top)
+  camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, 0, IMAGE_HEIGHT, -1, 1);
+  camera.position.z = 1;
+
+  scene = new THREE.Scene();
+
+  // Load image
+  const img = new Image();
+  img.src = IMAGE_SRC;
+  img.onload = () => {
+    setupScene(img);
+    window.ANIM_READY = true;
+    // Render frame 0
+    window.setTime(0);
+  };
+}
+
+function setupScene(img) {
+  // Offscreen canvas for cropping hands
+  const offscreen = document.createElement('canvas');
+  offscreen.width = IMAGE_WIDTH;
+  offscreen.height = IMAGE_HEIGHT;
+  const octx = offscreen.getContext('2d');
+  octx.drawImage(img, 0, 0);
+
+  // Base layer: full image
+  const baseTex = new THREE.CanvasTexture(offscreen);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  const baseMat = new THREE.MeshBasicMaterial({ map: baseTex });
+  const baseGeo = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+  const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+  baseMesh.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+  scene.add(baseMesh);
+
+  // Process each hand
+  HANDS_DATA.forEach(([name, lx, ly, w, h, px, py]) => {
+    // 1. Occlusion layer: white box to hide original static hand
+    const occGeo = new THREE.PlaneGeometry(w, h);
+    const occMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    const occMesh = new THREE.Mesh(occGeo, occMat);
+    // Position center of box at (lx + w/2, ly + h/2)
+    occMesh.position.set(lx + w / 2, ly + h / 2, 1);
+    scene.add(occMesh);
+    ocMeshes.push(occMesh);
+
+    // 2. Hand layer: cropped hand texture
+    const handCanvas = document.createElement('canvas');
+    handCanvas.width = w;
+    handCanvas.height = h;
+    const hctx = handCanvas.getContext('2d');
+    hctx.drawImage(offscreen, lx, ly, w, h, 0, 0, w, h);
+
+    const handTex = new THREE.CanvasTexture(handCanvas);
+    handTex.colorSpace = THREE.SRGBColorSpace;
+    const handMat = new THREE.MeshBasicMaterial({ map: handTex });
+    const handGeo = new THREE.PlaneGeometry(w, h);
+
+    // Create mesh positioned at crop center
+    const handMesh = new THREE.Mesh(handGeo, handMat);
+    // Position mesh at center of the crop box
+    handMesh.position.set(lx + w / 2, ly + h / 2, 2);
+
+    // Translate geometry so that pivot (px, py) is at local (0,0)
+    // Mesh is at (cx, cy) = (lx+w/2, ly+h/2)
+    // We want local (0,0) to be world (px, py)
+    // World pos = MeshPos + LocalPos
+    // So LocalPos for pivot = (px - cx, py - cy)
+    // Since geometry is centered, we translate geometry by (px - cx, py - cy)
+    handGeo.translate(px - (lx + w / 2), py - (ly + h / 2));
+
+    scene.add(handMesh);
+    handMeshes.push({ mesh: handMesh });
+  });
+}
+
+window.setTime = function(t) {
+  // t is in seconds, 0 <= t <= 2
+  // Normalize to 0..1 range for the loop
+  const phase = (t % 2) / 2;
+  // Sine wave: 0 -> 1 -> 0 over the 2 second duration
+  const wave = Math.sin(phase * Math.PI);
+  // Rotation angle in radians (approx 25 degrees max)
+  const angle = wave * 0.45;
+
+  handMeshes.forEach(h => {
+    h.mesh.rotation.z = angle;
+  });
+
+  renderer.render(scene, camera);
+};
+
+// Initialize
+init();
+
+// Optional live loop (not required for correctness but nice for preview)
+function animate() {
+  requestAnimationFrame(animate);
+}
+animate();
+
+</script>
+</body>
+</html>
+```

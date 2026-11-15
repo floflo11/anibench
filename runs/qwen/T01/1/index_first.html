@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html,body{margin:0;padding:0;background:#ffffff;overflow:hidden;}
+  canvas{display:block;}
+</style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+
+// Wrist pivot of the far-left boy's raised hand (image coords, y down)
+const PX = 232, PY = 192;
+
+// Elliptical mask around the raised hand + a bit of wrist (image coords)
+const CX = 232, CY = 150, RX = 44, RY = 52;
+
+// ---- renderer: 1 image pixel = 1 canvas pixel, ratio 1, no tonemapping ----
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xffffff);
+
+const camera = new THREE.OrthographicCamera(0, W, H, 0, 0.1, 100);
+camera.position.set(0, 0, 10);
+camera.lookAt(0, 0, 0);
+
+// ---- base layer: full image with the hand region filled white ----
+const baseGeo = new THREE.PlaneGeometry(W, H);
+const baseMat = new THREE.MeshBasicMaterial({ transparent: false });
+const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+baseMesh.position.set(W / 2, H / 2, 0);
+scene.add(baseMesh);
+
+// ---- hand layer: only the masked region, pivoted at the wrist ----
+const handGeo = new THREE.PlaneGeometry(W, H);
+handGeo.translate(W / 2 - PX, PY - H / 2, 0);   // local origin = wrist pivot
+const handMat = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false });
+const handMesh = new THREE.Mesh(handGeo, handMat);
+handMesh.position.set(PX, H - PY, 0.5);
+scene.add(handMesh);
+
+// ---- deterministic 2 s loop: wrist bend (rotation about the wrist) ----
+const AMP = 0.22; // radians (~12.6 deg)
+let ready = false;
+
+window.setTime = function (t) {
+  if (!ready) return;
+  const th = AMP * Math.sin(2 * Math.PI * t); // sin(2πt): period 1 s -> seamless at t=0 and t=2
+  handMesh.rotation.z = th;
+  renderer.render(scene, camera);
+};
+
+function ellipsePath(ctx) {
+  ctx.beginPath();
+  ctx.ellipse(CX, CY, RX, RY, 0, 0, Math.PI * 2);
+  ctx.closePath();
+}
+
+function makeTextures(img) {
+  // base: original image, hand region painted white
+  const bc = document.createElement('canvas');
+  bc.width = W; bc.height = H;
+  const bctx = bc.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  bctx.save();
+  ellipsePath(bctx);
+  bctx.clip();
+  bctx.fillStyle = '#ffffff';
+  bctx.fillRect(0, 0, W, H);
+  bctx.restore();
+
+  // hand: original image clipped to the mask
+  const hc = document.createElement('canvas');
+  hc.width = W; hc.height = H;
+  const hctx = hc.getContext('2d');
+  hctx.save();
+  ellipsePath(hctx);
+  hctx.clip();
+  hctx.drawImage(img, 0, 0);
+  hctx.restore();
+
+  const baseTex = new THREE.CanvasTexture(bc);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  baseTex.minFilter = THREE.LinearFilter;
+  baseTex.generateMipmaps = false;
+
+  const handTex = new THREE.CanvasTexture(hc);
+  handTex.colorSpace = THREE.SRGBColorSpace;
+  handTex.minFilter = THREE.LinearFilter;
+  handTex.generateMipmaps = false;
+
+  return [baseTex, handTex];
+}
+
+const img = new Image();
+img.onload = function () {
+  const [baseTex, handTex] = makeTextures(img);
+  baseMat.map = baseTex;
+  baseMat.needsUpdate = true;
+  handMat.map = handTex;
+  handMat.needsUpdate = true;
+
+  setTime(0);
+  ready = true;
+  window.ANIM_READY = true;
+
+  // optional live playback (setTime itself stays wall-clock free)
+  let start = null;
+  function loop(now) {
+    if (start === null) start = now;
+    const t = ((now - start) / 1000) % 2;
+    window.setTime(t);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+};
+img.src = './image.png';
+</script>
+</body>
+</html>

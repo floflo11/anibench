@@ -1,0 +1,194 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toddler Jump Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #ffffff; }
+        canvas { display: block; width: 1024px; height: 683px; }
+    </style>
+</head>
+<body>
+<canvas id="glcanvas"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_WIDTH = 1024;
+const IMAGE_HEIGHT = 683;
+const IMAGE_PATH = './image.png';
+
+// Approximate bounding box for the toddler in the red jacket (left side)
+const RED_TODDLER_BOX = {
+    x: 55,
+    y: 10,
+    w: 420,
+    h: 660
+};
+
+// --- Three.js Setup ---
+const canvas = document.getElementById('glcanvas');
+canvas.width = IMAGE_WIDTH;
+canvas.height = IMAGE_HEIGHT;
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+renderer.setPixelRatio(1);
+renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, IMAGE_HEIGHT, 0, -1, 1);
+const scene = new THREE.Scene();
+
+// --- Assets ---
+let textureImage = null;
+let meshBack = null;
+let meshFront = null;
+
+// Helper to create a mask canvas
+function createMaskCanvas(isFront) {
+    const c = document.createElement('canvas');
+    c.width = IMAGE_WIDTH;
+    c.height = IMAGE_HEIGHT;
+    const ctx = c.getContext('2d');
+
+    // Fill background based on purpose:
+    // Back mesh: We want to hide the toddler. So White everywhere, Black on toddler.
+    // Front mesh: We want to show only the toddler. So Black everywhere, White on toddler.
+    ctx.fillStyle = isFront ? 'black' : 'white';
+    ctx.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+
+    // Draw the toddler region
+    ctx.fillStyle = isFront ? 'white' : 'black';
+    ctx.beginPath();
+    // Approximate polygon for the toddler in red (left child)
+    // Bottom left shoe
+    ctx.moveTo(RED_TODDLER_BOX.x + 40, RED_TODDLER_BOX.y + RED_TODDLER_BOX.h - 10);
+    // Left side up
+    ctx.lineTo(RED_TODDLER_BOX.x + 40, RED_TODDLER_BOX.y + 100);
+    // Hat left brim
+    ctx.lineTo(RED_TODDLER_BOX.x + 80, RED_TODDLER_BOX.y + 30);
+    // Hat top
+    ctx.lineTo(RED_TODDLER_BOX.x + 180, RED_TODDLER_BOX.y + 10);
+    // Hat right brim
+    ctx.lineTo(RED_TODDLER_BOX.x + 320, RED_TODDLER_BOX.y + 30);
+    // Right shoulder
+    ctx.lineTo(RED_TODDLER_BOX.x + 400, RED_TODDLER_BOX.y + 120);
+    // Right side down to shoe
+    ctx.lineTo(RED_TODDLER_BOX.x + 400, RED_TODDLER_BOX.y + RED_TODDLER_BOX.h - 10);
+    ctx.closePath();
+    ctx.fill();
+
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    return tex;
+}
+
+// --- Scene Construction ---
+function buildScene(texture) {
+    texture.colorSpace = THREE.SRGBColorSpace;
+
+    // 1. Back Mesh: Full image with a hole cut out where the toddler is
+    const geoBack = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+    geoBack.translate(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+    
+    const maskBack = createMaskCanvas(false); // White everywhere, Black on toddler
+    const matBack = new THREE.MeshBasicMaterial({
+        map: texture,
+        alphaMap: maskBack,
+        transparent: true
+    });
+    meshBack = new THREE.Mesh(geoBack, matBack);
+    scene.add(meshBack);
+
+    // 2. Front Mesh: The toddler cutout
+    const box = RED_TODDLER_BOX;
+    const geoFront = new THREE.PlaneGeometry(box.w, box.h);
+    geoFront.translate(box.w / 2, box.h / 2, 0);
+
+    // Create cropped texture for the front mesh
+    const cutCanvas = document.createElement('canvas');
+    cutCanvas.width = box.w;
+    cutCanvas.height = box.h;
+    const cutCtx = cutCanvas.getContext('2d');
+    cutCtx.drawImage(texture.image, box.x, box.y, box.w, box.h, 0, 0, box.w, box.h);
+    const cutTexture = new THREE.CanvasTexture(cutCanvas);
+    cutTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // Create cropped alpha map for the front mesh
+    const maskFront = createMaskCanvas(true); // Black everywhere, White on toddler
+    // We need to crop this mask to match the front mesh plane
+    const maskCutCanvas = document.createElement('canvas');
+    maskCutCanvas.width = box.w;
+    maskCutCanvas.height = box.h;
+    const maskCutCtx = maskCutCanvas.getContext('2d');
+    maskCutCtx.drawImage(maskFront.image, box.x, box.y, box.w, box.h, 0, 0, box.w, box.h);
+    const cutAlphaTexture = new THREE.CanvasTexture(maskCutCanvas);
+    cutAlphaTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const matFront = new THREE.MeshBasicMaterial({
+        map: cutTexture,
+        alphaMap: cutAlphaTexture,
+        transparent: true
+    });
+    meshFront = new THREE.Mesh(geoFront, matFront);
+    
+    // Position the front mesh at the original location
+    // PlaneGeometry is centered, so position center at box center
+    meshFront.position.set(box.x + box.w / 2, box.y + box.h / 2, 0);
+    scene.add(meshFront);
+}
+
+// --- Loading ---
+const loader = new THREE.TextureLoader();
+loader.load(IMAGE_PATH, (tex) => {
+    buildScene(tex);
+    window.ANIM_READY = true;
+    // Render frame 0 immediately
+    window.setTime(0);
+});
+
+// --- Animation API ---
+window.setTime = function(t) {
+    // Ensure t is within [0, 2]
+    t = Math.max(0, Math.min(2, t));
+    
+    if (!meshFront || !meshBack) return;
+
+    // Jump logic: 
+    // t=0 -> ground
+    // t=1 -> peak (sin(PI/2) = 1) -> wait, sin(t*PI) at t=1 is 0.
+    // We want: t=0 -> 0, t=0.5 -> peak, t=1 -> 0, t=1.5 -> peak, t=2 -> 0?
+    // Or a single jump: t=0 -> 0, t=1 -> peak, t=2 -> 0.
+    // sin(t * PI / 2) : t=0->0, t=1->1, t=2->0.
+    // But "jump" usually implies up and down.
+    // Let's use: y = Math.sin(t * Math.PI) * height.
+    // t=0 -> 0. t=0.5 -> max. t=1 -> 0. t=1.5 -> -max. t=2 -> 0.
+    // We don't want it to go below ground.
+    // Let's use a simple parabolic jump or abs(sin).
+    // abs(sin(t * PI)): t=0->0, t=0.5->1, t=1->0, t=1.5->1, t=2->0. Double jump.
+    // Let's do a single jump arc: 4 * h * t * (2 - t) / 4 ? 
+    // Simple: height * Math.sin(t * Math.PI / 2). 
+    // t=0 -> 0. t=1 -> 1. t=2 -> 0. 
+    // This goes up and comes down smoothly.
+    
+    const jumpHeight = 60; // pixels
+    const progress = t / 2; // 0 to 1
+    // Ease out quad for ascent, ease in for descent?
+    // Simple sine arch for 0->2 seconds.
+    const yOffset = Math.sin(progress * Math.PI) * jumpHeight;
+
+    // In our camera setup (0 top, H bottom), moving "up" visually means decreasing Y.
+    const box = RED_TODDLER_BOX;
+    const baseY = box.y + box.h / 2;
+    meshFront.position.y = baseY - yOffset;
+
+    renderer.render(scene, camera);
+};
+
+</script>
+</body>
+</html>
+```

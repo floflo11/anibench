@@ -1,0 +1,139 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Animation</title>
+    <style>
+        body { margin: 0; background-color: white; overflow: hidden; display: block; }
+        canvas { width: 1200px; height: 600px; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="three-canvas" width="1200" height="600"></canvas>
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const WIDTH = 1200;
+        const HEIGHT = 600;
+
+        let renderer, scene, camera, meshBg, meshHand, pivotGroup;
+        let ready = false;
+
+        // Approximate bounding box for the boy on the far left's left hand (viewer's right side of his body)
+        // Based on visual inspection of the 1200x600 image.
+        const HAND_BOX = { x: 160, y: 130, w: 110, h: 240 };
+        const PIVOT_X = 190;
+        const PIVOT_Y = 250;
+
+        function setupTextures(image) {
+            const createCanvasCopy = () => {
+                const c = document.createElement('canvas');
+                c.width = WIDTH;
+                c.height = HEIGHT;
+                c.getContext('2d').drawImage(image, 0, 0);
+                return c;
+            };
+
+            const canvasBg = createCanvasCopy();
+            const canvasHand = createCanvasCopy();
+
+            const ctxBg = canvasBg.getContext('2d');
+            const ctxHand = canvasHand.getContext('2d');
+
+            const bgData = ctxBg.getImageData(0, 0, WIDTH, HEIGHT);
+            const handData = ctxHand.getImageData(0, 0, WIDTH, HEIGHT);
+
+            for (let y = 0; y < HEIGHT; y++) {
+                for (let x = 0; x < WIDTH; x++) {
+                    const i = (y * WIDTH + x) * 4;
+                    const inside = x >= HAND_BOX.x && x < HAND_BOX.x + HAND_BOX.w &&
+                                   y >= HAND_BOX.y && y < HAND_BOX.y + HAND_BOX.h;
+
+                    // Background layer: make hand area transparent
+                    if (inside) {
+                        bgData.data[i + 3] = 0;
+                    }
+
+                    // Hand layer: make everything outside hand area transparent
+                    if (!inside) {
+                        handData.data[i + 3] = 0;
+                    }
+                }
+            }
+
+            ctxBg.putImageData(bgData, 0, 0);
+            ctxHand.putImageData(handData, 0, 0);
+
+            const texBg = new THREE.CanvasTexture(canvasBg);
+            texBg.colorSpace = THREE.SRGBColorSpace;
+            const texHand = new THREE.CanvasTexture(canvasHand);
+            texHand.colorSpace = THREE.SRGBColorSpace;
+
+            return { texBg, texHand };
+        }
+
+        function init() {
+            const canvas = document.getElementById('three-canvas');
+            renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.setClearColor(0xffffff, 1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // Orthographic camera: 1 unit = 1 pixel. Y axis: 0 at top, HEIGHT at bottom.
+            camera = new THREE.OrthographicCamera(0, WIDTH, 0, HEIGHT, -1, 10);
+            scene = new THREE.Scene();
+
+            const geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+            const materialBg = new THREE.MeshBasicMaterial({ map: null, transparent: true });
+            const materialHand = new THREE.MeshBasicMaterial({ map: null, transparent: true });
+
+            meshBg = new THREE.Mesh(geometry, materialBg);
+            meshBg.position.set(WIDTH / 2, HEIGHT / 2, 0);
+            meshBg.renderOrder = 0;
+            scene.add(meshBg);
+
+            // Hand pivot setup
+            pivotGroup = new THREE.Group();
+            pivotGroup.position.set(PIVOT_X, PIVOT_Y, 0);
+
+            meshHand = new THREE.Mesh(geometry, materialHand);
+            // Position mesh so its center aligns with world center when pivot is at origin
+            meshHand.position.set(WIDTH / 2 - PIVOT_X, HEIGHT / 2 - PIVOT_Y, 0);
+            meshHand.renderOrder = 1;
+            pivotGroup.add(meshHand);
+            scene.add(pivotGroup);
+
+            const img = new Image();
+            img.onload = () => {
+                const { texBg, texHand } = setupTextures(img);
+                meshBg.material.map = texBg;
+                meshHand.material.map = texHand;
+                meshBg.material.needsUpdate = true;
+                meshHand.material.needsUpdate = true;
+
+                ready = true;
+                window.ANIM_READY = true;
+                setTime(0);
+            };
+            img.src = './image.png';
+
+            window.setTime = function(t) {
+                if (!ready) return;
+                // t is seconds [0, 2]
+                const phase = (t % 2) / 2;
+                // Wave angle: 0 at t=0 and t=2, max in between
+                const angle = Math.sin(phase * Math.PI) * 0.3;
+                pivotGroup.rotation.z = angle;
+                renderer.render(scene, camera);
+            };
+        }
+
+        init();
+    </script>
+</body>
+</html>
+```

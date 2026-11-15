@@ -5,6 +5,7 @@ The directory must contain index.html; image.png and vendor/ are linked in autom
 """
 import base64
 import functools
+import os
 import http.server
 import io
 import shutil
@@ -18,7 +19,7 @@ from playwright.sync_api import sync_playwright
 
 ROOT = Path(__file__).resolve().parents[1]
 N_FRAMES = 25
-CHROME = "/usr/bin/google-chrome"
+CHROME = os.environ.get("ANIBENCH_CHROME", "/usr/bin/google-chrome")
 ARGS = ["--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist",
         "--use-gl=angle", "--enable-webgl", "--disable-gpu-sandbox", "--no-sandbox"]
 
@@ -59,7 +60,8 @@ def prepare(run_dir, task_dir):
 class Renderer:
     def __init__(self):
         self.pw = sync_playwright().start()
-        self.browser = self.pw.chromium.launch(executable_path=CHROME, args=ARGS, headless=True)
+        exe = CHROME if CHROME and os.path.exists(CHROME) else None
+        self.browser = self.pw.chromium.launch(executable_path=exe, args=ARGS, headless=True)
         self.port = serve(ROOT)
 
     def close(self):

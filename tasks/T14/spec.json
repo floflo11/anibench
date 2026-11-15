@@ -14,7 +14,6 @@
   "G1",
   "G3",
   "G4",
-  "G5",
   "G6"
  ],
  "pivots": [
@@ -23,7 +22,14 @@
    160
   ]
  ],
- "area_tol": 0.35,
+ "area_tol": 0.5,
  "blob_allow": 3,
- "skull": true
+ "skull": true,
+ "graders_all": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
 }

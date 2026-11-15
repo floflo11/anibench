@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hand Wave Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 600;
+const IMAGE_PATH = './image.png';
+
+// Target: Small boy in striped shirt (3rd from left).
+// Estimated coordinates based on image analysis:
+// Wrist position (pivot point): x=790, y=290
+// Hand crop region: x=740, y=210, w=100, h=100
+const WRIST_X = 790;
+const WRIST_Y = 290;
+const CROP_X = 740;
+const CROP_Y = 210;
+const CROP_SIZE = 100;
+const MAX_WAVE_ANGLE = 0.4; // Radians (~23 degrees)
+
+// --- Globals ---
+let renderer, scene, camera, bgTexture, handTexture, bgMesh, handMesh, wristPivot;
+let isReady = false;
+
+// --- Helpers ---
+function loadImage(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = url;
+    });
+}
+
+function createCanvas(w, h) {
+    const c = document.createElement('canvas');
+    c.width = w;
+    c.height = h;
+    return c;
+}
+
+// --- Initialization ---
+async function init() {
+    // 1. Setup Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.setClearColor(0xffffff, 1);
+    renderer.toneMapping = THREE.NoToneMapping;
+    document.body.appendChild(renderer.domElement);
+
+    // 2. Setup Camera (Orthographic, 1:1 pixel mapping)
+    // left, right, top, bottom, near, far
+    camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, IMAGE_HEIGHT, 0, -1, 1);
+    camera.position.z = 1;
+
+    // 3. Setup Scene
+    scene = new THREE.Scene();
+
+    // 4. Load Image
+    const image = await loadImage(IMAGE_PATH);
+
+    // 5. Prepare Textures
+    // A. Background Texture (Full image)
+    const bgCanvas = createCanvas(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const bgCtx = bgCanvas.getContext('2d');
+    bgCtx.drawImage(image, 0, 0);
+    bgTexture = new THREE.CanvasTexture(bgCanvas);
+    bgTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // B. Hand Cutout Texture (Just the hand region with transparency elsewhere)
+    const handCanvas = createCanvas(CROP_SIZE, CROP_SIZE);
+    const handCtx = handCanvas.getContext('2d');
+    // Clear to transparent
+    handCtx.clearRect(0, 0, CROP_SIZE, CROP_SIZE);
+    // Draw the specific crop from the main image
+    handCtx.drawImage(
+        image,
+        CROP_X, CROP_Y, CROP_SIZE, CROP_SIZE, // Source rect
+        0, 0, CROP_SIZE, CROP_SIZE             // Dest rect
+    );
+    handTexture = new THREE.CanvasTexture(handCanvas);
+    handTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // C. Alpha Mask for Background (To hide the original static hand)
+    // We create a mask where the hand area is transparent (black in alpha map)
+    const maskCanvas = createCanvas(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const maskCtx = maskCanvas.getContext('2d');
+    // Fill white (opaque)
+    maskCtx.fillStyle = '#ffffff';
+    maskCtx.fillRect(0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
+    // Fill black (transparent) at hand location
+    // We use a circle slightly larger than the hand crop to ensure full coverage
+    maskCtx.fillStyle = '#000000';
+    maskCtx.beginPath();
+    maskCtx.arc(WRIST_X, WRIST_Y, CROP_SIZE * 0.6, 0, Math.PI * 2);
+    maskCtx.fill();
+    const maskTexture = new THREE.CanvasTexture(maskCanvas);
+    // maskTexture.colorSpace = THREE.SRGBColorSpace; // Alpha maps usually linear, but doesn't matter much for B&W
+
+    // 6. Create Meshes
+    // Background Mesh
+    const bgGeo = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const bgMat = new THREE.MeshBasicMaterial({
+        map: bgTexture,
+        alphaMap: maskTexture,
+        transparent: true
+    });
+    bgMesh = new THREE.Mesh(bgGeo, bgMat);
+    bgMesh.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0); // Center the plane if camera is centered?
+    // Wait, OrthographicCamera(0, W, H, 0) means (0,0) is top-left.
+    // PlaneGeometry(0,0) center is at object position.
+    // To map pixels 1:1 with top-left origin:
+    // Camera: left=0, right=W, top=H, bottom=0.
+    // Object at (W/2, H/2) puts center of plane at center of screen.
+    // PlaneGeometry(W, H) ranges from -W/2 to W/2.
+    // So object position (W/2, H/2) aligns plane corner (0,0) in local space to screen (W/2, H/2)? No.
+    // If camera is (0, W, H, 0), view space x=0 is left, x=W is right. y=0 is top, y=H is bottom.
+    // PlaneGeometry(W, H) centered at (0,0,0) spans -W/2..W/2.
+    // To align local (0,0) with screen (0,0), we should position at (0,0)?
+    // If position is (0,0,0), plane spans -600..600 x, -300..300 y.
+    // Camera sees 0..1200 x, 0..600 y.
+    // So we need to shift plane by +W/2, +H/2.
+    // Position (600, 300).
+    bgMesh.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+    bgMesh.renderOrder = 0;
+    scene.add(bgMesh);
+
+    // Hand Mesh
+    const handGeo = new THREE.PlaneGeometry(CROP_SIZE, CROP_SIZE);
+    const handMat = new THREE.MeshBasicMaterial({
+        map: handTexture,
+        transparent: true
+    });
+    handMesh = new THREE.Mesh(handGeo, handMat);
+    handMesh.renderOrder = 1;
+    
+    // Pivot setup
+    wristPivot = new THREE.Object3D();
+    wristPivot.position.set(WRIST_X, WRIST_Y, 0);
+    
+    // Offset hand mesh so its local (0,0) aligns with the wrist point within the crop.
+    // Crop starts at (CROP_X, CROP_Y). Wrist is at (WRIST_X, WRIST_Y).
+    // Offset in crop coords: (WRIST_X - CROP_X, WRIST_Y - CROP_Y).
+    // Since geometry is centered, we need to shift by -CROP_SIZE/2 + offset.
+    const offsetX = (WRIST_X - CROP_X) - CROP_SIZE / 2;
+    const offsetY = (WRIST_Y - CROP_Y) - CROP_SIZE / 2;
+    handMesh.position.set(offsetX, offsetY, 0);
+    
+    wristPivot.add(handMesh);
+    scene.add(wristPivot);
+
+    // 7. Define setTime
+    window.setTime = function(t) {
+        // Normalize t to 0..2 range just in case, though contract says 0<=t<=2
+        const normalizedT = t % 2;
+        if (normalizedT < 0) normalizedT += 2;
+
+        // Smooth wave: 0 at t=0, max at t=0.5, 0 at t=1, min at t=1.5, 0 at t=2
+        // Using sin(PI * t) gives 0 at 0, 1 at 0.5, 0 at 1, -1 at 1.5, 0 at 2.
+        const angle = MAX_WAVE_ANGLE * Math.sin(Math.PI * normalizedT);
+        
+        wristPivot.rotation.z = angle;
+        
+        renderer.render(scene, camera);
+    };
+
+    // Initial render
+    window.setTime(0);
+    
+    isReady = true;
+    window.ANIM_READY = true;
+}
+
+// Run init
+init().catch(err => {
+    console.error("Failed to initialize animation:", err);
+});
+
+</script>
+</body>
+</html>

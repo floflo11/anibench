@@ -1,0 +1,142 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Three.js Image Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #ffffff; }
+        canvas { display: block; width: 1200px; height: 600px; }
+    </style>
+</head>
+<body>
+<canvas id="c" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('c');
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+renderer.setSize(1200, 600);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const camera = new THREE.OrthographicCamera(0, 1200, 600, 0, -1, 1);
+const scene = new THREE.Scene();
+
+let bgMesh, armPivot, armMesh;
+let ready = false;
+
+const loader = new THREE.TextureLoader();
+
+// Approximate coordinates for the girl with pigtails (2nd figure from left)
+// Image size: 1200x600
+// Region covering her raised forearm and hand (viewer's right side)
+const ARM_X = 420;
+const ARM_Y = 200;
+const ARM_W = 80;
+const ARM_H = 200;
+// Elbow pivot point within that region (estimated)
+const ELBOW_OFFSET_X = 30;   // Absolute X: 450
+const ELBOW_OFFSET_Y = 150;  // Absolute Y: 350
+const WAVE_ANGLE = 0.35;     // Radians
+
+function init() {
+    loader.load('./image.png', (imageTexture) => {
+        imageTexture.colorSpace = THREE.SRGBColorSpace;
+        imageTexture.flipY = false; // Ensure (0,0) is top-left matching image pixels
+
+        // --- Create Background Texture (with arm area whited out) ---
+        const bgCanvas = document.createElement('canvas');
+        bgCanvas.width = 1200;
+        bgCanvas.height = 600;
+        const bgCtx = bgCanvas.getContext('2d');
+        bgCtx.drawImage(imageTexture.image, 0, 0);
+
+        // Fill the original arm area with white so it doesn't show through
+        bgCtx.fillStyle = '#ffffff';
+        bgCtx.fillRect(ARM_X, ARM_Y, ARM_W, ARM_H);
+
+        const bgTexture = new THREE.CanvasTexture(bgCanvas);
+        bgTexture.colorSpace = THREE.SRGBColorSpace;
+        bgTexture.flipY = false;
+
+        // --- Create Arm Texture (cropped from original) ---
+        const armCanvas = document.createElement('canvas');
+        armCanvas.width = ARM_W;
+        armCanvas.height = ARM_H;
+        const armCtx = armCanvas.getContext('2d');
+        armCtx.drawImage(
+            imageTexture.image,
+            ARM_X, ARM_Y, ARM_W, ARM_H,   // source rect
+            0, 0, ARM_W, ARM_H            // dest rect
+        );
+
+        const armTexture = new THREE.CanvasTexture(armCanvas);
+        armTexture.colorSpace = THREE.SRGBColorSpace;
+        armTexture.flipY = false;
+
+        // --- Background Mesh ---
+        const bgGeo = new THREE.PlaneGeometry(1200, 600);
+        bgGeo.translate(600, 300, 0); // Center the plane at canvas center
+        const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+        bgMesh = new THREE.Mesh(bgGeo, bgMat);
+        scene.add(bgMesh);
+
+        // --- Arm Mesh ---
+        // Geometry: (0,0) is top-left after translation
+        const armGeo = new THREE.PlaneGeometry(ARM_W, ARM_H);
+        armGeo.translate(ARM_W / 2, ARM_H / 2, 0);
+
+        const armMat = new THREE.MeshBasicMaterial({ map: armTexture, transparent: true });
+        armMesh = new THREE.Mesh(armGeo, armMat);
+
+        // Pivot at the elbow in world space
+        armPivot = new THREE.Object3D();
+        armPivot.position.set(
+            ARM_X + ELBOW_OFFSET_X,
+            ARM_Y + ELBOW_OFFSET_Y,
+            0
+        );
+
+        // Position mesh so its top-left local corner aligns with image top-left of crop,
+        // relative to the elbow pivot.
+        armMesh.position.set(-ELBOW_OFFSET_X, -ELBOW_OFFSET_Y, 0);
+
+        armPivot.add(armMesh);
+        scene.add(armPivot);
+
+        ready = true;
+        window.ANIM_READY = true;
+
+        // Render frame 0
+        setTime(0);
+    });
+}
+
+window.setTime = function(t) {
+    if (!ready) return;
+
+    // Loop time between 0 and 2
+    let time = t % 2;
+    if (time < 0) time += 2;
+
+    // Sine wave: 0 at t=0, max at t=0.5, 0 at t=1, -max at t=1.5, 0 at t=2
+    const angle = Math.sin(time * Math.PI) * WAVE_ANGLE;
+
+    armPivot.rotation.z = angle;
+
+    renderer.render(scene, camera);
+};
+
+init();
+
+// Optional live loop (does not affect correctness of setTime)
+function animate() {
+    requestAnimationFrame(animate);
+}
+animate(0);
+
+</script>
+</body>
+</html>
+```

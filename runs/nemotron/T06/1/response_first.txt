@@ -1,0 +1,177 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toddler Arm Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        canvas {
+            display: block;
+            width: 1024px;
+            height: 683px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1024" height="683"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const WIDTH = 1024;
+        const HEIGHT = 683;
+        const SHOULDER_X = 760;
+        const SHOULDER_Y = 265;
+        const SWING_AMPLITUDE = 0.35; // radians
+
+        // Mask polygon for the right toddler's raised arm (navy jacket)
+        // Points approximate the arm region to isolate it from the background/body
+        const ARM_POLYGON = [
+            { x: 720, y: 290 },
+            { x: 750, y: 260 },
+            { x: 790, y: 220 },
+            { x: 840, y: 190 },
+            { x: 890, y: 180 },
+            { x: 930, y: 200 },
+            { x: 920, y: 240 },
+            { x: 880, y: 270 },
+            { x: 820, y: 290 }
+        ];
+
+        let renderer, camera, scene, baseMesh, armMesh, pivot;
+        let baseTexture, armTexture;
+        let animReady = false;
+
+        function init() {
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // Camera: Orthographic, 1 image pixel = 1 canvas pixel, (0,0) top-left
+            camera = new THREE.OrthographicCamera(0, WIDTH, 0, HEIGHT, -1, 1);
+            camera.position.z = 1;
+            camera.lookAt(0, 0, 0);
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Geometry: Full screen plane
+            const geometry = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+            // Base Mesh: Original image with arm area whited out
+            const baseMaterial = new THREE.MeshBasicMaterial({ map: baseTexture });
+            baseMesh = new THREE.Mesh(geometry, baseMaterial);
+            baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+            scene.add(baseMesh);
+
+            // Arm Mesh: Just the arm on transparent background
+            const armMaterial = new THREE.MeshBasicMaterial({ 
+                map: armTexture, 
+                transparent: true 
+            });
+            armMesh = new THREE.Mesh(geometry, armMaterial);
+            
+            // Pivot setup for rotation around shoulder
+            pivot = new THREE.Object3D();
+            pivot.position.set(SHOULDER_X, SHOULDER_Y, 0);
+            scene.add(pivot);
+
+            // armMesh is child of pivot. 
+            // We position it so its center aligns with canvas center (0,0..W,0..H mapping)
+            // but it rotates around pivot.
+            armMesh.position.set(WIDTH / 2 - SHOULDER_X, HEIGHT / 2 - SHOULDER_Y, 0);
+            pivot.add(armMesh);
+
+            window.ANIM_READY = true;
+            setTime(0);
+        }
+
+        function createMaskedTextures(img) {
+            const offscreen = document.createElement('canvas');
+            offscreen.width = WIDTH;
+            offscreen.height = HEIGHT;
+            const octx = offscreen.getContext('2d');
+            octx.drawImage(img, 0, 0);
+
+            // --- Base Texture (Image with arm removed/whited out) ---
+            const baseCanvas = document.createElement('canvas');
+            baseCanvas.width = WIDTH;
+            baseCanvas.height = HEIGHT;
+            const bctx = baseCanvas.getContext('2d');
+            bctx.drawImage(offscreen, 0, 0);
+
+            // Whiten out the arm area
+            bctx.save();
+            bctx.fillStyle = 'white';
+            bctx.beginPath();
+            if (ARM_POLYGON.length > 0) {
+                bctx.moveTo(ARM_POLYGON[0].x, ARM_POLYGON[0].y);
+                for (let i = 1; i < ARM_POLYGON.length; i++) {
+                    bctx.lineTo(ARM_POLYGON[i].x, ARM_POLYGON[i].y);
+                }
+                bctx.closePath();
+            }
+            bctx.fill();
+            bctx.restore();
+
+            // --- Arm Texture (Only the arm, transparent elsewhere) ---
+            const armCanvas = document.createElement('canvas');
+            armCanvas.width = WIDTH;
+            armCanvas.height = HEIGHT;
+            const actx = armCanvas.getContext('2d');
+            actx.drawImage(offscreen, 0, 0);
+
+            // Use destination-in to keep only the arm polygon area
+            actx.save();
+            actx.globalCompositeOperation = 'destination-in';
+            actx.fillStyle = 'black'; // opaque source
+            actx.beginPath();
+            if (ARM_POLYGON.length > 0) {
+                actx.moveTo(ARM_POLYGON[0].x, ARM_POLYGON[0].y);
+                for (let i = 1; i < ARM_POLYGON.length; i++) {
+                    actx.lineTo(ARM_POLYGON[i].x, ARM_POLYGON[i].y);
+                }
+                actx.closePath();
+            }
+            actx.fill();
+            actx.restore();
+
+            // Create Three.js textures
+            baseTexture = new THREE.CanvasTexture(baseCanvas);
+            baseTexture.colorSpace = THREE.SRGBColorSpace;
+
+            armTexture = new THREE.CanvasTexture(armCanvas);
+            armTexture.colorSpace = THREE.SRGBColorSpace;
+
+            init();
+        }
+
+        function loadImage() {
+            const img = new Image();
+            img.onload = () => createMaskedTextures(img);
+            img.src = './image.png';
+        }
+
+        window.setTime = function(t) {
+            if (!animReady) return;
+            // Clamp t to [0, 2] just in case, though contract says 0 <= t <= 2
+            const tt = Math.max(0, Math.min(2, t));
+            // Sine wave swing: 0 at t=0, max at t=1, 0 at t=2
+            const angle = Math.sin(Math.PI * tt) * SWING_AMPLITUDE;
+            pivot.rotation.z = angle;
+            renderer.render(scene, camera);
+        };
+
+        loadImage();
+    </script>
+</body>
+</html>
+```

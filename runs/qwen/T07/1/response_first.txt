@@ -1,0 +1,199 @@
+
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Swing the red earrings</title>
+<style>
+  html, body { margin: 0; padding: 0; background: #ffffff; }
+  #c { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="c" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1200, H = 600;
+const canvas = document.getElementById('c');
+
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H, false);
+renderer.toneMapping = THREE.NoToneMapping;
+if ('outputColorSpace' in renderer) renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+const scene = new THREE.Scene();
+const camera = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, -100, 100);
+camera.position.set(0, 0, 10);
+camera.lookAt(0, 0, 0);
+
+function makeTexture(cv) {
+  const t = new THREE.CanvasTexture(cv);
+  if (THREE.SRGBColorSpace !== undefined) t.colorSpace = THREE.SRGBColorSpace;
+  t.magFilter = THREE.LinearFilter;
+  t.minFilter = THREE.LinearFilter;
+  t.generateMipmaps = false;
+  t.needsUpdate = true;
+  return t;
+}
+
+const img = new Image();
+img.onload = () => {
+  // ---------- source image ----------
+  const src = document.createElement('canvas');
+  src.width = W; src.height = H;
+  const sctx = src.getContext('2d');
+  sctx.drawImage(img, 0, 0, W, H);
+  const origData = sctx.getImageData(0, 0, W, H);
+
+  // ---------- 1) locate the two red earrings (girl in white dress, far right) ----------
+  const isRed = (r, g, b) => r > 110 && (r - g) > 55 && (r - b) > 45;
+  const windows = [
+    { x0: 895,  x1: 992,  y0: 178, y1: 272 },   // left earring
+    { x0: 1035, x1: 1132, y0: 178, y1: 272 }    // right earring
+  ];
+  const fallback = [ { cx: 963, cy: 219, r: 6.5 }, { cx: 1064, cy: 212, r: 6.5 } ];
+  const ears = windows.map((w, i) => {
+    let n = 0, sx = 0, sy = 0;
+    const pts = [];
+    for (let y = w.y0; y < w.y1; y++)
+      for (let x = w.x0; x < w.x1; x++) {
+        const j = (y * W + x) * 4;
+        if (isRed(origData.data[j], origData.data[j + 1], origData.data[j + 2])) {
+          n++; sx += x; sy += y; pts.push(x, y);
+        }
+      }
+    if (n >= 5) {
+      const cx = sx / n, cy = sy / n;
+      let md = 0;
+      for (let k = 0; k < pts.length; k += 2) {
+        const d = Math.hypot(pts[k] - cx, pts[k + 1] - cy);
+        if (d > md) md = d;
+      }
+      return { cx: cx, cy: cy, r: Math.max(4, md + 1.5) };
+    }
+    return { cx: fallback[i].cx, cy: fallback[i].cy, r: fallback[i].r };
+  });
+
+  // pivot = attachment at the earlobe, just above each bead
+  ears.forEach(e => { e.px = e.cx; e.py = e.cy - e.r - 7; });
+
+  // ---------- 2) inpaint the earring regions (harmonic fill) in a copy ----------
+  const fillData = new ImageData(new Uint8ClampedArray(origData.data), W, H);
+  const fd = fillData.data;
+  const fillRects = ears.map(e => ({
+    x0: Math.max(1, Math.floor(e.cx - e.r - 6)),
+    x1: Math.min(W - 1, Math.ceil(e.cx + e.r + 6)),
+    y0: Math.max(1, Math.floor(e.py - 5)),
+    y1: Math.min(H - 1, Math.ceil(e.cy + e.r + 6))
+  }));
+  fillRects.forEach(rc => {
+    const { x0, x1, y0, y1 } = rc;
+    for (let y = y0 + 1; y < y1; y++)
+      for (let x = x0 + 1; x < x1; x++) {
+        const wx = (x - x0) / (x1 - x0), wy = (y - y0) / (y1 - y0);
+        const i = (y * W + x) * 4;
+        const it = (y0 * W + x) * 4, ib = (y1 * W + x) * 4;
+        const il = (y * W + x0) * 4, ir = (y * W + x1) * 4;
+        for (let c = 0; c < 3; c++) {
+          const top = fd[it + c] * (1 - wx) + fd[ib + c] * wx;
+          const bot = fd[il + c] * (1 - wy) + fd[ir + c] * wy;
+          fd[i + c] = top * (1 - wy) + bot * wy;
+        }
+      }
+    for (let k = 0; k < 240; k++)
+      for (let y = y0 + 1; y < y1; y++)
+        for (let x = x0 + 1; x < x1; x++) {
+          const i = (y * W + x) * 4;
+          for (let c = 0; c < 3; c++) {
+            fd[i + c] = (fd[i - W + c] + fd[i + W + c] + fd[i - 1 + c] + fd[i + 1 + c]) * 0.25;
+          }
+        }
+  });
+  const bgFillCv = document.createElement('canvas');
+  bgFillCv.width = W; bgFillCv.height = H;
+  bgFillCv.getContext('2d').putImageData(fillData, 0, 0);
+
+  // ---------- 3) earring cutouts (original pixels + alpha mask) ----------
+  const earringGroups = [];
+  const amps = [ [0.16, 0.04], [0.20, -0.04] ];  // [primary, secondary] rad
+  ears.forEach((e, idx) => {
+    const x0 = Math.max(0, Math.floor(e.cx - e.r - 5));
+    const x1 = Math.min(W, Math.ceil(e.cx + e.r + 5));
+    const y0 = Math.max(0, Math.floor(e.py - 4));
+    const y1 = Math.min(H, Math.ceil(e.cy + e.r + 5));
+    const rw = x1 - x0, rh = y1 - y0;
+    const cv = document.createElement('canvas');
+    cv.width = rw; cv.height = rh;
+    const ctx = cv.getContext('2d');
+    ctx.drawImage(img, x0, y0, rw, rh, 0, 0, rw, rh);
+    const ed = ctx.getImageData(0, 0, rw, rh);
+    const cyb = e.cy - e.r;
+    for (let v = 0; v < rh; v++) {
+      for (let u = 0; u < rw; u++) {
+        const x = x0 + u, y = y0 + v;
+        const i = (v * rw + u) * 4;
+        const dB = Math.hypot(x - e.cx, y - e.cy);
+        let a = Math.max(0, Math.min(1, (e.r + 2.2 - dB) / 2.4));
+        if (y > e.py && y < cyb) {           // thin chain stub, faded at the top
+          const dx = Math.abs(x - e.px);
+          if (dx < 3.2) {
+            const cf = Math.max(0, Math.min(1, (2.8 - dx) / 1.8));
+            const tf = Math.max(0, Math.min(1, (y - e.py) / (cyb - e.py)));
+            a = Math.max(a, cf * tf);
+          }
+        }
+        ed.data[i + 3] = ed.data[i + 3] * a;
+      }
+    }
+    ctx.putImageData(ed, 0, 0);
+
+    const mat = new THREE.MeshBasicMaterial({ map: makeTexture(cv), transparent: true, depthWrite: false });
+    const mesh = new THREE.Mesh(new THREE.PlaneGeometry(rw, rh), mat);
+    const group = new THREE.Group();
+    group.position.set(e.px - W / 2, H / 2 - e.py, 0.5);
+    mesh.position.set(x0 + rw / 2 - e.px, e.py - (y0 + rh / 2));
+    group.add(mesh);
+    scene.add(group);
+    earringGroups.push({ group: group, amp: amps[idx] });
+  });
+
+  // ---------- 4) background layers (original + inpainted) ----------
+  const bgOrig = new THREE.Mesh(new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: makeTexture(src) }));
+  const bgFill = new THREE.Mesh(new THREE.PlaneGeometry(W, H),
+    new THREE.MeshBasicMaterial({ map: makeTexture(bgFillCv) }));
+  scene.add(bgFill);
+  scene.add(bgOrig);
+
+  // ---------- 5) deterministic frame setter ----------
+  // angle uses sin(pi t) and sin(2 pi t): zero at t=0 and t=2, period exactly 2 s
+  window.setTime = function (t) {
+    const m = ((t % 2) + 2) % 2;
+    const s1 = Math.sin(Math.PI * m);
+    const s2 = Math.sin(2 * Math.PI * m);
+    const zero = (m === 0);
+    bgOrig.visible = zero;   // at t=0/2 show the untouched original image
+    bgFill.visible = !zero;
+    for (const eg of earringGroups) {
+      eg.group.rotation.z = eg.amp[0] * s1 + eg.amp[1] * s2;
+    }
+    renderer.render(scene, camera);
+  };
+
+  window.setTime(0);
+  window.ANIM_READY = true;
+
+  // optional live playback (correctness does not depend on it)
+  (function loop() {
+    window.setTime((performance.now() / 1000) % 2);
+    requestAnimationFrame(loop);
+  })();
+};
+</script>
+</body>
+</html>
+```

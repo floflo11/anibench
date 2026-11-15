@@ -1,0 +1,132 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hat Animation</title>
+    <style>
+        body {
+            margin: 0;
+            background: white;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            width: 100vw;
+        }
+        canvas {
+            display: block;
+            width: 1024px;
+            height: 683px;
+        }
+    </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1024;
+const HEIGHT = 683;
+
+// Hat region coordinates for the toddler in the red jacket (left side)
+const HAT_X = 145;
+const HAT_Y = 15;
+const HAT_W = 320;
+const HAT_H = 245;
+
+let scene, camera, renderer, baseMesh, hatMesh, hatOriginalY;
+let animReady = false;
+
+const canvas = document.createElement('canvas');
+canvas.width = WIDTH;
+canvas.height = HEIGHT;
+document.body.appendChild(canvas);
+
+const ctx = canvas.getContext('2d');
+
+function init() {
+    scene = new THREE.Scene();
+
+    // Orthographic camera: 1 unit = 1 pixel, Y down (0 at top)
+    camera = new THREE.OrthographicCamera(0, WIDTH, 0, HEIGHT, -1, 1);
+    camera.position.z = 1;
+
+    renderer = new THREE.WebGLRenderer({ canvas, antialias: false });
+    renderer.setSize(WIDTH, HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+
+    const loader = new THREE.TextureLoader();
+    loader.load('./image.png', (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+
+        // Create base texture: full image with hat area painted white
+        const baseCanvas = document.createElement('canvas');
+        baseCanvas.width = WIDTH;
+        baseCanvas.height = HEIGHT;
+        const baseCtx = baseCanvas.getContext('2d');
+        baseCtx.drawImage(texture.image, 0, 0);
+        baseCtx.fillStyle = 'white';
+        baseCtx.fillRect(HAT_X, HAT_Y, HAT_W, HAT_H);
+
+        const baseTex = new THREE.CanvasTexture(baseCanvas);
+        baseTex.colorSpace = THREE.SRGBColorSpace;
+
+        // Create hat texture: just the hat cropped out
+        const hatCanvas = document.createElement('canvas');
+        hatCanvas.width = HAT_W;
+        hatCanvas.height = HAT_H;
+        const hatCtx = hatCanvas.getContext('2d');
+        hatCtx.drawImage(texture.image, HAT_X, HAT_Y, HAT_W, HAT_H, 0, 0, HAT_W, HAT_H);
+
+        const hatTex = new THREE.CanvasTexture(hatCanvas);
+        hatTex.colorSpace = THREE.SRGBColorSpace;
+
+        // Meshes
+        const planeGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+        const matBase = new THREE.MeshBasicMaterial({ map: baseTex });
+        baseMesh = new THREE.Mesh(planeGeo, matBase);
+        baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+        scene.add(baseMesh);
+
+        const hatPlaneGeo = new THREE.PlaneGeometry(HAT_W, HAT_H);
+        const matHat = new THREE.MeshBasicMaterial({ map: hatTex });
+        hatMesh = new THREE.Mesh(hatPlaneGeo, matHat);
+        hatMesh.position.set(HAT_X + HAT_W / 2, HAT_Y + HAT_H / 2, 1);
+        hatOriginalY = hatMesh.position.y;
+        scene.add(hatMesh);
+
+        animReady = true;
+        window.ANIM_READY = true;
+        setTime(0);
+    });
+}
+
+window.setTime = function(t) {
+    if (!animReady) return;
+    // Clamp t to [0, 2]
+    const tt = Math.max(0, Math.min(2, t));
+    // Lift hat up (decrease Y) then settle back down over 2 seconds
+    // sin(0)=0, sin(PI/2)=1 at t=1, sin(PI)=0 at t=2
+    const offset = 50 * Math.sin(Math.PI * tt / 2);
+    hatMesh.position.y = hatOriginalY - offset;
+    renderer.render(scene, camera);
+};
+
+init();
+
+// Optional live playback loop
+function animate() {
+    if (animReady) {
+        const time = (performance.now() / 1000) % 2;
+        setTime(time);
+    }
+    requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>
+```

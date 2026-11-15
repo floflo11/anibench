@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hand Wave Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_PATH = './image.png';
+const IMAGE_WIDTH = 1200;
+const IMAGE_HEIGHT = 600;
+const LOOP_DURATION = 2; // seconds
+
+// Approximate coordinates for the boy's raised hand on the far left.
+// These are estimates based on the image layout.
+const HAND_REGION = {
+    x: 180,
+    y: 130,
+    w: 100,
+    h: 120
+};
+
+// Local pivot point within the hand crop (wrist location relative to crop top-left)
+const WRIST_LOCAL = {
+    x: 30,
+    y: 95
+};
+
+// Maximum rotation angle for the wave (radians)
+const MAX_ANGLE = 0.6;
+
+// --- Globals ---
+let scene, camera, renderer, meshBg, meshHand, textureHand;
+let isReady = false;
+
+// --- Initialization ---
+function init() {
+    // Setup Scene
+    scene = new THREE.Scene();
+
+    // Setup Orthographic Camera (0,0 at top-left)
+    camera = new THREE.OrthographicCamera(0, IMAGE_WIDTH, IMAGE_HEIGHT, 0, -1, 1);
+    camera.position.z = 1;
+
+    // Setup Renderer
+    renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false });
+    renderer.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+    document.body.appendChild(renderer.domElement);
+
+    // Setup Lighting (not strictly needed for unlit materials, but good practice)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
+    scene.add(ambientLight);
+
+    // Load Texture
+    const textureLoader = new THREE.TextureLoader();
+    textureLoader.load(
+        IMAGE_PATH,
+        (texture) => {
+            texture.colorSpace = THREE.SRGBColorSpace;
+            setupScene(texture);
+            isReady = true;
+            window.ANIM_READY = true;
+        },
+        undefined,
+        (err) => {
+            console.error('Failed to load texture', err);
+        }
+    );
+}
+
+function setupTextureProcessing(image) {
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = IMAGE_WIDTH;
+    bgCanvas.height = IMAGE_HEIGHT;
+    const bgCtx = bgCanvas.getContext('2d');
+
+    // Draw original image to background canvas
+    bgCtx.drawImage(image, 0, 0);
+
+    // Fill the hand region with white to "erase" it from the background
+    // This assumes the background behind the hand is white or negligible.
+    bgCtx.fillStyle = '#ffffff';
+    bgCtx.fillRect(HAND_REGION.x, HAND_REGION.y, HAND_REGION.w, HAND_REGION.h);
+
+    const textureBg = new THREE.CanvasTexture(bgCanvas);
+    textureBg.colorSpace = THREE.SRGBColorSpace;
+
+    // Create hand crop canvas
+    const handCanvas = document.createElement('canvas');
+    handCanvas.width = HAND_REGION.w;
+    handCanvas.height = HAND_REGION.h;
+    const handCtx = handCanvas.getContext('2d');
+
+    // Draw just the hand part from the original image
+    handCtx.drawImage(
+        image,
+        HAND_REGION.x, HAND_REGION.y, HAND_REGION.w, HAND_REGION.h,
+        0, 0, HAND_REGION.w, HAND_REGION.h
+    );
+
+    textureHand = new THREE.CanvasTexture(handCanvas);
+    textureHand.colorSpace = THREE.SRGBColorSpace;
+
+    return { textureBg, textureHand };
+}
+
+function setupScene(texture) {
+    const { textureBg } = setupTextureProcessing(texture.image);
+
+    // Background Mesh (Image with hand removed)
+    const geoBg = new THREE.PlaneGeometry(IMAGE_WIDTH, IMAGE_HEIGHT);
+    const matBg = new THREE.MeshBasicMaterial({ map: textureBg });
+    meshBg = new THREE.Mesh(geoBg, matBg);
+    meshBg.position.set(IMAGE_WIDTH / 2, IMAGE_HEIGHT / 2, 0);
+    scene.add(meshBg);
+
+    // Hand Mesh
+    const geoHand = new THREE.PlaneGeometry(HAND_REGION.w, HAND_REGION.h);
+    
+    // Move geometry so (0,0) is at the wrist pivot
+    geoHand.translate(-WRIST_LOCAL.x, -WRIST_LOCAL.y, 0);
+
+    const matHand = new THREE.MeshBasicMaterial({ 
+        map: textureHand,
+        transparent: true,
+        alphaTest: 0.5 
+    });
+    meshHand = new THREE.Mesh(geoHand, matHand);
+    
+    // Position the mesh so the local (0,0) pivot lands on the wrist in world space
+    const worldWristX = HAND_REGION.x + WRIST_LOCAL.x;
+    const worldWristY = HAND_REGION.y + WRIST_LOCAL.y;
+    meshHand.position.set(worldWristX, worldWristY, 1); // Slightly above background
+    
+    scene.add(meshHand);
+
+    // Initial render
+    renderFrame(0);
+}
+
+function renderFrame(t) {
+    // Normalize t to 0..2 loop
+    const time = t % LOOP_DURATION;
+    
+    // Calculate angle: 0 at t=0, max at t=0.5, 0 at t=1, min at t=1.5, 0 at t=2
+    // Using sine wave: sin(time * PI) gives 0 -> 1 -> 0 -> -1 -> 0 over 0..2
+    const angle = Math.sin(time * Math.PI) * MAX_ANGLE;
+    
+    meshHand.rotation.z = angle;
+    
+    renderer.render(scene, camera);
+}
+
+// --- Public API ---
+window.setTime = function(t) {
+    if (!isReady) return;
+    renderFrame(t);
+};
+
+// Start
+init();
+
+</script>
+</body>
+</html>

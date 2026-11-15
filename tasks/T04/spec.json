@@ -12,7 +12,6 @@
  "amp": 20,
  "graders": [
   "G1",
-  "G2",
   "G3",
   "G4",
   "G5",
@@ -24,6 +23,14 @@
    296
   ]
  ],
- "area_tol": 0.08,
- "blob_allow": 0
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ]
 }

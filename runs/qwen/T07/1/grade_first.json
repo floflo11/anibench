@@ -1,0 +1,37 @@
+{
+ "stage": "first",
+ "task": "T07",
+ "model": "qwen",
+ "try_": "1",
+ "tier": 1,
+ "usage": {
+  "prompt_tokens": 1236,
+  "completion_tokens": 25563,
+  "total_tokens": 26799,
+  "cost": 0.012019497,
+  "is_byok": false,
+  "prompt_tokens_details": {
+   "cached_tokens": 0,
+   "cache_write_tokens": 0,
+   "audio_tokens": 0,
+   "video_tokens": 0
+  },
+  "cost_details": {
+   "upstream_inference_cost": 0.012019497,
+   "upstream_inference_prompt_cost": 8.1576e-05,
+   "upstream_inference_completions_cost": 0.011937921
+  },
+  "completion_tokens_details": {
+   "reasoning_tokens": 19195,
+   "image_tokens": 0,
+   "audio_tokens": 0
+  }
+ },
+ "latency_s": 1190.175,
+ "status": "RUNTIME",
+ "error": "RUNTIME: ANIM_READY/setTime not available within 15s",
+ "logs": [
+  "warning: [.WebGL-0xba40016fe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+  "error: Failed to load resource: the server responded with a status of 404 (File not found)"
+ ]
+}

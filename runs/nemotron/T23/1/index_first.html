@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Walk in Place Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+renderer.setSize(1200, 600);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+// Orthographic camera: 1 unit = 1 pixel. Center at (0,0).
+// Left: -600, Right: 600, Top: 300, Bottom: -300.
+const camera = new THREE.OrthographicCamera(-600, 600, 300, -300, 1, 1000);
+camera.position.z = 10;
+
+let uniforms;
+let mesh;
+let animReady = false;
+
+const textureLoader = new THREE.TextureLoader();
+const imageTexture = textureLoader.load('./image.png', () => {
+    imageTexture.colorSpace = THREE.SRGBColorSpace;
+
+    // High segment count allows vertex deformation without excessive faceting.
+    const geometry = new THREE.PlaneGeometry(1200, 600, 128, 64);
+
+    const vertexShader = `
+        varying vec2 vUv;
+        uniform float u_time;
+        void main() {
+            vUv = uv;
+            vec3 pos = position;
+
+            // Define bounding box for the boy in the striped shirt (3rd kid from left).
+            // Image space approx: x[610, 790], y[180, 560].
+            // Three.js space (y is up): x[10, 190], y[120, -260].
+            const float boxLeft = 10.0;
+            const float boxRight = 190.0;
+            const float boxTop = 120.0;    // Head
+            const float boxBottom = -260.0; // Feet
+
+            if (pos.x > boxLeft && pos.x < boxRight && pos.y > boxBottom && pos.y < boxTop) {
+                // Isolate legs: lower half of the bounding box.
+                const float waistY = -50.0;
+                const float feetY = boxBottom;
+                float legFactor = smoothstep(waistY, feetY, pos.y);
+
+                if (legFactor > 0.01) {
+                    // Alternate left and right leg.
+                    const float centerX = (boxLeft + boxRight) * 0.5; // 100.0
+                    float side = (pos.x < centerX) ? 1.0 : -1.0;
+                    
+                    // Period = 2 seconds. Frequency = PI.
+                    float phase = u_time * 3.14159265 + (side > 0.0 ? 0.0 : 3.14159265);
+                    float move = sin(phase) * 8.0;
+                    
+                    pos.y += move * legFactor;
+                }
+            }
+
+            gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+        }
+    `;
+
+    const fragmentShader = `
+        varying vec2 vUv;
+        uniform sampler2D u_map;
+        void main() {
+            gl_FragColor = texture2D(u_map, vUv);
+        }
+    `;
+
+    uniforms = {
+        u_time: { value: 0 },
+        u_map: { value: imageTexture }
+    };
+
+    const material = new THREE.ShaderMaterial({
+        uniforms: uniforms,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader
+    });
+
+    mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    animReady = true;
+    window.ANIM_READY = true;
+    
+    // Render frame 0 (original image)
+    renderer.render(scene, camera);
+});
+
+window.setTime = function(t) {
+    if (!animReady) return;
+    // Ensure seamless 2-second loop
+    const time = t % 2;
+    uniforms.u_time.value = time;
+    renderer.render(scene, camera);
+};
+</script>
+</body>
+</html>

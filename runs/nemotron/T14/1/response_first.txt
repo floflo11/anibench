@@ -1,0 +1,191 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Hat Animation</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: white; }
+        canvas { display: block; width: 1024px; height: 683px; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1024" height="683"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const IMAGE_PATH = './image.png';
+        const WIDTH = 1024;
+        const HEIGHT = 683;
+
+        // Configuration for the hat region (toddler in navy jacket, right side)
+        // These coordinates are estimated based on the provided image.
+        const HAT_X = 550;
+        const HAT_Y = 10;
+        const HAT_W = 280;
+        const HAT_H = 180;
+        // Pivot: left end of the brim (viewer's left)
+        const PIVOT_X = HAT_X;
+        const PIVOT_Y = HAT_Y + HAT_H; // Bottom-left of the hat box
+
+        let renderer, camera, scene, bgMesh, pivotHat, hatMesh;
+        let isReady = false;
+
+        async function init() {
+            // Setup Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // Setup Camera (Orthographic, 1 pixel = 1 unit)
+            // Y axis: 0 is top, -HEIGHT is bottom
+            camera = new THREE.OrthographicCamera(0, WIDTH, 0, -HEIGHT, -1, 1);
+            camera.position.z = 1;
+
+            // Setup Scene
+            scene = new THREE.Scene();
+
+            // Load and process image
+            const img = await loadImage(IMAGE_PATH);
+            const { bgTexture, hatTexture } = processImage(img);
+
+            // Background Mesh (Full image with hat area painted white)
+            const bgGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+            const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+            bgMesh = new THREE.Mesh(bgGeo, bgMat);
+            // Position so top-left of plane is at (0,0) of camera
+            bgMesh.position.set(WIDTH / 2, -HEIGHT / 2, 0);
+            scene.add(bgMesh);
+
+            // Hat Mesh
+            const hatGeo = new THREE.PlaneGeometry(HAT_W, HAT_H);
+            const hatMat = new THREE.MeshBasicMaterial({ 
+                map: hatTexture, 
+                transparent: true, 
+                alphaTest: 0.5 
+            });
+            hatMesh = new THREE.Mesh(hatGeo, hatMat);
+
+            // Pivot Object
+            pivotHat = new THREE.Object3D();
+            // Pivot position in world space: (PIVOT_X, -PIVOT_Y) because camera Y is inverted (0 at top)
+            pivotHat.position.set(PIVOT_X, -PIVOT_Y, 0);
+            
+            // Offset hatMesh from pivot to its center
+            // Hat Mesh center is at (HAT_W/2, HAT_H/2) local.
+            // We want the texture (which is flipped Y) to align.
+            // Using flipY on texture means UV (0,0) is top-left of geometry.
+            // Geometry is centered at 0,0. So Top-Left is (-W/2, H/2).
+            // We want Top-Left of geometry to be at World (HAT_X, -HAT_Y).
+            // Pivot is at World (HAT_X, -(HAT_Y + HAT_H)).
+            // Offset from Pivot to HatMesh Center:
+            // Center World: (HAT_X + HAT_W/2, -(HAT_Y + HAT_H/2))
+            // Pivot World: (HAT_X, -(HAT_Y + HAT_H))
+            // Diff: (HAT_W/2, HAT_H/2)
+            hatMesh.position.set(HAT_W / 2, HAT_H / 2, 0);
+            
+            pivotHat.add(hatMesh);
+            scene.add(pivotHat);
+
+            // Initial Render
+            setTime(0);
+            isReady = true;
+            window.ANIM_READY = true;
+        }
+
+        function loadImage(src) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        }
+
+        function processImage(img) {
+            // Create offscreen canvas for processing
+            const procCanvas = document.createElement('canvas');
+            procCanvas.width = WIDTH;
+            procCanvas.height = HEIGHT;
+            const pCtx = procCanvas.getContext('2d');
+            pCtx.drawImage(img, 0, 0);
+
+            // 1. Background Texture: Full image, but hat area filled with white
+            const bgCanvas = document.createElement('canvas');
+            bgCanvas.width = WIDTH;
+            bgCanvas.height = HEIGHT;
+            const bCtx = bgCanvas.getContext('2d');
+            bCtx.drawImage(procCanvas, 0, 0);
+            bCtx.fillStyle = 'white';
+            bCtx.fillRect(HAT_X, HAT_Y, HAT_W, HAT_H);
+
+            const bgTexture = new THREE.CanvasTexture(bgCanvas);
+            bgTexture.colorSpace = THREE.SRGBColorSpace;
+            bgTexture.flipY = false; // CanvasTexture usually handles this, but explicit is safer for ortho
+            // Actually, Three.js CanvasTexture flips Y by default to match UV space?
+            // Standard PlaneGeometry UV (0,0) is bottom-left. Image (0,0) is top-left.
+            // So we need flipY = true for the texture to appear upright.
+            bgTexture.flipY = true;
+
+            // 2. Hat Texture: Crop of hat, with white background made transparent
+            const hatCanvas = document.createElement('canvas');
+            hatCanvas.width = HAT_W;
+            hatCanvas.height = HAT_H;
+            const hCtx = hatCanvas.getContext('2d');
+            hCtx.drawImage(procCanvas, HAT_X, HAT_Y, HAT_W, HAT_H, 0, 0, HAT_W, HAT_H);
+
+            // Make white background transparent
+            const imgData = hCtx.getImageData(0, 0, HAT_W, HAT_H);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const r = data[i];
+                const g = data[i + 1];
+                const b = data[i + 2];
+                // Threshold for white
+                if (r > 240 && g > 240 && b > 240) {
+                    data[i + 3] = 0;
+                }
+            }
+            hCtx.putImageData(imgData, 0, 0);
+
+            const hatTexture = new THREE.CanvasTexture(hatCanvas);
+            hatTexture.colorSpace = THREE.SRGBColorSpace;
+            hatTexture.flipY = true;
+
+            return { bgTexture, hatTexture };
+        }
+
+        window.setTime = function(t) {
+            if (!isReady) return;
+            // Clamp t
+            const tt = Math.max(0, Math.min(2, t));
+            
+            // Animation: 0 -> Max -> 0 over 2 seconds.
+            // Smooth start/stop: 1 - cos(PI * t) gives 0 -> 2 -> 0.
+            // Scale to 0 -> 1 -> 0.
+            const phase = (1 - Math.cos(Math.PI * tt)) * 0.5;
+            
+            // Max tilt angle in radians (~20 degrees)
+            const maxAngle = 0.35; 
+            const angle = phase * maxAngle;
+
+            pivotHat.rotation.z = angle;
+            
+            renderer.render(scene, camera);
+        };
+
+        // Live playback loop (optional, but good for verification)
+        function animate() {
+            // No rAF needed for setTime contract, but keep window responsive if needed
+            // requestAnimationFrame(animate);
+        }
+
+        init().catch(err => console.error("Init failed", err));
+    </script>
+</body>
+</html>
+```

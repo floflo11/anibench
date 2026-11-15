@@ -123,7 +123,8 @@ def build():
             P["B1_body"] = dict(mask=B1, pivot=None)
             P["B2_body"] = dict(mask=B2, pivot=None)
             # B1 raised hand (viewer's left), wrist pivot
-            m = B1 & box_mask(S, 62, 112, 158, 206) & skin(rgb)
+            hat_b1 = [(142, 150), (160, 105), (200, 62), (212, 22), (258, 2), (352, 2), (402, 28), (448, 48), (476, 80), (476, 170), (445, 200), (414, 186), (402, 130), (345, 92), (280, 90), (232, 105), (206, 160), (186, 204), (150, 196)]
+            m = B1 & box_mask(S, 62, 112, 152, 206) & skin(rgb) & ~ndimage.binary_dilation(poly_mask(S, hat_b1), iterations=6)
             P["B1_hand"] = dict(mask=clean(component_at(m, 110, 160)), pivot=(122, 198))
             # B1 hat
             hat = [(142, 150), (160, 105), (200, 62), (212, 22), (258, 2), (352, 2), (402, 28), (448, 48), (476, 80), (476, 170), (445, 200), (414, 186), (402, 130), (345, 92), (280, 90), (232, 105), (206, 160), (186, 204), (150, 196)]
@@ -140,8 +141,11 @@ def build():
             P["B2_skull"] = dict(mask=ellipse_mask(S, 690, 128, 100, 62) & poly_mask(S, hat2), pivot=None)
         for k, v in P.items():
             if not (k.endswith("_body") or k.endswith("_skull")):
-                # include the drawn outline around each part
-                v["mask"] = ndimage.binary_dilation(v["mask"], iterations=3) & fg
+                # include the drawn outline around each part (but never another character or the B1 hat for the hand)
+                grow = ndimage.binary_dilation(v["mask"], iterations=3) & fg
+                if k == "B1_hand":
+                    grow &= ~ndimage.binary_dilation(poly_mask(S, hat_b1), iterations=4)
+                v["mask"] = grow
             parts[(name, k)] = v
     return parts
 

@@ -1,0 +1,210 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toddler Wave Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+            width: 1024px;
+            height: 683px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1024" height="683"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_PATH = './image.png';
+const IMG_WIDTH = 1024;
+const IMG_HEIGHT = 683;
+const CANVAS_ID = 'canvas';
+
+// Animation parameters
+const WAVE_AMPLITUDE = 0.15; // radians (~8.5 degrees)
+const WAVE_PERIOD = 2; // seconds
+
+// Approximate coordinates for the left toddler's raised hand (red jacket)
+// Image space: (0,0) top-left
+const HAND_BOX_X = 70;
+const HAND_BOX_Y = 140;
+const HAND_BOX_W = 80;
+const HAND_BOX_H = 90;
+
+// Wrist position (pivot point) estimated within the hand box
+const WRIST_X = 115;
+const WRIST_Y = 225;
+
+// White box to cover the original hand location in the background layer
+// Made slightly larger than hand box to accommodate rotation without revealing gaps
+const BG_COVER_X = 60;
+const BG_COVER_Y = 130;
+const BG_COVER_W = 100;
+const BG_COVER_H = 110;
+
+// --- Three.js Setup ---
+const canvas = document.getElementById(CANVAS_ID);
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: false });
+renderer.setSize(IMG_WIDTH, IMG_HEIGHT);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+// Orthographic camera matching image pixels (Y is up in Three.js)
+const camera = new THREE.OrthographicCamera(
+    -IMG_WIDTH / 2,
+    IMG_WIDTH / 2,
+    IMG_HEIGHT / 2,
+    -IMG_HEIGHT / 2,
+    0.1,
+    10
+);
+camera.position.set(0, 0, 5);
+camera.lookAt(0, 0, 0);
+
+const scene = new THREE.Scene();
+
+// --- Texture Generation Helper ---
+function createTexturesFromImage(image) {
+    const offscreenCanvas = document.createElement('canvas');
+    offscreenCanvas.width = IMG_WIDTH;
+    offscreenCanvas.height = IMG_HEIGHT;
+    const ctx = offscreenCanvas.getContext('2d');
+
+    // 1. Background Texture: Original image with hand area covered by white
+    ctx.drawImage(image, 0, 0);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(BG_COVER_X, BG_COVER_Y, BG_COVER_W, BG_COVER_H);
+    const bgCanvas = offscreenCanvas;
+
+    // 2. Hand Texture: Original image cropped to hand box, rest transparent
+    const handCanvas = document.createElement('canvas');
+    handCanvas.width = HAND_BOX_W;
+    handCanvas.height = HAND_BOX_H;
+    const handCtx = handCanvas.getContext('2d');
+    // Draw image region
+    handCtx.drawImage(
+        image,
+        HAND_BOX_X, HAND_BOX_Y, HAND_BOX_W, HAND_BOX_H,
+        0, 0, HAND_BOX_W, HAND_BOX_H
+    );
+
+    const bgTexture = new THREE.CanvasTexture(bgCanvas);
+    bgTexture.colorSpace = THREE.SRGBColorSpace;
+
+    const handTexture = new THREE.CanvasTexture(handCanvas);
+    handTexture.colorSpace = THREE.SRGBColorSpace;
+
+    return { bgTexture, handTexture };
+}
+
+// --- Scene Objects ---
+let bgMesh;
+let handMesh;
+
+function buildScene(bgTexture, handTexture) {
+    // Background Mesh
+    const bgGeometry = new THREE.PlaneGeometry(IMG_WIDTH, IMG_HEIGHT);
+    const bgMaterial = new THREE.MeshBasicMaterial({ map: bgTexture });
+    bgMesh = new THREE.Mesh(bgGeometry, bgMaterial);
+    bgMesh.position.set(0, 0, 0);
+    scene.add(bgMesh);
+
+    // Hand Mesh
+    // Geometry centered at (0,0). We translate so wrist is at local (0,0).
+    const handGeometry = new THREE.PlaneGeometry(HAND_BOX_W, HAND_BOX_H);
+    
+    // Calculate translation to make wrist the origin of the geometry
+    // Box center in geometry space is (0,0).
+    // Box center in image space is (HAND_BOX_X + W/2, HAND_BOX_Y + H/2)
+    // Wrist in image space is (WRIST_X, WRIST_Y)
+    // Offset from box center to wrist in image space:
+    const boxCenterX = HAND_BOX_X + HAND_BOX_W / 2;
+    const boxCenterY = HAND_BOX_Y + HAND_BOX_H / 2;
+    const offsetX = WRIST_X - boxCenterX;
+    const offsetY = WRIST_Y - boxCenterY; // Image Y is down
+    
+    // Three.js geometry Y is up. Image Y is down.
+    // When we map image (x, y) to Three.js (x - W/2, H/2 - y):
+    // Image offset (offsetX, offsetY) becomes Three.js offset (offsetX, -offsetY).
+    // We want to translate geometry so that this point becomes (0,0).
+    // So translate by (-offsetX, -(-offsetY)) = (-offsetX, offsetY).
+    // Wait, simpler logic:
+    // We want local (0,0) to correspond to Wrist.
+    // Currently local (0,0) corresponds to Box Center.
+    // So we shift geometry by (Wrist - BoxCenter).
+    // In Three.js coords:
+    // Box Center maps to (0,0).
+    // Wrist maps to (offsetX, -offsetY).
+    // So translate geometry by (-offsetX, offsetY).
+    handGeometry.translate(-offsetX, offsetY);
+
+    const handMaterial = new THREE.MeshBasicMaterial({ 
+        map: handTexture,
+        transparent: true
+    });
+    handMesh = new THREE.Mesh(handGeometry, handMaterial);
+    
+    // Position mesh at Wrist location in Three.js space
+    const wristThreeX = WRIST_X - IMG_WIDTH / 2;
+    const wristThreeY = IMG_HEIGHT / 2 - WRIST_Y;
+    handMesh.position.set(wristThreeX, wristThreeY, 1); // Slightly in front of bg
+    
+    scene.add(handMesh);
+}
+
+// --- Animation Logic ---
+function setTime(t) {
+    // Normalize t to [0, 2] loop
+    const loopT = t % WAVE_PERIOD;
+    if (loopT < 0) loopT += WAVE_PERIOD;
+    
+    // Sine wave from 0 to 0 over 2 seconds
+    // sin(0) = 0, sin(PI) = 0. Period is 2, so frequency is PI.
+    const angle = Math.sin(loopT * Math.PI) * WAVE_AMPLITUDE;
+    
+    if (handMesh) {
+        handMesh.rotation.z = angle;
+    }
+    
+    renderer.render(scene, camera);
+}
+
+window.setTime = setTime;
+window.ANIM_READY = false;
+
+// --- Loading & Initialization ---
+const image = new Image();
+image.onload = function() {
+    const textures = createTexturesFromImage(image);
+    buildScene(textures.bgTexture, textures.handTexture);
+    
+    // Render frame 0 (original image)
+    setTime(0);
+    
+    window.ANIM_READY = true;
+    
+    // Optional: Live playback loop
+    function animate() {
+        // Use a fake time based on performance for live preview, 
+        // but setTime itself is deterministic.
+        const now = performance.now() * 0.001;
+        setTime(now);
+        requestAnimationFrame(animate);
+    }
+    animate();
+};
+image.src = IMAGE_PATH;
+</script>
+</body>
+</html>
+```

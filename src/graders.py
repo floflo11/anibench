@@ -15,8 +15,8 @@ FG_T = 30          # distance from white that counts as foreground
 MIN_BLOB = 60      # px
 G1_MAX = 0.002     # fraction of outside pixels allowed to change
 G4_MIN = 0.20      # fraction of target pixels that must change at peak
-G5_KEEP = 0.85     # fraction of original foreground that must stay in the pivot disc
-G5_R = 7
+G5_MAX = 0.20      # max fraction of the part's pixels at the joint that may change
+G5_R = 10
 G6_LOOP = 0.001
 G6_ORIG = 0.005
 SKULL_KEEP = 0.85
@@ -74,7 +74,9 @@ def grade(frames, task_dir):
         worst = max(blobs(f & region) for f in fgs)
         res["G2"] = dict(ok=bool(worst <= base + spec.get("blob_allow", 0)), value=int(worst), base=int(base))
     if "G3" in spec["graders"]:
-        dev = max(abs((f & region).sum() - area0) / area0 for f in fgs)
+        # net foreground lost or gained in the moving region, relative to the moving part's own area
+        tarea = max(1, (fg0 & target).sum())
+        dev = max(abs(int((f & region).sum()) - int(area0)) / tarea for f in fgs)
         ok = dev <= spec["area_tol"]
         extra = {}
         if skull is not None:
@@ -86,15 +88,15 @@ def grade(frames, task_dir):
         peak = max((c & target).sum() for c in ch) / max(1, target.sum())
         res["G4"] = dict(ok=bool(peak >= G4_MIN), value=round(float(peak), 3))
     if "G5" in spec["graders"]:
-        worst = 1.0
+        # the moving part's own pixels right at the joint should stay put (they barely move when rotating about the joint)
+        worst = 0.0
         for (x, y) in spec["pivots"]:
-            dm = disc(orig.shape, x, y, G5_R)
-            base = (fg0 & dm).sum()
-            if base < 0.5 * dm.sum():
+            dm = disc(orig.shape, x, y, G5_R) & target
+            if dm.sum() < 30:
                 continue
-            keep = min((f & dm).sum() / base for f in fgs)
-            worst = min(worst, keep)
-        res["G5"] = dict(ok=bool(worst >= G5_KEEP), value=round(float(worst), 3))
+            frac = max((c & dm).sum() for c in ch) / dm.sum()
+            worst = max(worst, frac)
+        res["G5"] = dict(ok=bool(worst <= G5_MAX), value=round(float(worst), 3))
     if "G6" in spec["graders"]:
         loop = changed(frames[0], frames[-1]).mean()
         o = ch[0].mean()

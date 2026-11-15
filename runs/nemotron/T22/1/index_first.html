@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+            width: 1024px;
+            height: 683px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const IMAGE_PATH = './image.png';
+        const WIDTH = 1024;
+        const HEIGHT = 683;
+
+        // Approximate bounding box for the right toddler's raised hand (navy jacket)
+        // Image coordinates (x, y, width, height)
+        const HAND_X = 855;
+        const HAND_Y = 135;
+        const HAND_W = 90;
+        const HAND_H = 110;
+
+        let renderer, scene, camera, texture, handTexture;
+        let pivot, handMesh, fillerMesh;
+        let ready = false;
+
+        function init() {
+            // Setup Renderer
+            renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('canvas'), antialias: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+
+            // Setup Camera (Orthographic, 1 unit = 1 pixel)
+            // Center (0,0) corresponds to image center (512, 341.5)
+            camera = new THREE.OrthographicCamera(-WIDTH / 2, WIDTH / 2, HEIGHT / 2, -HEIGHT / 2, 0, 10);
+            camera.position.z = 5;
+
+            // Setup Scene
+            scene = new THREE.Scene();
+
+            // Load Texture
+            const loader = new THREE.TextureLoader();
+            loader.load(IMAGE_PATH, (tex) => {
+                tex.colorSpace = THREE.SRGBColorSpace;
+                texture = tex;
+                setupScene();
+            });
+        }
+
+        function setupScene() {
+            // 1. Background Mesh (Full Image)
+            const bgGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+            const bgMat = new THREE.MeshBasicMaterial({ map: texture });
+            const bgMesh = new THREE.Mesh(bgGeo, bgMat);
+            bgMesh.position.z = 0;
+            scene.add(bgMesh);
+
+            // 2. Filler Mesh (Covers the original hand location)
+            // We fill with white to match the background, as the hand is mostly against white space.
+            const fillerGeo = new THREE.PlaneGeometry(HAND_W, HAND_H);
+            const fillerMat = new THREE.MeshBasicMaterial({ color: 0xffffff });
+            fillerMesh = new THREE.Mesh(fillerGeo, fillerMat);
+            // Image center of hand box:
+            // x_img = 855 + 45 = 900 -> world x = 900 - 512 = 388
+            // y_img = 135 + 55 = 190 -> world y = 341.5 - 190 = 151.5
+            fillerMesh.position.set(388, 151.5, 1);
+            scene.add(fillerMesh);
+
+            // 3. Hand Mesh (Isolated hand, animated)
+            // Create a canvas texture of just the hand area
+            const handCanvas = document.createElement('canvas');
+            handCanvas.width = HAND_W;
+            handCanvas.height = HAND_H;
+            const hCtx = handCanvas.getContext('2d');
+            
+            // We need an image element to draw from the texture
+            const img = new Image();
+            img.src = texture.image.src;
+            img.onload = () => {
+                hCtx.drawImage(img, HAND_X, HAND_Y, HAND_W, HAND_H, 0, 0, HAND_W, HAND_H);
+                
+                handTexture = new THREE.CanvasTexture(handCanvas);
+                handTexture.colorSpace = THREE.SRGBColorSpace;
+
+                const handMat = new THREE.MeshBasicMaterial({ 
+                    map: handTexture, 
+                    transparent: true 
+                });
+                handMesh = new THREE.Mesh(new THREE.PlaneGeometry(HAND_W, HAND_H), handMat);
+
+                // Setup Pivot for rotation
+                // Pivot at wrist (approx bottom center of hand box)
+                // World pivot: x=388, y = 341.5 - (135 + 100) = 106.5
+                pivot = new THREE.Object3D();
+                pivot.position.set(388, 106.5, 2);
+                
+                // Offset hand mesh from pivot (hand center relative to wrist)
+                // Hand center world y was 151.5. Pivot y is 106.5. Diff = 45.
+                handMesh.position.set(0, 45, 0);
+                
+                pivot.add(handMesh);
+                scene.add(pivot);
+
+                ready = true;
+                window.ANIM_READY = true;
+                
+                // Initial render
+                setTime(0);
+            };
+        }
+
+        window.setTime = function(t) {
+            if (!ready) return;
+
+            // Normalize t to 0..2 loop
+            let time = t % 2;
+            if (time < 0) time += 2;
+
+            // Phase 0 -> 1 -> 0 over 2 seconds
+            const phase = time / 2; // 0 to 1
+            const angle = Math.sin(phase * Math.PI) * (Math.PI / 4); // Rotate up to 45 degrees
+
+            if (pivot) {
+                pivot.rotation.z = angle;
+            }
+
+            renderer.render(scene, camera);
+        };
+
+        init();
+    </script>
+</body>
+</html>

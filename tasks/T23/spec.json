@@ -12,6 +12,6 @@
  "amp": 0,
  "graders": [],
  "pivots": [],
- "area_tol": 0.08,
+ "area_tol": 0.5,
  "blob_allow": 0
 }

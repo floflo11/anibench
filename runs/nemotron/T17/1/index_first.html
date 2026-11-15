@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: white;
+        }
+        canvas {
+            display: block;
+            width: 1200px;
+            height: 600px;
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+// --- Configuration ---
+const IMAGE_PATH = './image.png';
+const CANVAS_WIDTH = 1200;
+const CANVAS_HEIGHT = 600;
+const MASK_BOX = [280, 0, 280, 600]; // x, y, width, height for the girl with pigtails
+const SQUAT_DEPTH_FACTOR = 0.08; // Fraction of image height to squat
+
+// --- Globals ---
+let renderer, scene, camera, texture;
+let meshBackground, meshGirl;
+let uniformsBackground, uniformsGirl;
+let isReady = false;
+
+// --- Shaders ---
+const vertexShader = `
+    varying vec2 vUv;
+    void main() {
+        vUv = uv;
+        gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+    }
+`;
+
+const fragmentShader = `
+    uniform sampler2D u_texture;
+    uniform vec4 u_mask_box; // x, y, width, height (top-left origin pixels)
+    uniform int u_mode; // 0: background (mask out box), 1: girl (mask in box)
+    uniform float u_scroll; // Vertical scroll amount for the girl texture
+    
+    varying vec2 vUv;
+
+    void main() {
+        // gl_FragCoord is bottom-left origin. Convert to top-left origin for image coords.
+        vec2 pos = gl_FragCoord.xy;
+        pos.y = 600.0 - pos.y;
+
+        bool inside = pos.x >= u_mask_box.x && 
+                      pos.x < u_mask_box.x + u_mask_box.z &&
+                      pos.y >= u_mask_box.y && 
+                      pos.y < u_mask_box.y + u_mask_box.w;
+
+        if (u_mode == 0) {
+            if (inside) discard;
+        } else {
+            if (!inside) discard;
+        }
+
+        // Map PlaneGeometry UV (bottom-left origin) to Image UV (top-left origin)
+        vec2 uv = vUv;
+        uv.y = 1.0 - uv.y;
+
+        if (u_mode == 1) {
+            uv.y -= u_scroll;
+        }
+
+        gl_FragColor = texture2D(u_texture, uv);
+    }
+`;
+
+// --- Initialization ---
+function init() {
+    const canvas = document.getElementById('canvas');
+    
+    renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false });
+    renderer.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+    renderer.setPixelRatio(1);
+    renderer.toneMapping = THREE.NoToneMapping;
+
+    camera = new THREE.OrthographicCamera(0, CANVAS_WIDTH, CANVAS_HEIGHT, 0, -1, 1);
+    scene = new THREE.Scene();
+
+    // Load Texture
+    const loader = new THREE.TextureLoader();
+    loader.load(IMAGE_PATH, (tex) => {
+        texture = tex;
+        texture.colorSpace = THREE.SRGBColorSpace;
+        texture.flipY = true; // Ensure UV (0,0) is top-left matching image
+        texture.magFilter = THREE.NearestFilter;
+        texture.minFilter = THREE.NearestFilter;
+
+        setupScene();
+        isReady = true;
+        window.ANIM_READY = true;
+        
+        // Initial render
+        setTime(0);
+    });
+}
+
+function setupScene() {
+    const geometry = new THREE.PlaneGeometry(CANVAS_WIDTH, CANVAS_HEIGHT);
+
+    // --- Background Mesh (Everything except the girl) ---
+    uniformsBackground = {
+        u_texture: { value: texture },
+        u_mask_box: { value: new THREE.Vector4(MASK_BOX[0], MASK_BOX[1], MASK_BOX[2], MASK_BOX[3]) },
+        u_mode: { value: 0 },
+        u_scroll: { value: 0 }
+    };
+
+    const materialBackground = new THREE.ShaderMaterial({
+        uniforms: uniformsBackground,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader
+    });
+
+    meshBackground = new THREE.Mesh(geometry, materialBackground);
+    meshBackground.position.set(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 0);
+    scene.add(meshBackground);
+
+    // --- Girl Mesh (Only the girl, animated) ---
+    uniformsGirl = {
+        u_texture: { value: texture },
+        u_mask_box: { value: new THREE.Vector4(MASK_BOX[0], MASK_BOX[1], MASK_BOX[2], MASK_BOX[3]) },
+        u_mode: { value: 1 },
+        u_scroll: { value: 0 }
+    };
+
+    const materialGirl = new THREE.ShaderMaterial({
+        uniforms: uniformsGirl,
+        vertexShader: vertexShader,
+        fragmentShader: fragmentShader
+    });
+
+    meshGirl = new THREE.Mesh(geometry, materialGirl);
+    meshGirl.position.set(CANVAS_WIDTH / 2, CANVAS_HEIGHT / 2, 0);
+    scene.add(meshGirl);
+}
+
+// --- Public API ---
+window.setTime = function(t) {
+    if (!isReady) return;
+
+    // Clamp t to [0, 2]
+    t = Math.max(0, Math.min(2, t));
+
+    // Calculate squat offset.
+    // sin(PI * t) goes 0 -> 1 -> 0 over t=0..2.
+    // Positive value means squat down (scroll texture up visually, moving image down).
+    const squat = Math.sin(Math.PI * t);
+    const scrollAmount = squat * SQUAT_DEPTH_FACTOR; 
+
+    uniformsGirl.u_scroll.value = scrollAmount;
+
+    renderer.render(scene, camera);
+};
+
+// Optional: rAF loop for smooth playback if needed, but setTime is the contract.
+function animate() {
+    requestAnimationFrame(animate);
+    // If we wanted live playback based on clock, we'd call setTime here.
+    // But contract says setTime is the driver.
+}
+
+init();
+animate();
+
+</script>
+</body>
+</html>

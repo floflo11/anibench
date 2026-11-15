@@ -1,0 +1,163 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Head Tilt Loop</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; display: block; }
+  canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1200;
+const HEIGHT = 600;
+
+// Estimated coordinates for the boy in the striped shirt (3rd child from left).
+// Image origin (0,0) is top-left.
+const HEAD_X = 530;      // left edge of head crop
+const HEAD_Y = 120;      // top edge of head crop
+const HEAD_W = 120;      // width of head crop
+const HEAD_H = 200;      // height of head crop
+const PIVOT_X = 590;     // neck pivot X in image space
+const PIVOT_Y = 315;     // neck pivot Y in image space
+const MAX_TILT = 0.10;   // max tilt angle in radians (~5.7 degrees)
+
+let renderer, scene, camera, headMesh, bgMesh;
+let ready = false;
+
+function makeTexture(canvas, srgb = true) {
+  const tex = new THREE.CanvasTexture(canvas);
+  if (srgb) tex.colorSpace = THREE.SRGBColorSpace;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function init() {
+  const canvasEl = document.getElementById('canvas');
+
+  renderer = new THREE.WebGLRenderer({ canvas: canvasEl, alpha: false });
+  renderer.setSize(WIDTH, HEIGHT);
+  renderer.setPixelRatio(1);
+  renderer.toneMapping = THREE.NoToneMapping;
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+
+  // Orthographic camera: Y-up standard, maps image pixels 1:1 to world units.
+  camera = new THREE.OrthographicCamera(-WIDTH / 2, WIDTH / 2, HEIGHT / 2, -HEIGHT / 2, -1, 1);
+  camera.position.z = 1;
+
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0xffffff);
+
+  const loader = new THREE.TextureLoader();
+  loader.load('./image.png', (baseTex) => {
+    baseTex.colorSpace = THREE.SRGBColorSpace;
+    const img = baseTex.image;
+
+    // --- Prepare offscreen canvases ---
+    const prep = document.createElement('canvas');
+    prep.width = WIDTH;
+    prep.height = HEIGHT;
+    const pctx = prep.getContext('2d');
+    pctx.drawImage(img, 0, 0);
+
+    // 1) Background texture: original image with head area painted white.
+    const bgCanvas = document.createElement('canvas');
+    bgCanvas.width = WIDTH;
+    bgCanvas.height = HEIGHT;
+    const bctx = bgCanvas.getContext('2d');
+    bctx.drawImage(prep, 0, 0);
+    bctx.fillStyle = '#ffffff';
+    bctx.fillRect(HEAD_X, HEAD_Y, HEAD_W, HEAD_H);
+    const bgTexture = makeTexture(bgCanvas, true);
+
+    // 2) Head texture: cropped head region from original image.
+    const headCanvas = document.createElement('canvas');
+    headCanvas.width = HEAD_W;
+    headCanvas.height = HEAD_H;
+    const hctx = headCanvas.getContext('2d');
+    hctx.drawImage(img, -HEAD_X, -HEAD_Y);
+    const headTexture = makeTexture(headCanvas, true);
+
+    // 3) Head alpha mask: approximate oval head + small neck stub.
+    const alphaCanvas = document.createElement('canvas');
+    alphaCanvas.width = HEAD_W;
+    alphaCanvas.height = HEAD_H;
+    const actx = alphaCanvas.getContext('2d');
+    actx.fillStyle = '#000000';
+    actx.fillRect(0, 0, HEAD_W, HEAD_H);
+    actx.fillStyle = '#ffffff';
+    const cx = PIVOT_X - HEAD_X;
+    const cy = 75; // approximate eye/head center within crop
+    actx.beginPath();
+    actx.ellipse(cx, cy, HEAD_W * 0.45, HEAD_H * 0.42, 0, 0, Math.PI * 2);
+    actx.fill();
+    actx.fillRect(cx - 12, cy + 55, 24, 40); // neck stub
+    const headAlpha = makeTexture(alphaCanvas, false);
+
+    // --- Background mesh ---
+    const bgGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+    const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+    bgMesh = new THREE.Mesh(bgGeo, bgMat);
+    bgMesh.position.set(0, 0, 0);
+    scene.add(bgMesh);
+
+    // --- Head mesh (rotates around neck pivot) ---
+    // World coords (Y-up camera): image (x,y) -> world (x - W/2, H/2 - y)
+    const P = new THREE.Vector2(PIVOT_X - WIDTH / 2, HEIGHT / 2 - PIVOT_Y); // pivot
+    const tl = new THREE.Vector2(HEAD_X - WIDTH / 2, HEIGHT / 2 - HEAD_Y);   // crop top-left
+    const v_tl = new THREE.Vector2(-HEAD_W / 2, HEAD_H / 2);                  // geometry top-left corner
+
+    // Translation so texture aligns at rest, while local (0,0) ends up at pivot.
+    const T = new THREE.Vector2().subVectors(tl, P).sub(v_tl);
+
+    const headGeo = new THREE.PlaneGeometry(HEAD_W, HEAD_H);
+    headGeo.translate(T.x, T.y, 0);
+
+    const headMat = new THREE.MeshBasicMaterial({
+      map: headTexture,
+      alphaMap: headAlpha,
+      transparent: true
+    });
+    headMesh = new THREE.Mesh(headGeo, headMat);
+    headMesh.position.set(P.x, P.y, 0);
+    scene.add(headMesh);
+
+    ready = true;
+    window.ANIM_READY = true;
+    window.setTime(0);
+  });
+}
+
+// Synchronous frame renderer. Deterministic, no wall-clock.
+window.setTime = function (t) {
+  if (!ready || !headMesh) return;
+  let tt = t % 2;
+  if (tt < 0) tt += 2;
+  // 0 -> 0, 1 -> 0, 2 -> 0 ; smooth side-to-side in between
+  const angle = MAX_TILT * Math.sin(Math.PI * tt);
+  headMesh.rotation.z = angle;
+  renderer.render(scene, camera);
+};
+
+// Optional live playback loop (not required for correctness of setTime)
+function animate(time) {
+  if (ready) {
+    const t = ((time / 1000) % 2 + 2) % 2;
+    window.setTime(t);
+  }
+  requestAnimationFrame(animate);
+}
+
+init();
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toddler Bounce</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; }
+  canvas { display: block; width: 1024px; height: 683px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+renderer.setSize(1024, 683);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+// Orthographic camera: one image pixel = one world unit.
+// Y increases downward in screen space, matching image coordinates.
+const camera = new THREE.OrthographicCamera(-512, 512, 341.5, -341.5, -1, 1);
+camera.position.z = 1;
+
+// Dense plane so localized vertex displacement stays smooth.
+const geometry = new THREE.PlaneGeometry(1024, 683, 256, 256);
+
+const vertexShader = `
+uniform float uTime;
+varying vec2 vUv;
+void main() {
+  vec3 pos = position;
+
+  float u = vUv.x;
+  float v = vUv.y;
+
+  // Isolate the right toddler's lower legs / knees region.
+  // u: horizontal span across the right child's legs.
+  // v: vertical span near the bottom (feet), tapering up toward the knees.
+  float inX = smoothstep(0.50, 0.58, u) * (1.0 - smoothstep(0.82, 0.90, u));
+  float inY = smoothstep(0.0, 0.10, v) * (1.0 - smoothstep(0.22, 0.32, v));
+  float mask = inX * inY;
+
+  // Feet move most, knees less, creating a bending bounce.
+  float amp = 10.0 * (1.0 - smoothstep(0.0, 0.30, v));
+
+  // Seamless 2-second loop: sin(0)=0, sin(PI)=0, peak at t=1.
+  float bounce = sin(uTime * 3.141592653589793);
+
+  pos.y += bounce * mask * amp;
+
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+}
+`;
+
+const fragmentShader = `
+uniform sampler2D uMap;
+varying vec2 vUv;
+void main() {
+  gl_FragColor = texture2D(uMap, vUv);
+}
+`;
+
+let material;
+let mesh;
+let ready = false;
+
+const loader = new THREE.TextureLoader();
+loader.load('./image.png', (texture) => {
+  texture.colorSpace = THREE.SRGBColorSpace;
+  // Make image top row match UV v = 1 (top of screen).
+  texture.flipY = true;
+
+  material = new THREE.ShaderMaterial({
+    uniforms: {
+      uTime: { value: 0 },
+      uMap: { value: texture }
+    },
+    vertexShader,
+    fragmentShader
+  });
+
+  mesh = new THREE.Mesh(geometry, material);
+  scene.add(mesh);
+
+  ready = true;
+
+  window.setTime = function(t) {
+    if (!ready) return;
+    material.uniforms.uTime.value = t;
+    renderer.render(scene, camera);
+  };
+
+  window.ANIM_READY = true;
+
+  // Frame 0 must show the original image unchanged.
+  window.setTime(0);
+});
+
+// Optional live playback loop. Correctness does not depend on this.
+function animate() {
+  const t = (performance.now() / 1000) % 2;
+  if (typeof window.setTime === 'function') {
+    window.setTime(t);
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+</script>
+</body>
+</html>

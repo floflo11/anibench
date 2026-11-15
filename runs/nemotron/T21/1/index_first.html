@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toddler Wave</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; }
+  canvas { display: block; width: 1024px; height: 683px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const W = 1024;
+const H = 683;
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: false });
+renderer.setSize(W, H, false);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const camera = new THREE.OrthographicCamera(-W / 2, W / 2, H / 2, -H / 2, -1, 1);
+camera.position.z = 0;
+
+const scene = new THREE.Scene();
+
+// Base plane: full image with hand region erased
+const baseGeo = new THREE.PlaneGeometry(W, H);
+const baseMat = new THREE.MeshBasicMaterial();
+const baseMesh = new THREE.Mesh(baseGeo, baseMat);
+scene.add(baseMesh);
+
+// Hand variables
+let handPivot = null;
+let initialized = false;
+
+function initFromImage(img) {
+  const oc = document.createElement('canvas');
+  oc.width = W;
+  oc.height = H;
+  const octx = oc.getContext('2d', { willReadFrequently: true });
+  octx.drawImage(img, 0, 0);
+
+  // Region covering the left toddler's raised right hand.
+  // Coordinates are image pixels, (0,0) top-left.
+  const x0 = 55;
+  const x1 = 145;
+  const y0 = 115;
+  const y1 = 200;
+  const bw = x1 - x0;
+  const bh = y1 - y0;
+
+  // --- Base texture: erase hand pixels to white ---
+  const baseCanvas = document.createElement('canvas');
+  baseCanvas.width = W;
+  baseCanvas.height = H;
+  const bctx = baseCanvas.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  const baseImgData = bctx.getImageData(0, 0, W, H);
+  const baseData = baseImgData.data;
+  for (let y = y0; y < y1; y++) {
+    for (let x = x0; x < x1; x++) {
+      const i = (y * W + x) * 4;
+      const r = baseData[i];
+      const g = baseData[i + 1];
+      const b = baseData[i + 2];
+      // Erase non-white pixels inside the hand box
+      if (!(r > 245 && g > 245 && b > 245)) {
+        baseData[i] = 255;
+        baseData[i + 1] = 255;
+        baseData[i + 2] = 255;
+        baseData[i + 3] = 255;
+      }
+    }
+  }
+  bctx.putImageData(baseImgData, 0, 0);
+
+  // --- Hand texture: keep only hand pixels inside the box ---
+  const handCanvas = document.createElement('canvas');
+  handCanvas.width = bw;
+  handCanvas.height = bh;
+  const hctx = handCanvas.getContext('2d');
+  hctx.drawImage(img, x0, y0, bw, bh, 0, 0, bw, bh);
+  const handImgData = hctx.getImageData(0, 0, bw, bh);
+  const handData = handImgData.data;
+  for (let i = 0; i < handData.length; i += 4) {
+    const r = handData[i];
+    const g = handData[i + 1];
+    const b = handData[i + 2];
+    if (r > 245 && g > 245 && b > 245) {
+      handData[i + 3] = 0; // transparent background
+    }
+  }
+  hctx.putImageData(handImgData, 0, 0);
+
+  const baseTex = new THREE.CanvasTexture(baseCanvas);
+  baseTex.colorSpace = THREE.SRGBColorSpace;
+  baseMat.map = baseTex;
+  baseMat.needsUpdate = true;
+
+  const handTex = new THREE.CanvasTexture(handCanvas);
+  handTex.colorSpace = THREE.SRGBColorSpace;
+
+  const handMat = new THREE.MeshBasicMaterial({
+    map: handTex,
+    transparent: true,
+    depthTest: false,
+    depthWrite: false
+  });
+
+  const handGeo = new THREE.PlaneGeometry(bw, bh);
+  const handMesh = new THREE.Mesh(handGeo, handMat);
+  handMesh.renderOrder = 1;
+
+  // Pivot at the wrist so the hand waves naturally.
+  const wristX = 100;
+  const wristY = 200;
+
+  handPivot = new THREE.Object3D();
+  handPivot.position.set(wristX - W / 2, H / 2 - wristY, 0);
+  scene.add(handPivot);
+
+  // Position the hand mesh relative to the pivot so that at rotation 0 it sits
+  // exactly over the erased region.
+  const meshX = (x0 + x1) / 2 - W / 2;
+  const meshY = H / 2 - (y0 + y1) / 2;
+  handMesh.position.set(
+    meshX - (wristX - W / 2),
+    meshY - (H / 2 - wristY),
+    0
+  );
+
+  handPivot.add(handMesh);
+
+  initialized = true;
+  window.ANIM_READY = true;
+
+  // Frame 0 must be identical to the original image.
+  window.setTime(0);
+}
+
+const img = new Image();
+img.src = './image.png';
+img.onload = () => initFromImage(img);
+
+window.setTime = function (t) {
+  if (!initialized) return;
+  // Wrap into the 0..2 second loop
+  let tt = t % 2;
+  if (tt < 0) tt += 2;
+
+  // Smooth wave: 0 at t=0, max at t=0.5, 0 at t=1, -max at t=1.5, 0 at t=2.
+  const maxAngle = 0.35;
+  const angle = maxAngle * Math.sin(tt * Math.PI);
+  handPivot.rotation.z = angle;
+
+  renderer.render(scene, camera);
+};
+
+// Optional live playback loop (does not affect setTime determinism)
+function animate() {
+  const now = performance.now() * 0.001;
+  window.setTime(now % 2);
+  requestAnimationFrame(animate);
+}
+requestAnimationFrame(animate);
+</script>
+</body>
+</html>

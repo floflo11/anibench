@@ -21,7 +21,7 @@ def worker(jobs, q):
             q.put((tid, v, {"error": err, "logs": logs[-5:]}))
             continue
         g = grade(fr, ROOT / "tasks" / tid)
-        if v in ("ref", "missed_thumb", "center_pivot"):
+        if v in ("ref", "missed_thumb", "center_pivot", "hole"):
             save_gif(fr, d / "anim.gif", 0.4)
         q.put((tid, v, g))
     R.close()

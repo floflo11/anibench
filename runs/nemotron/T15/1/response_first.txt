@@ -1,0 +1,135 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Three.js Animation</title>
+<style>
+  body { margin: 0; overflow: hidden; background-color: #ffffff; }
+  canvas { display: block; }
+</style>
+</head>
+<body>
+<canvas id="anim-canvas" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1200;
+const HEIGHT = 600;
+
+const canvas = document.getElementById('anim-canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: false });
+renderer.setSize(WIDTH, HEIGHT);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const scene = new THREE.Scene();
+// Orthographic camera: left=0, right=WIDTH, top=HEIGHT, bottom=0.
+// This maps (0,0) to top-left corner and Y increases downwards in screen space.
+const camera = new THREE.OrthographicCamera(0, WIDTH, HEIGHT, 0, -1, 1);
+camera.position.z = 1;
+
+let bgMesh, boyMesh;
+let isReady = false;
+
+// Approximate bounding box for the boy in the striped shirt (3rd child from left).
+// Based on visual layout of the 1200x600 source image.
+const BOY_X = 600;
+const BOY_Y = 150;
+const BOY_W = 250;
+const BOY_H = 450;
+
+function createTextureFromCanvas(canvasEl) {
+  const tex = new THREE.CanvasTexture(canvasEl);
+  tex.colorSpace = THREE.SRGBColorSpace;
+  tex.needsUpdate = true;
+  return tex;
+}
+
+function setup(textureBg, textureBoy) {
+  // Background mesh: full image with the boy's region painted white.
+  const geoBg = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+  const matBg = new THREE.MeshBasicMaterial({ map: textureBg });
+  bgMesh = new THREE.Mesh(geoBg, matBg);
+  bgMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+  scene.add(bgMesh);
+
+  // Boy mesh: isolated cutout.
+  const geoBoy = new THREE.PlaneGeometry(BOY_W, BOY_H);
+  const matBoy = new THREE.MeshBasicMaterial({ 
+    map: textureBoy, 
+    transparent: true 
+  });
+  boyMesh = new THREE.Mesh(geoBoy, matBoy);
+  // Position center of the mesh at the boy's original location.
+  boyMesh.position.set(BOY_X + BOY_W / 2, BOY_Y + BOY_H / 2, 1);
+  scene.add(boyMesh);
+}
+
+window.setTime = function(t) {
+  if (!isReady) return;
+  // t ranges 0 to 2.
+  // Jump arc: sin(0)=0 at t=0, sin(PI/2)=1 at t=1, sin(PI)=0 at t=2.
+  const jumpAmplitude = 40; // pixels
+  const offsetY = jumpAmplitude * Math.sin(Math.PI * t / 2);
+  
+  // Camera Top=HEIGHT, Bottom=0 means increasing Y moves the object UP visually.
+  boyMesh.position.y = (BOY_Y + BOY_H / 2) + offsetY;
+  
+  renderer.render(scene, camera);
+};
+
+window.ANIM_READY = false;
+
+const img = new Image();
+img.src = './image.png';
+img.onload = () => {
+  // Prepare offscreen canvases for layering.
+  const fullCanvas = document.createElement('canvas');
+  fullCanvas.width = WIDTH;
+  fullCanvas.height = HEIGHT;
+  const fCtx = fullCanvas.getContext('2d');
+  fCtx.drawImage(img, 0, 0);
+
+  // 1. Background canvas: copy image, then paint white rect over the boy to hide him.
+  const bgCanvas = document.createElement('canvas');
+  bgCanvas.width = WIDTH;
+  bgCanvas.height = HEIGHT;
+  const bCtx = bgCanvas.getContext('2d');
+  bCtx.drawImage(img, 0, 0);
+  bCtx.fillStyle = '#ffffff';
+  bCtx.fillRect(BOY_X, BOY_Y, BOY_W, BOY_H);
+
+  // 2. Boy canvas: transparent background, copy only the boy's bounding box.
+  const boyCanvas = document.createElement('canvas');
+  boyCanvas.width = BOY_W;
+  boyCanvas.height = BOY_H;
+  const boyCtx = boyCanvas.getContext('2d');
+  boyCtx.drawImage(
+    img, 
+    BOY_X, BOY_Y, BOY_W, BOY_H, // source rect in original image
+    0, 0, BOY_W, BOY_H          // destination rect
+  );
+
+  const texBg = createTextureFromCanvas(bgCanvas);
+  const texBoy = createTextureFromCanvas(boyCanvas);
+
+  setup(texBg, texBoy);
+
+  isReady = true;
+  window.ANIM_READY = true;
+  
+  // Render initial frame.
+  window.setTime(0);
+  
+  // Optional live playback loop (not required by contract but keeps it alive).
+  function animate() {
+    requestAnimationFrame(animate);
+  }
+  animate();
+};
+</script>
+</body>
+</html>
+```

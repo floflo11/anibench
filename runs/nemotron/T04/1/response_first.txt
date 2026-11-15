@@ -1,0 +1,145 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Three.js Image Animation</title>
+    <style>
+        body { margin: 0; background: #ffffff; overflow: hidden; }
+        #canvas { width: 1200px; height: 600px; display: block; }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="1200" height="600"></canvas>
+
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        const canvas = document.getElementById('canvas');
+        const renderer = new THREE.WebGLRenderer({ canvas: canvas, antialias: false, alpha: false });
+        renderer.setSize(1200, 600);
+        renderer.setPixelRatio(1);
+        renderer.toneMapping = THREE.NoToneMapping;
+
+        // Orthographic camera: 1 unit = 1 pixel, Y axis matches image (0 at top)
+        const camera = new THREE.OrthographicCamera(0, 1200, 0, 600, -1, 1);
+        const scene = new THREE.Scene();
+
+        let bgMesh, armPivotGroup, armMesh;
+        let isReady = false;
+
+        // Configuration for the girl in the white dress (far right)
+        // Crop region for the forearm/hand
+        const cropX = 980;
+        const cropY = 150;
+        const cropW = 200;
+        const cropH = 250;
+
+        // Pivot point (elbow) in image coordinates
+        const pivotX = 1050;
+        const pivotY = 330;
+
+        // Max rotation angle in radians (~25 degrees)
+        const maxAngle = 0.45;
+
+        const img = new Image();
+        img.src = './image.png';
+
+        img.onload = () => {
+            // 1. Prepare Background Texture (original image with arm area erased)
+            const bgCanvas = document.createElement('canvas');
+            bgCanvas.width = 1200;
+            bgCanvas.height = 600;
+            const bgCtx = bgCanvas.getContext('2d');
+            bgCtx.drawImage(img, 0, 0);
+
+            // Fill the arm region with a color sampled from nearby dress/background to hide the original arm
+            const sampleX = 1050;
+            const sampleY = 450;
+            const samplePixel = bgCtx.getImageData(sampleX, sampleY, 1, 1).data;
+            bgCtx.fillStyle = `rgb(${samplePixel[0]}, ${samplePixel[1]}, ${samplePixel[2]})`;
+            bgCtx.fillRect(cropX, cropY, cropW, cropH);
+
+            const bgTexture = new THREE.CanvasTexture(bgCanvas);
+            bgTexture.colorSpace = THREE.SRGBColorSpace;
+
+            const bgGeo = new THREE.PlaneGeometry(1200, 600);
+            const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+            bgMesh = new THREE.Mesh(bgGeo, bgMat);
+            // Position mesh so its center aligns with camera view (0,0 top-left -> 600,300 center)
+            bgMesh.position.set(600, 300, 0);
+            scene.add(bgMesh);
+
+            // 2. Prepare Arm Texture (cutout of forearm/hand)
+            const armCanvas = document.createElement('canvas');
+            armCanvas.width = cropW;
+            armCanvas.height = cropH;
+            const armCtx = armCanvas.getContext('2d');
+            armCtx.drawImage(img, cropX, cropY, cropW, cropH, 0, 0, cropW, cropH);
+
+            // Create transparency: remove near-white pixels (background and white dress parts)
+            const imgData = armCtx.getImageData(0, 0, cropW, cropH);
+            const data = imgData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i] > 235 && data[i + 1] > 235 && data[i + 2] > 235) {
+                    data[i + 3] = 0;
+                }
+            }
+            armCtx.putImageData(imgData, 0, 0);
+
+            const armTexture = new THREE.CanvasTexture(armCanvas);
+            armTexture.colorSpace = THREE.SRGBColorSpace;
+
+            // 3. Setup Arm Mesh with Pivot
+            const armGeo = new THREE.PlaneGeometry(cropW, cropH);
+            const armMat = new THREE.MeshBasicMaterial({ 
+                map: armTexture, 
+                transparent: true,
+                alphaTest: 0.5 
+            });
+            armMesh = new THREE.Mesh(armGeo, armMat);
+
+            // Calculate offset so mesh rotates around pivot
+            const meshCenterX = cropX + cropW / 2;
+            const meshCenterY = cropY + cropH / 2;
+            const offsetX = meshCenterX - pivotX;
+            const offsetY = meshCenterY - pivotY;
+
+            armPivotGroup = new THREE.Group();
+            armPivotGroup.position.set(pivotX, pivotY, 0);
+            armMesh.position.set(offsetX, offsetY, 0);
+
+            armPivotGroup.add(armMesh);
+            scene.add(armPivotGroup);
+
+            // 4. Expose API
+            window.setTime = function(t) {
+                if (!isReady) return;
+                // Loop time 0..2 seconds
+                const tt = ((t % 2) + 2) % 2;
+                // Sine wave for smooth wave motion: 0 at t=0, max at t=1, 0 at t=2
+                const angle = Math.sin((tt / 2) * Math.PI) * maxAngle;
+                armPivotGroup.rotation.z = angle;
+                renderer.render(scene, camera);
+            };
+
+            window.ANIM_READY = true;
+            isReady = true;
+
+            // Render initial frame
+            window.setTime(0);
+        };
+
+        // Optional: live playback loop
+        function animate() {
+            if (isReady) {
+                // Could drive setTime with clock here if needed, but contract requires setTime(t)
+            }
+            requestAnimationFrame(animate);
+        }
+        animate();
+    </script>
+</body>
+</html>
+```

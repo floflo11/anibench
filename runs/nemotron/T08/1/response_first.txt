@@ -1,0 +1,183 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pigtail Swing Animation</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #ffffff;
+        }
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <script type="module">
+        import * as THREE from './vendor/three.module.js';
+
+        // Configuration
+        const WIDTH = 1200;
+        const HEIGHT = 600;
+        const IMAGE_SRC = './image.png';
+
+        // Estimated coordinates for the girl with pigtails (2nd child from left)
+        // Based on visual inspection of the provided image
+        const PIGTAIL_L = { x: 290, y: 160, w: 110, h: 220 };
+        const PIGTAIL_R = { x: 500, y: 160, w: 110, h: 220 };
+
+        // Anchor points (top center of each pigtail box)
+        const ANCHOR_L = { x: PIGTAIL_L.x + PIGTAIL_L.w / 2, y: PIGTAIL_L.y };
+        const ANCHOR_R = { x: PIGTAIL_R.x + PIGTAIL_R.w / 2, y: PIGTAIL_R.y };
+
+        let renderer, scene, camera, bgMesh, pigMeshL, pigMeshR;
+        let textureBg, texturePigL, texturePigR;
+        let animReady = false;
+
+        function init() {
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: false });
+            renderer.setSize(WIDTH, HEIGHT);
+            renderer.setPixelRatio(1);
+            renderer.toneMapping = THREE.NoToneMapping;
+            document.body.appendChild(renderer.domElement);
+
+            // Camera: Orthographic, 1 unit = 1 pixel
+            // left, right, top, bottom
+            camera = new THREE.OrthographicCamera(0, WIDTH, HEIGHT, 0, -1000, 1000);
+            camera.position.z = 10;
+
+            // Scene
+            scene = new THREE.Scene();
+
+            // Load image and setup textures
+            const img = new Image();
+            img.src = IMAGE_SRC;
+            img.onload = () => {
+                setupTextures(img);
+                createMeshes();
+                setTime(0); // Render frame 0
+                window.ANIM_READY = true;
+                animReady = true;
+                startLoop();
+            };
+        }
+
+        function setupTextures(img) {
+            // Offscreen canvas for processing
+            const procCanvas = document.createElement('canvas');
+            procCanvas.width = WIDTH;
+            procCanvas.height = HEIGHT;
+            const ctx = procCanvas.getContext('2d');
+
+            // Draw original image
+            ctx.drawImage(img, 0, 0);
+
+            // 1. Background Texture: Original image with pigtail areas painted white
+            const bgCanvas = document.createElement('canvas');
+            bgCanvas.width = WIDTH;
+            bgCanvas.height = HEIGHT;
+            const bgCtx = bgCanvas.getContext('2d');
+            bgCtx.drawImage(procCanvas, 0, 0);
+
+            // Paint over pigtail locations to hide originals
+            bgCtx.fillStyle = '#ffffff';
+            bgCtx.fillRect(PIGTAIL_L.x, PIGTAIL_L.y, PIGTAIL_L.w, PIGTAIL_L.h);
+            bgCtx.fillRect(PIGTAIL_R.x, PIGTAIL_R.y, PIGTAIL_R.w, PIGTAIL_R.h);
+
+            textureBg = new THREE.CanvasTexture(bgCanvas);
+            textureBg.colorSpace = THREE.SRGBColorSpace;
+
+            // 2. Left Pigtail Texture: Cropped pigtail
+            const pigLCanvas = document.createElement('canvas');
+            pigLCanvas.width = PIGTAIL_L.w;
+            pigLCanvas.height = PIGTAIL_L.h;
+            const pigLCtx = pigLCanvas.getContext('2d');
+            pigLCtx.drawImage(
+                procCanvas,
+                PIGTAIL_L.x, PIGTAIL_L.y, PIGTAIL_L.w, PIGTAIL_L.h,
+                0, 0, PIGTAIL_L.w, PIGTAIL_L.h
+            );
+            texturePigL = new THREE.CanvasTexture(pigLCanvas);
+            texturePigL.colorSpace = THREE.SRGBColorSpace;
+
+            // 3. Right Pigtail Texture: Cropped pigtail
+            const pigRCanvas = document.createElement('canvas');
+            pigRCanvas.width = PIGTAIL_R.w;
+            pigRCanvas.height = PIGTAIL_R.h;
+            const pigRCtx = pigRCanvas.getContext('2d');
+            pigRCtx.drawImage(
+                procCanvas,
+                PIGTAIL_R.x, PIGTAIL_R.y, PIGTAIL_R.w, PIGTAIL_R.h,
+                0, 0, PIGTAIL_R.w, PIGTAIL_R.h
+            );
+            texturePigR = new THREE.CanvasTexture(pigRCanvas);
+            texturePigR.colorSpace = THREE.SRGBColorSpace;
+        }
+
+        function createMeshes() {
+            // Background Mesh (full image, pigtails whited out)
+            const bgGeo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+            // Shift geometry so (0,0) is top-left to match camera
+            bgGeo.translate(WIDTH / 2, HEIGHT / 2, 0);
+            const bgMat = new THREE.MeshBasicMaterial({ map: textureBg });
+            bgMesh = new THREE.Mesh(bgGeo, bgMat);
+            bgMesh.position.set(0, 0, 0);
+            scene.add(bgMesh);
+
+            // Pigtail Meshes
+            // Geometry shifted so local (0,0) is top-center (anchor point)
+            const pigLGeo = new THREE.PlaneGeometry(PIGTAIL_L.w, PIGTAIL_L.h);
+            pigLGeo.translate(-PIGTAIL_L.w / 2, -PIGTAIL_L.h, 0); // Pivot at top-center
+            const pigLMat = new THREE.MeshBasicMaterial({ map: texturePigL, transparent: true });
+            pigMeshL = new THREE.Mesh(pigLGeo, pigLMat);
+            pigMeshL.position.set(ANCHOR_L.x, ANCHOR_L.y, 1);
+            scene.add(pigMeshL);
+
+            const pigRGeo = new THREE.PlaneGeometry(PIGTAIL_R.w, PIGTAIL_R.h);
+            pigRGeo.translate(-PIGTAIL_R.w / 2, -PIGTAIL_R.h, 0); // Pivot at top-center
+            const pigRMat = new THREE.MeshBasicMaterial({ map: texturePigR, transparent: true });
+            pigMeshR = new THREE.Mesh(pigRGeo, pigRMat);
+            pigMeshR.position.set(ANCHOR_R.x, ANCHOR_R.y, 1);
+            scene.add(pigMeshR);
+        }
+
+        // Exposed API
+        window.setTime = function(t) {
+            if (!animReady) return;
+
+            // Clamp time
+            const time = Math.max(0, Math.min(2, t));
+
+            // Swing angle: 0 at t=0, max at t=0.5, 0 at t=1, min at t=1.5, 0 at t=2
+            const angle = Math.sin(time * Math.PI) * 0.35; // ~20 degrees
+
+            // Apply rotation around Z axis (side to side swing)
+            // Both pigtails swing in same phase for simplicity
+            pigMeshL.rotation.z = angle;
+            pigMeshR.rotation.z = angle;
+
+            renderer.render(scene, camera);
+        };
+
+        function startLoop() {
+            let lastTime = performance.now();
+            function loop(now) {
+                const elapsed = (now - lastTime) / 1000;
+                // Loop time 0-2 seconds
+                const t = (elapsed % 2000) / 1000; 
+                setTime(t);
+                requestAnimationFrame(loop);
+            }
+            requestAnimationFrame(loop);
+        }
+
+        init();
+    </script>
+</body>
+</html>
+```

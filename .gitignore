@@ -8,3 +8,4 @@ scratch/
 validation/*/*/*.png
 validation/log.txt
 runs/raw/
+runs/*/T*/*/page_*/

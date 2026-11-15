@@ -139,7 +139,7 @@ def build():
             pivots = [HAT_PIVOT_T14] if kind == "rotate_hat" else [PARTS[p]["pivot"] for p in parts]
         spec = dict(id=tid, tier=tier, image=img, width=W, height=H, instruction=instr, parts=parts,
                     kind=kind, amp=amp, graders=graders, pivots=pivots,
-                    area_tol=0.35 if kind in ("translate_up", "rotate_hat") else (0.12 if kind in ("jump", "body", "flutter") else 0.08),
+                    area_tol=0.5,
                     blob_allow=3 if kind in ("translate_up", "rotate_hat") else 0)
         Image.fromarray((target * 255).astype("uint8")).save(d / "target.png")
         if graders:

@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Toddler Clap Loop</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #ffffff; }
+  canvas { display: block; width: 1024px; height: 683px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1024" height="683"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const WIDTH = 1024;
+const HEIGHT = 683;
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, alpha: false });
+renderer.setSize(WIDTH, HEIGHT);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.setClearColor(0xffffff, 1);
+
+const camera = new THREE.OrthographicCamera(0, WIDTH, 0, HEIGHT, -1, 1);
+camera.position.set(WIDTH / 2, HEIGHT / 2, 1);
+camera.lookAt(WIDTH / 2, HEIGHT / 2, 0);
+
+const scene = new THREE.Scene();
+
+let baseTexture, rhTexture, lhTexture;
+let baseMesh, rhMesh, lhMesh;
+let ready = false;
+
+// Estimated bounding boxes for the red-jacket toddler's hands
+const RH_BOX = { x: 60, y: 125, w: 110, h: 120 };
+const LH_BOX = { x: 390, y: 445, w: 80, h: 100 };
+
+const RH_START = new THREE.Vector2(RH_BOX.x + RH_BOX.w / 2, RH_BOX.y + RH_BOX.h / 2);
+const LH_START = new THREE.Vector2(LH_BOX.x + LH_BOX.w / 2, LH_BOX.y + LH_BOX.h / 2);
+const RH_CLAP = new THREE.Vector2(250, 380);
+const LH_CLAP = new THREE.Vector2(270, 380);
+
+function setTime(t) {
+  if (!ready) return;
+  t = Math.max(0, Math.min(2, t));
+  const phase = t < 1 ? t : 2 - t; // 0 -> 1 -> 0
+  const eased = phase * phase * (3 - 2 * phase); // smoothstep
+
+  const rhX = RH_START.x + (RH_CLAP.x - RH_START.x) * eased;
+  const rhY = RH_START.y + (RH_CLAP.y - RH_START.y) * eased;
+  rhMesh.position.set(rhX, rhY, 0.1);
+
+  const lhX = LH_START.x + (LH_CLAP.x - LH_START.x) * eased;
+  const lhY = LH_START.y + (LH_CLAP.y - LH_START.y) * eased;
+  lhMesh.position.set(lhX, lhY, 0.2);
+
+  renderer.render(scene, camera);
+}
+
+window.setTime = setTime;
+
+function initThree() {
+  const geo = new THREE.PlaneGeometry(WIDTH, HEIGHT);
+
+  const baseMat = new THREE.MeshBasicMaterial({ map: baseTexture });
+  baseMesh = new THREE.Mesh(geo, baseMat);
+  baseMesh.position.set(WIDTH / 2, HEIGHT / 2, 0);
+  scene.add(baseMesh);
+
+  const rhGeo = new THREE.PlaneGeometry(RH_BOX.w, RH_BOX.h);
+  const rhMat = new THREE.MeshBasicMaterial({ map: rhTexture, transparent: true });
+  rhMesh = new THREE.Mesh(rhGeo, rhMat);
+  rhMesh.position.set(RH_START.x, RH_START.y, 0.1);
+  scene.add(rhMesh);
+
+  const lhGeo = new THREE.PlaneGeometry(LH_BOX.w, LH_BOX.h);
+  const lhMat = new THREE.MeshBasicMaterial({ map: lhTexture, transparent: true });
+  lhMesh = new THREE.Mesh(lhGeo, lhMat);
+  lhMesh.position.set(LH_START.x, LH_START.y, 0.2);
+  scene.add(lhMesh);
+
+  renderer.render(scene, camera);
+  ready = true;
+  window.ANIM_READY = true;
+}
+
+const img = new Image();
+img.src = './image.png';
+img.onload = () => {
+  const src = document.createElement('canvas');
+  src.width = WIDTH;
+  src.height = HEIGHT;
+  const sctx = src.getContext('2d');
+  sctx.drawImage(img, 0, 0);
+
+  // Base: original image with hand areas filled with background color
+  const bgPixel = sctx.getImageData(10, 10, 1, 1).data;
+  const bgColor = `rgb(${bgPixel[0]}, ${bgPixel[1]}, ${bgPixel[2]})`;
+
+  const baseCvs = document.createElement('canvas');
+  baseCvs.width = WIDTH;
+  baseCvs.height = HEIGHT;
+  const bctx = baseCvs.getContext('2d');
+  bctx.drawImage(img, 0, 0);
+  bctx.fillStyle = bgColor;
+  bctx.fillRect(RH_BOX.x, RH_BOX.y, RH_BOX.w, RH_BOX.h);
+  bctx.fillRect(LH_BOX.x, LH_BOX.y, LH_BOX.w, LH_BOX.h);
+
+  // Right hand sprite
+  const rhCvs = document.createElement('canvas');
+  rhCvs.width = RH_BOX.w;
+  rhCvs.height = RH_BOX.h;
+  const rhctx = rhCvs.getContext('2d');
+  rhctx.drawImage(src, RH_BOX.x, RH_BOX.y, RH_BOX.w, RH_BOX.h, 0, 0, RH_BOX.w, RH_BOX.h);
+
+  // Left hand sprite
+  const lhCvs = document.createElement('canvas');
+  lhCvs.width = LH_BOX.w;
+  lhCvs.height = LH_BOX.h;
+  const lhctx = lhCvs.getContext('2d');
+  lhctx.drawImage(src, LH_BOX.x, LH_BOX.y, LH_BOX.w, LH_BOX.h, 0, 0, LH_BOX.w, LH_BOX.h);
+
+  baseTexture = new THREE.CanvasTexture(baseCvs);
+  baseTexture.colorSpace = THREE.SRGBColorSpace;
+
+  rhTexture = new THREE.CanvasTexture(rhCvs);
+  rhTexture.colorSpace = THREE.SRGBColorSpace;
+
+  lhTexture = new THREE.CanvasTexture(lhCvs);
+  lhTexture.colorSpace = THREE.SRGBColorSpace;
+
+  initThree();
+
+  // Optional live playback loop (does not affect setTime correctness)
+  function loop() {
+    const t = (performance.now() * 0.001) % 2;
+    setTime(t);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+};
+</script>
+</body>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nodding Boy Animation</title>
+<style>
+  body { margin: 0; background: #ffffff; overflow: hidden; }
+  #canvas { display: block; width: 1200px; height: 600px; }
+</style>
+</head>
+<body>
+<canvas id="canvas" width="1200" height="600"></canvas>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: false, antialias: false });
+renderer.setSize(1200, 600);
+renderer.setPixelRatio(1);
+renderer.toneMapping = THREE.NoToneMapping;
+
+const camera = new THREE.OrthographicCamera(-600, 600, 300, -300, -1, 10);
+camera.position.set(0, 0, 5);
+
+const scene = new THREE.Scene();
+
+let bgMesh, headMesh, pivot;
+let isReady = false;
+
+// Head region parameters (image pixel coordinates, top-left origin)
+const HEAD_X = 50;
+const HEAD_Y = 10;
+const HEAD_W = 160;
+const HEAD_H = 190;
+
+function initFromImage(img) {
+  const W = 1200;
+  const H = 600;
+
+  // Create background texture: original image with head area painted white
+  const bgCanvas = document.createElement('canvas');
+  bgCanvas.width = W;
+  bgCanvas.height = H;
+  const bgCtx = bgCanvas.getContext('2d');
+  bgCtx.drawImage(img, 0, 0);
+  bgCtx.fillStyle = '#ffffff';
+  bgCtx.fillRect(HEAD_X, HEAD_Y, HEAD_W, HEAD_H);
+
+  const bgTexture = new THREE.CanvasTexture(bgCanvas);
+  bgTexture.colorSpace = THREE.SRGBColorSpace;
+
+  // Create head texture: only the head region, rest transparent
+  const headCanvas = document.createElement('canvas');
+  headCanvas.width = HEAD_W;
+  headCanvas.height = HEAD_H;
+  const headCtx = headCanvas.getContext('2d');
+  headCtx.drawImage(img, HEAD_X, HEAD_Y, HEAD_W, HEAD_H, 0, 0, HEAD_W, HEAD_H);
+
+  const headTexture = new THREE.CanvasTexture(headCanvas);
+  headTexture.colorSpace = THREE.SRGBColorSpace;
+
+  // Background mesh (full image)
+  const bgGeo = new THREE.PlaneGeometry(W, H);
+  const bgMat = new THREE.MeshBasicMaterial({ map: bgTexture });
+  bgMesh = new THREE.Mesh(bgGeo, bgMat);
+  bgMesh.position.set(0, 0, 0);
+  scene.add(bgMesh);
+
+  // Head mesh
+  const headGeo = new THREE.PlaneGeometry(HEAD_W, HEAD_H);
+  const headMat = new THREE.MeshBasicMaterial({
+    map: headTexture,
+    transparent: true
+  });
+  headMesh = new THREE.Mesh(headGeo, headMat);
+
+  // Pivot at neck position in 3D space
+  // Image coords -> Three.js coords: x = imgX - 600, y = 300 - imgY
+  const pivotX = (HEAD_X + HEAD_W / 2) - 600;
+  const pivotY = 300 - (HEAD_Y + HEAD_H); // neck is at bottom of head box
+
+  pivot = new THREE.Object3D();
+  pivot.position.set(pivotX, pivotY, 0);
+  scene.add(pivot);
+
+  // Head mesh is positioned so its local center is at head center relative to neck
+  headMesh.position.set(0, HEAD_H / 2, 0);
+  pivot.add(headMesh);
+
+  isReady = true;
+  window.ANIM_READY = true;
+  
+  // Render frame 0
+  setTime(0);
+}
+
+const loader = new THREE.TextureLoader();
+loader.load('./image.png', (texture) => {
+  initFromImage(texture.image);
+});
+
+window.setTime = function(t) {
+  if (!isReady) return;
+  
+  // Normalize t to [0, 2]
+  const tt = ((t % 2) + 2) % 2;
+  const progress = tt / 2; // 0 to 1
+
+  // Nodding animation: rotate around X axis.
+  // sin(progress * PI) gives 0 -> 1 -> 0 over the loop.
+  const maxAngle = 0.1; // radians
+  const angle = Math.sin(progress * Math.PI) * maxAngle;
+  
+  pivot.rotation.x = angle;
+
+  renderer.render(scene, camera);
+};
+</script>
+</body>
+</html>
