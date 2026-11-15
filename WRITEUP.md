@@ -19,7 +19,7 @@ to 25 frames and score it with **six image-math checks**, not a model judge.
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
   Nemotron flipped or shifted the image in 9 of 21 first-try runs and left the canvas blank in 4;
   Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
-- **On Valkyrie** (agent setting: Claude Code, which can open the image and iterate), Claude Sonnet 5.5 passed **12/21 (57%)**; reference solutions score **21/21**. It passed T01 in a separate smoke run and failed it here, so results vary run to run. The GPT-6.1 Sol run did not start before the deadline (model name not accepted).
+- **On Valkyrie** (agent setting: Claude Code, which can open the image and iterate), Claude Sonnet 5.5 passed **12/21 (57%)**; reference solutions score **21/21**. It passed T01 in a separate smoke run and failed it here, so results vary run to run. The GPT-6.1 Sol run did not start before the deadline (the CLI returned no run ID).
 - Gemini 4 Carbon is left out of the table: in 8 of 8 completed runs it used the whole 32k-token budget reasoning and returned no file.
 - Every check is validated before use: a reference animation must pass it, and deliberately broken copies must fail it.
 
@@ -85,7 +85,7 @@ The weakest check is **G2 on small fragments**: a leftover piece that keeps touc
 | Kimi K3.1 Pro | 15 | 9 (60%) | 6/11 | 3/4 | 0 | $3.113 |
 | Nemotron 3.5 Super VL | 21 | 0 (0%) | 0/12 | 0/9 | 0 | $0 |
 | Qwen 3.8 27B | 15 | 6 (40%) | 4/10 | 2/5 | 1 | $0.458 |
-| Claude Sonnet 5.5 (Claude Code, Valkyrie) | 21 | 12 (57%) | 6/12 | 6/9 | 0 | $0 |
+| Claude Sonnet 5.5 (Claude Code, Valkyrie) | 21 | 12 (57%) | 6/12 | 6/9 | 0 | not reported |
 
 ## Failure rate per check
 

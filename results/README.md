@@ -7,7 +7,7 @@
 | Kimi K3.1 Pro | 15 | 9 (60%) | 6/11 | 3/4 | 0 | $3.113 |
 | Nemotron 3.5 Super VL | 21 | 0 (0%) | 0/12 | 0/9 | 0 | $0 |
 | Qwen 3.8 27B | 15 | 6 (40%) | 4/10 | 2/5 | 1 | $0.458 |
-| Claude Sonnet 5.5 (Claude Code, Valkyrie) | 21 | 12 (57%) | 6/12 | 6/9 | 0 | $0 |
+| Claude Sonnet 5.5 (Claude Code, Valkyrie) | 21 | 12 (57%) | 6/12 | 6/9 | 0 | not reported |
 
 ## Failure rate per check
 
