@@ -1,9 +1,16 @@
-\begin{thebibliography}{42}
+\begin{thebibliography}{82}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Ao et~al.(2025)Ao, Jiang, Ke, and Ehinger]{ao2025amodal}
+Jiayang Ao, Yanbei Jiang, Qiuhong Ke, and Krista~A. Ehinger.
+\newblock Open-world amodal appearance completion.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 6490--6499, 2025.
+\newblock URL \url{https://mlanthology.org/cvpr/2025/ao2025cvpr-openworld/}.
 
 \bibitem[Bakshi(2026)]{bakshi2026worldbench}
 Krish Bakshi.
@@ -34,6 +41,30 @@ Andrew~M. Bean, Ryan~Othniel Kearns, Angelika Romanou, Franziska~Sofia Hafner,
 \newblock URL
   \url{https://papers.neurips.cc/paper_files/paper/2025/hash/1967e0fc3aa6cbbace562f5cb8e3954e-Abstract-Datasets_and_Benchmarks_Track.html}.
 
+\bibitem[Blume et~al.(2025)Blume, Kim, Ha, Chatikyan, Jin, Nguyen, Peng, Chang,
+  Hoiem, and Ji]{blume2025partonomy}
+Ansel Blume, Jeonghwan Kim, Hyeonjeong Ha, Elen Chatikyan, Xiaomeng Jin,
+  Khanh~Duy Nguyen, Nanyun Peng, Kai-Wei Chang, Derek Hoiem, and Heng Ji.
+\newblock {PARTONOMY}: Large multimodal models with part-level visual
+  understanding, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.20759}.
+
+\bibitem[Carion et~al.(2025)Carion, Gustafson, Hu, Debnath, Hu, Suris, Ryali,
+  Alwala, Khedr, Huang, Lei, Ma, Guo, Kalla, Marks, Greer, Wang, Sun,
+  R{\"a}dle, Afouras, Mavroudi, Xu, Wu, Zhou, Momeni, Hazra, Ding, Vaze,
+  Porcher, Li, Li, Kamath, Cheng, Doll{\'a}r, Ravi, Saenko, Zhang, and
+  Feichtenhofer]{carion2025sam3}
+Nicolas Carion, Laura Gustafson, Yuan-Ting Hu, Shoubhik Debnath, Ronghang Hu,
+  Didac Suris, Chaitanya Ryali, Kalyan~Vasudev Alwala, Haitham Khedr, Andrew
+  Huang, Jie Lei, Tengyu Ma, Baishan Guo, Arpit Kalla, Markus Marks, Joseph
+  Greer, Meng Wang, Peize Sun, Roman R{\"a}dle, Triantafyllos Afouras,
+  Effrosyni Mavroudi, Katherine Xu, Tsung-Han Wu, Yu~Zhou, Liliane Momeni,
+  Rishi Hazra, Shuangrui Ding, Sagar Vaze, Francois Porcher, Feng Li, Siyuan
+  Li, Aishwarya Kamath, Ho~Kei Cheng, Piotr Doll{\'a}r, Nikhila Ravi, Kate
+  Saenko, Pengchuan Zhang, and Christoph Feichtenhofer.
+\newblock {SAM} 3: Segment anything with concepts, 2025.
+\newblock URL \url{https://arxiv.org/abs/2511.16719}.
+
 \bibitem[Cassano et~al.(2024)Cassano, Li, Sethi, Shinn, Brennan-Jones, Lozkhov,
   Anderson, and Guha]{cassano2024canitedit}
 Federico Cassano, Luisa Li, Akul Sethi, Noah Shinn, Abby Brennan-Jones, Anton
@@ -53,6 +84,33 @@ Dongping Chen, Ruoxi Chen, Shilin Zhang, Yaochen Wang, Yinuo Liu, Huichi Zhou,
   vision-language benchmark.
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2024.
 \newblock URL \url{https://icml.cc/virtual/2024/poster/33545}.
+
+\bibitem[Chen et~al.(2026)Chen, Mao, Li, Li, Zhang, Li, Zhao, Wang, and
+  Huang]{chen2026bunraku}
+Junhao Chen, Jingjia Mao, Dayong Li, Chenghai Li, Saining Zhang, Zhihao Li, Hao
+  Zhao, Yufei Wang, and Ruqi Huang.
+\newblock Bunraku: Turning a single illustration into an editable {Live2D}
+  character, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.27348}.
+\newblock Releases Live2D-Bench.
+
+\bibitem[Chen and Zwicker(2022)]{chen2022illustratedpose}
+Shuhong Chen and Matthias Zwicker.
+\newblock Transfer learning for pose estimation of illustrated characters.
+\newblock In \emph{IEEE/CVF Winter Conference on Applications of Computer
+  Vision (WACV)}, pages 793--802, 2022.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/WACV2022/html/Chen_Transfer_Learning_for_Pose_Estimation_of_Illustrated_Characters_WACV_2022_paper.html}.
+
+\bibitem[Cheng et~al.(2021)Cheng, Girshick, Doll{\'a}r, Berg, and
+  Kirillov]{cheng2021boundaryiou}
+Bowen Cheng, Ross Girshick, Piotr Doll{\'a}r, Alexander~C. Berg, and Alexander
+  Kirillov.
+\newblock Boundary {IoU}: Improving object-centric image segmentation
+  evaluation.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 15334--15342, 2021.
+\newblock URL \url{https://mlanthology.org/cvpr/2021/cheng2021cvpr-boundary}.
 
 \bibitem[Cheng et~al.(2025)Cheng, Duan, Wang, Fang, Li, Huang, Wang, Eftekhar,
   Lee, Yuan, Hendrix, Smith, Xia, Fox, and Krishna]{cheng2025pointarena}
@@ -93,6 +151,15 @@ Adrienne Deganutti, Elad Hirsch, Haonan Zhu, Jaejung Seol, and Purvanshi Mehta.
 \newblock URL \url{https://arxiv.org/html/2604.04192v1}.
 \newblock Authors listed alphabetically in the paper.
 
+\bibitem[Deitke et~al.(2025)]{deitke2025molmo}
+Matt Deitke et~al.
+\newblock Molmo and {PixMo}: Open weights and open data for state-of-the-art
+  vision-language models.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 91--104, 2025.
+\newblock URL \url{https://mlanthology.org/cvpr/2025/deitke2025cvpr-molmo}.
+\newblock 47 authors; the last listed author is Aniruddha Kembhavi.
+
 \bibitem[Diao et~al.(2026)Diao, Xu, Yang, Ma, Chen,
   et~al.]{diao2026vibevideobench}
 Muxi Diao, Wenbin Xu, Lele Yang, Xuyang Ma, Yuzhe Chen, et~al.
@@ -105,6 +172,32 @@ Yug~Aditi Gupta and Prannay Hebbar.
 \newblock {Vector-Bench}: Can models surgically edit {SVG} code?, 2026.
 \newblock URL \url{https://arxiv.org/abs/2607.19056}.
 
+\bibitem[Hamdi(2026)]{hamdi2026llmseg}
+Abdullah Hamdi.
+\newblock {LLMSeg}: Training-free text-prompted image segmentation with
+  {B}-splines, 2026.
+\newblock URL \url{https://arxiv.org/abs/2610.29409}.
+
+\bibitem[Hu et~al.(2025)Hu, Zhu, Zhang, Cheng, Liu, Liu, Ran, Chen, Liu, and
+  Wang]{hu2025groundingsuite}
+Rui Hu, Lianghui Zhu, Yuxuan Zhang, Tianheng Cheng, Lei Liu, Heng Liu, Longjin
+  Ran, Xiaoxin Chen, Wenyu Liu, and Xinggang Wang.
+\newblock {GroundingSuite}: Measuring complex multi-granular pixel grounding.
+\newblock In \emph{IEEE/CVF International Conference on Computer Vision
+  (ICCV)}, pages 23105--23114, 2025.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/ICCV2025/html/Hu_GroundingSuite_Measuring_Complex_Multi-Granular_Pixel_Grounding_ICCV_2025_paper.html}.
+
+\bibitem[Hu et~al.(2024)Hu, Shi, Fu, Roth, Ostendorf, Zettlemoyer, Smith, and
+  Krishna]{hu2024sketchpad}
+Yushi Hu, Weijia Shi, Xingyu Fu, Dan Roth, Mari Ostendorf, Luke Zettlemoyer,
+  Noah~A. Smith, and Ranjay Krishna.
+\newblock Visual sketchpad: Sketching as a visual chain of thought for
+  multimodal language models.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2024.
+\newblock URL \url{https://mlanthology.org/neurips/2024/hu2024neurips-visual}.
+
 \bibitem[Huang et~al.(2026)Huang, Chen, Liang, Ma, Yang, Ke, Tan, and
   Sun]{huang2026sabench}
 Jiaju Huang, Shaobin Chen, Xinglong Liang, Xinyu Ma, Hao Yang, Wei Ke, Tao Tan,
@@ -115,6 +208,14 @@ Jiaju Huang, Shaobin Chen, Xinglong Liang, Xinyu Ma, Hao Yang, Wei Ke, Tao Tan,
   Evaluations and Datasets Track}, 2026.
 \newblock URL \url{https://arxiv.org/abs/2610.34167}.
 \newblock arXiv:2610.34167; venue per arXiv comments field.
+
+\bibitem[Igarashi et~al.(2005)Igarashi, Moscovich, and
+  Hughes]{igarashi2005arap}
+Takeo Igarashi, Tomer Moscovich, and John~F. Hughes.
+\newblock As-rigid-as-possible shape manipulation.
+\newblock \emph{ACM Transactions on Graphics}, 24\penalty0 (3), 2005.
+\newblock URL \url{https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/rigid}.
+\newblock SIGGRAPH 2005.
 
 \bibitem[Jimenez et~al.(2024)Jimenez, Yang, Wettig, Yao, Pei, Press, and
   Narasimhan]{jimenez2024swebench}
@@ -146,12 +247,64 @@ Ren{\'e} Just, Darioush Jalali, Laura Inozemtseva, Michael~D. Ernst, Reid
 \newblock URL
   \url{https://homes.cs.washington.edu/~mernst/pubs/mutation-effectiveness-fse2014-abstract.html}.
 
+\bibitem[Ke et~al.(2023)Ke, Ye, Danelljan, Liu, Tai, Tang, and Yu]{ke2023hqsam}
+Lei Ke, Mingqiao Ye, Martin Danelljan, Yifan Liu, Yu-Wing Tai, Chi-Keung Tang,
+  and Fisher Yu.
+\newblock Segment anything in high quality.
+\newblock In \emph{Advances in Neural Information Processing Systems
+  (NeurIPS)}, 2023.
+\newblock URL \url{https://neurips.cc/virtual/2023/poster/71673}.
+
+\bibitem[Kim et~al.(2025)Kim, Chung, and Kim]{kim2025capellm}
+Junho Kim, Hyungjin Chung, and Byung-Hoon Kim.
+\newblock {CapeLLM}: Support-free category-agnostic pose estimation with
+  multimodal large language models.
+\newblock In \emph{IEEE/CVF International Conference on Computer Vision
+  (ICCV)}, pages 22889--22898, 2025.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/ICCV2025/html/Kim_CapeLLM_Support-Free_Category-Agnostic_Pose_Estimation_with_Multimodal_Large_Language_Models_ICCV_2025_paper.html}.
+
+\bibitem[Lan et~al.(2025)Lan, Chen, Zhou, Xu, Ke, Wang, Feng, and
+  Zhang]{lan2025text4seg}
+Mengcheng Lan, Chaofeng Chen, Yue Zhou, Jiaxing Xu, Yiping Ke, Xinjiang Wang,
+  Litong Feng, and Wei Zhang.
+\newblock {Text4Seg}: Reimagining image segmentation as text generation.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025.
+\newblock URL
+  \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/04d8c25cbf0d5e1b70d64e672ac92637-Abstract-Conference.html}.
+\newblock Author list as on the proceedings page; the arXiv page (2410.09855)
+  lists the last author as Wayne Zhang.
+
+\bibitem[Le et~al.(2025)Le, Xie, Liang, Wang, Yang, Ma, Vedder, Krishna,
+  Jayaraman, and Eaton]{le2025articulateanything}
+Long Le, Jason Xie, William Liang, Hung-Ju Wang, Yue Yang, Yecheng~Jason Ma,
+  Kyle Vedder, Arjun Krishna, Dinesh Jayaraman, and Eric Eaton.
+\newblock {Articulate-Anything}: Automatic modeling of articulated objects via
+  a vision-language foundation model.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, pages 17578--17602, 2025.
+\newblock URL
+  \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/2c8047bf3ed8ef6905351608d641f02f-Abstract-Conference.html}.
+
 \bibitem[Levy et~al.(2026)Levy, Margolin, Cavia, Samuel, Pritch, Pelec, Peleg,
   Rav~Acha, Shamir, and Lischinski]{levy2026livesvg}
 Matan Levy, Ran Margolin, Bar Cavia, Dvir Samuel, Yael Pritch, Shallel Pelec,
   Shmuel Peleg, Alex Rav~Acha, Ariel Shamir, and Dani Lischinski.
 \newblock {LiveSVG}: Zero-shot {SVG} animation via video generation, 2026.
 \newblock URL \url{https://arxiv.org/html/2605.30174}.
+
+\bibitem[Li et~al.(2025)Li, Meng, Lin, Luo, Tian, Ma, Huang, and
+  Chua]{li2025screenspotpro}
+Kaixin Li, Ziyang Meng, Hongzhan Lin, Ziyang Luo, Yuchen Tian, Jing Ma, Zhiyong
+  Huang, and Tat-Seng Chua.
+\newblock {ScreenSpot-Pro}: {GUI} grounding for professional high-resolution
+  computer use.
+\newblock In \emph{ICLR 2025 Workshop on Reasoning and Planning for Large
+  Language Models}, 2025.
+\newblock URL
+  \url{https://mlanthology.org/iclrw/2025/li2025iclrw-screenspotpro}.
+\newblock arXiv:2504.07981.
 
 \bibitem[Li et~al.(2026)Li, Hu, Liu, Feng, Liu, and Wan]{li2026mtweb2code}
 Qiming Li, Shujie Hu, Haohan Liu, Xiaocheng Feng, Songxiang Liu, and Guanglu
@@ -172,6 +325,33 @@ Guotao Liang, Zhangcheng Wang, Chuang Wang, Juncheng Hu, Haitao Zhou, Junhua
 \newblock URL \url{https://arxiv.org/html/2605.01517}.
 \newblock Introduces the SVGAnim-134k dataset. arXiv:2605.01517.
 
+\bibitem[Liew et~al.(2021)Liew, Cohen, Price, Mai, and
+  Feng]{liew2021thinobject}
+Jun~Hao Liew, Scott Cohen, Brian Price, Long Mai, and Jiashi Feng.
+\newblock Deep interactive thin object selection.
+\newblock In \emph{Winter Conference on Applications of Computer Vision
+  (WACV)}, pages 305--314, 2021.
+\newblock URL \url{https://mlanthology.org/wacv/2021/liew2021wacv-deep/}.
+
+\bibitem[Lin et~al.(2026)Lin, Li, Qin, Chan, Jin, Liu, Choy, and
+  Liu]{lin2026seethrough}
+Jian Lin, Chengze Li, Haoyun Qin, Kwun~Wang Chan, Yanghua Jin, Hanyuan Liu,
+  Stephen Chun~Wang Choy, and Xueting Liu.
+\newblock See-through: Single-image layer decomposition for anime characters,
+  2026.
+\newblock URL \url{https://arxiv.org/abs/2602.03749}.
+
+\bibitem[Liu et~al.(2023)Liu, Ding, Cai, Zhang, Satzoda, Mahadevan, and
+  Manmatha]{liu2023polyformer}
+Jiang Liu, Hui Ding, Zhaowei Cai, Yuting Zhang, Ravi~Kumar Satzoda, Vijay
+  Mahadevan, and R.~Manmatha.
+\newblock {PolyFormer}: Referring image segmentation as sequential polygon
+  generation.
+\newblock In \emph{IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, pages 18653--18663, 2023.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/CVPR2023/html/Liu_PolyFormer_Referring_Image_Segmentation_As_Sequential_Polygon_Generation_CVPR_2023_paper.html}.
+
 \bibitem[Liu et~al.(2024)Liu, Kazi, Wei, Fisher, Langlois, Walker, and
   Chilton]{liu2024logomotion}
 Vivian Liu, Rubaiat~Habib Kazi, Li-Yi Wei, Matthew Fisher, Timothy Langlois,
@@ -181,6 +361,22 @@ Vivian Liu, Rubaiat~Habib Kazi, Li-Yi Wei, Matthew Fisher, Timothy Langlois,
 \newblock URL \url{https://arxiv.org/abs/2405.07065}.
 \newblock v1 title: LogoMotion: Visually Grounded Code Generation for
   Content-Aware Animation.
+
+\bibitem[Liu et~al.(2025{\natexlab{a}})Liu, Peng, Zhong, Yue, Lu, Yu, and
+  Jia]{liu2025segzero}
+Yuqi Liu, Bohao Peng, Zhisheng Zhong, Zihao Yue, Fanbin Lu, Bei Yu, and Jiaya
+  Jia.
+\newblock {Seg-Zero}: Reasoning-chain guided segmentation via cognitive
+  reinforcement, 2025{\natexlab{a}}.
+\newblock URL \url{https://huggingface.co/papers/2503.06520}.
+
+\bibitem[Liu et~al.(2025{\natexlab{b}})Liu, Gao, Liang, Xiao, Qiao, Ma, and
+  Jiang]{liu2025obench}
+Zhaochen Liu, Kaiwen Gao, Shuyi Liang, Bin Xiao, Limeng Qiao, Lin Ma, and
+  Tingting Jiang.
+\newblock Beyond the visible: Benchmarking occlusion perception in multimodal
+  large language models, 2025{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2508.04059}.
 
 \bibitem[Lu et~al.(2026)Lu, Xu, Yu, Jiang, Yu, Wang, Yang, Zhang, Wang, He, and
   Liang]{lu2026worldcoderbench}
@@ -268,11 +464,68 @@ Eric Mitchell, Charles Lin, Antoine Bosselut, Chelsea Finn, and Christopher~D.
 \newblock URL \url{https://www.iclr.cc/virtual/2022/poster/6846}.
 \newblock MEND.
 
+\bibitem[Ozguroglu et~al.(2024)Ozguroglu, Liu, Sur{\'\i}s, Chen, Dave,
+  Tokmakov, and Vondrick]{ozguroglu2024pix2gestalt}
+Ege Ozguroglu, Ruoshi Liu, D{\'\i}dac Sur{\'\i}s, Dian Chen, Achal Dave, Pavel
+  Tokmakov, and Carl Vondrick.
+\newblock pix2gestalt: Amodal segmentation by synthesizing wholes.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 3931--3940, 2024.
+\newblock URL
+  \url{https://mlanthology.org/cvpr/2024/ozguroglu2024cvpr-pix2gestalt}.
+
+\bibitem[Perazzi et~al.(2016)Perazzi, Pont-Tuset, McWilliams, Van~Gool, Gross,
+  and Sorkine-Hornung]{perazzi2016davis}
+Federico Perazzi, Jordi Pont-Tuset, Brian McWilliams, Luc Van~Gool, Markus
+  Gross, and Alexander Sorkine-Hornung.
+\newblock A benchmark dataset and evaluation methodology for video object
+  segmentation.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, 2016.
+\newblock URL
+  \url{https://mlanthology.org/cvpr/2016/perazzi2016cvpr-benchmark}.
+
 \bibitem[Pysklo et~al.(2026)Pysklo, Zhuravel, and Watson]{pysklo2026agentdiff}
 Hubert~M. Pysklo, Artem Zhuravel, and Patrick~D. Watson.
 \newblock {Agent-Diff}: Benchmarking {LLM} agents on enterprise {API} tasks via
   code execution with state-diff-based evaluation, 2026.
 \newblock URL \url{https://arxiv.org/abs/2602.11224}.
+
+\bibitem[Qian et~al.(2025)Qian, Lu, Fu, Wang, Chen, Yang, Hu, and
+  Gan]{qian2025giebench}
+Yusu Qian, Jiasen Lu, Tsu-Jui Fu, Xinze Wang, Chen Chen, Yinfei Yang, Wenze Hu,
+  and Zhe Gan.
+\newblock {GIE-Bench}: Towards grounded evaluation for text-guided image
+  editing, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.11493}.
+
+\bibitem[Rahmanzadehgervi et~al.(2024)Rahmanzadehgervi, Bolton, Taesiri, and
+  Nguyen]{rahmanzadehgervi2024blind}
+Pooyan Rahmanzadehgervi, Logan Bolton, Mohammad~Reza Taesiri, and Anh~Totti
+  Nguyen.
+\newblock Vision language models are blind.
+\newblock In \emph{Asian Conference on Computer Vision (ACCV)}, pages 18--34,
+  2024.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/ACCV2024/html/Rahmanzadehgervi_Vision_language_models_are_blind_ACCV_2024_paper.html}.
+
+\bibitem[Ramachandran et~al.(2025)Ramachandran, Garjani, Bachmann, Atanov, Kar,
+  and Zamir]{ramachandran2025gpt4ovision}
+Rahul Ramachandran, Ali Garjani, Roman Bachmann, Andrei Atanov,
+  O{\u{g}}uzhan~Fatih Kar, and Amir Zamir.
+\newblock How well does {GPT-4o} understand vision? evaluating multimodal
+  foundation models on standard computer vision tasks, 2025.
+\newblock URL \url{https://arxiv.org/abs/2507.01955}.
+
+\bibitem[Shit et~al.(2021)Shit, Paetzold, Sekuboyina, Ezhov, Unger, Zhylka,
+  Pluim, Bauer, and Menze]{shit2021cldice}
+Suprosanna Shit, Johannes~C. Paetzold, Anjany Sekuboyina, Ivan Ezhov, Alexander
+  Unger, Andrey Zhylka, Josien P.~W. Pluim, Ulrich Bauer, and Bjoern~H. Menze.
+\newblock {clDice} -- a novel topology-preserving loss function for tubular
+  structure segmentation.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 16560--16569, 2021.
+\newblock URL \url{https://mlanthology.org/cvpr/2021/shit2021cvpr-cldice}.
 
 \bibitem[Si et~al.(2025)Si, Zhang, Li, Yang, Liu, and Yang]{si2025design2code}
 Chenglei Si, Yanzhe Zhang, Ryan Li, Zhengyuan Yang, Ruibo Liu, and Diyi Yang.
@@ -299,6 +552,58 @@ Harrison~Jesse Smith, Qingyuan Zheng, Yifei Li, Somya Jain, and Jessica~K.
 \newblock \emph{ACM Transactions on Graphics}, 2023.
 \newblock URL \url{https://dspace.mit.edu/handle/1721.1/150815}.
 \newblock Meta Animated Drawings. arXiv:2303.12741.
+
+\bibitem[Sur{\'\i}s et~al.(2023)Sur{\'\i}s, Menon, and
+  Vondrick]{suris2023vipergpt}
+D{\'\i}dac Sur{\'\i}s, Sachit Menon, and Carl Vondrick.
+\newblock {ViperGPT}: Visual inference via python execution for reasoning.
+\newblock In \emph{IEEE/CVF International Conference on Computer Vision
+  (ICCV)}, pages 11888--11898, 2023.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/ICCV2023/html/Suris_ViperGPT_Visual_Inference_via_Python_Execution_for_Reasoning_ICCV_2023_paper.html}.
+
+\bibitem[Suvorov et~al.(2022)Suvorov, Logacheva, Mashikhin, Remizova, Ashukha,
+  Silvestrov, Kong, Goka, Park, and Lempitsky]{suvorov2022lama}
+Roman Suvorov, Elizaveta Logacheva, Anton Mashikhin, Anastasia Remizova,
+  Arsenii Ashukha, Aleksei Silvestrov, Naejin Kong, Harshith Goka, Kiwoong
+  Park, and Victor Lempitsky.
+\newblock Resolution-robust large mask inpainting with {F}ourier convolutions.
+\newblock In \emph{Winter Conference on Applications of Computer Vision
+  (WACV)}, pages 2149--2159, 2022.
+\newblock URL
+  \url{https://mlanthology.org/wacv/2022/suvorov2022wacv-resolutionrobust}.
+
+\bibitem[Tao et~al.(2025)Tao, Wang, Cai, Luo, Han, and Tang]{tao2025coordbias}
+Xingjian Tao, Yiwei Wang, Yujun Cai, Yihong Luo, Kai Han, and Jing Tang.
+\newblock Mitigating coordinate prediction bias from positional encoding
+  failures, 2025.
+\newblock URL \url{https://arxiv.org/abs/2510.22102}.
+
+\bibitem[Wan et~al.(2025)Wan, Xie, Zhang, Lin, Wang, Stepputtis, Ramanan, and
+  Sycara]{wan2025instructpart}
+Zifu Wan, Yaqi Xie, Ce~Zhang, Zhiqiu Lin, Zihan Wang, Simon Stepputtis, Deva
+  Ramanan, and Katia Sycara.
+\newblock {InstructPart}: Task-oriented part segmentation with instruction
+  reasoning, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.18291}.
+
+\bibitem[Wang et~al.(2024{\natexlab{a}})Wang, Xuan, and Zhang]{wang2024locllm}
+Dongkai Wang, Shiyu Xuan, and Shiliang Zhang.
+\newblock {LocLLM}: Exploiting generalizable human keypoint localization via
+  large language model.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 614--623, 2024{\natexlab{a}}.
+\newblock URL \url{https://mlanthology.org/cvpr/2024/wang2024cvpr-locllm}.
+
+\bibitem[Wang et~al.(2024{\natexlab{b}})Wang, Yue, Zhang, Guo, He, Wang, and
+  Liu]{wang2024mres}
+Wenxuan Wang, Tongtian Yue, Yisi Zhang, Longteng Guo, Xingjian He, Xinlong
+  Wang, and Jing Liu.
+\newblock Unveiling parts beyond objects: Towards finer-granularity referring
+  expression segmentation.
+\newblock In \emph{Conference on Computer Vision and Pattern Recognition
+  (CVPR)}, pages 12998--13008, 2024{\natexlab{b}}.
+\newblock URL \url{https://mlanthology.org/cvpr/2024/wang2024cvpr-unveiling}.
 
 \bibitem[Wu et~al.(2024{\natexlab{a}})Wu, Ge, Guo, Wang, Liang, Lu, Shan, and
   Luo]{wu2024plot2code}
@@ -334,16 +639,24 @@ Yunzhi Yao, Peng Wang, Bozhong Tian, Siyuan Cheng, Zhoubo Li, Shumin Deng,
 \newblock \doi{10.18653/v1/2023.emnlp-main.632}.
 \newblock URL \url{https://aclanthology.org/2023.emnlp-main.632}.
 
-\bibitem[Ye et~al.(2025)Ye, Wang, Huang, Chen, Zhang, Moniz, Gao, Geyer, Huang,
-  Chen, Chawla, and Zhang]{ye2025justice}
+\bibitem[Ye et~al.(2025{\natexlab{a}})Ye, Wang, Huang, Chen, Zhang, Moniz, Gao,
+  Geyer, Huang, Chen, Chawla, and Zhang]{ye2025justice}
 Jiayi Ye, Yanbo Wang, Yue Huang, Dongping Chen, Qihui Zhang, Nuno Moniz, Tian
   Gao, Werner Geyer, Chao Huang, Pin-Yu Chen, Nitesh Chawla, and Xiangliang
   Zhang.
 \newblock Justice or prejudice? quantifying biases in {LLM-as-a-Judge}.
 \newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, pages 102351--102390, 2025.
+  (ICLR)}, pages 102351--102390, 2025{\natexlab{a}}.
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/fdca08d371e4b6c031397909e20043bd-Abstract-Conference.html}.
+
+\bibitem[Ye et~al.(2025{\natexlab{b}})Ye, He, Li, Lin, Yuan, Yan, Hou, and
+  Yuan]{ye2025imgedit}
+Yang Ye, Xianyi He, Zongjian Li, Bin Lin, Shenghai Yuan, Zhiyuan Yan, Bohan
+  Hou, and Li~Yuan.
+\newblock {ImgEdit}: A unified image editing dataset and benchmark,
+  2025{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2505.20275}.
 
 \bibitem[Yin et~al.(2026)Yin, Chen, Wang, Sun, Jin, Song, and
   Zhang]{yin2026verifierbench}
@@ -353,22 +666,65 @@ Jianing Yin, Ziyi Chen, Hao Wang, Yiyou Sun, Zijian Jin, Dawn Song, and Daoan
   for {LLM} agents, 2026.
 \newblock URL \url{https://arxiv.org/abs/2610.28679}.
 
-\bibitem[Zhang et~al.(2025)Zhang, Li, Xu, Liu, Liu, Zhou, Deng, Wu, Huang, Li,
-  Yi, Xiong, Hu, Zhang, Jiang, Xu, Zhang, Zhou, Zhou, and
+\bibitem[Yin et~al.(2025)Yin, Zhang, Tang, Gao, Xu, Yan, Li, Chen, Chen, Shum,
+  Ni, Zhou, Lin, and Wu]{yin2025qwenimagelayered}
+Shengming Yin, Zekai Zhang, Zecheng Tang, Kaiyuan Gao, Xiao Xu, Kun Yan, Jiahao
+  Li, Yilei Chen, Yuxiang Chen, Heung-Yeung Shum, Lionel~M. Ni, Jingren Zhou,
+  Junyang Lin, and Chenfei Wu.
+\newblock {Qwen-Image-Layered}: Towards inherent editability via layer
+  decomposition, 2025.
+\newblock URL \url{https://arxiv.org/abs/2512.15603}.
+
+\bibitem[Zhang et~al.(2025{\natexlab{a}})Zhang, Li, Xu, Liu, Liu, Zhou, Deng,
+  Wu, Huang, Li, Yi, Xiong, Hu, Zhang, Jiang, Xu, Zhang, Zhou, Zhou, and
   Lian]{zhang2025artifactsbench}
 Chenchen Zhang, Yuhang Li, Can Xu, Jiaheng Liu, Ao~Liu, Changzhi Zhou, Ken
   Deng, Dengpeng Wu, Guanhua Huang, Kejiao Li, Qi~Yi, Ruibin Xiong, Shihui Hu,
   Yue Zhang, Yuhao Jiang, Zenan Xu, Yuanxing Zhang, Wiggin Zhou, Chayse Zhou,
   and Fengzong Lian.
 \newblock {ArtifactsBench}: Bridging the visual-interactive gap in {LLM} code
-  generation evaluation, 2025.
+  generation evaluation, 2025{\natexlab{a}}.
 \newblock URL \url{https://arxiv.org/abs/2507.04952}.
+
+\bibitem[Zhang et~al.(2025{\natexlab{b}})Zhang, Hussain, An, and
+  Shouno]{zhang2025posellm}
+Dewen Zhang, Tahir Hussain, Wangpeng An, and Hayaru Shouno.
+\newblock {PoseLLM}: Enhancing language-guided human pose estimation with {MLP}
+  alignment, 2025{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2507.09139}.
+
+\bibitem[Zhang et~al.(2025{\natexlab{c}})Zhang, Khayatkhoei, Chhikara, and
+  Ilievski]{zhang2025wheretolook}
+Jiarui Zhang, Mahyar Khayatkhoei, Prateek Chhikara, and Filip Ilievski.
+\newblock {MLLMs} know where to look: Training-free perception of small visual
+  details with multimodal {LLMs}.
+\newblock In \emph{International Conference on Learning Representations
+  (ICLR)}, 2025{\natexlab{c}}.
+\newblock URL
+  \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/aaa0ac4253da75faf9b0dc0dda062612-Abstract-Conference.html}.
+
+\bibitem[Zhang and Agrawala(2024)]{zhang2024layerdiffuse}
+Lvmin Zhang and Maneesh Agrawala.
+\newblock Transparent image layer diffusion using latent transparency.
+\newblock \emph{ACM Transactions on Graphics}, 43\penalty0 (4), 2024.
+\newblock URL \url{https://lllyasviel.github.io/pages/layerdiffuse}.
+\newblock Article 100. SIGGRAPH 2024.
 
 \bibitem[Zhang et~al.(2026)Zhang, Xiao, Li, and Lyu]{zhang2026animwebbench}
 Zhongyi Zhang, Jingyu Xiao, Shuqing Li, and Michael~R. Lyu.
 \newblock {AnimWeb-Bench}: Benchmarking animated webpage code generation from
   videos, 2026.
 \newblock URL \url{https://arxiv.org/abs/2611.09769}.
+
+\bibitem[Zhao et~al.(2025)Zhao, Zhang, Lin, Li, Wu, Zhang, and
+  Wei]{zhao2025pyvision}
+Shitian Zhao, Haoquan Zhang, Shaoheng Lin, Ming Li, Qilong Wu, Kaipeng Zhang,
+  and Chen Wei.
+\newblock {PyVision}: Agentic vision with dynamic tooling.
+\newblock In \emph{NeurIPS 2025 Workshop on Multi-Turn Interactions in Large
+  Language Models}, 2025.
+\newblock URL \url{https://neurips.cc/virtual/2025/127984}.
+\newblock arXiv:2507.07998.
 
 \bibitem[Zheng et~al.(2023)Zheng, Chiang, Sheng, Zhuang, Wu, Zhuang, Lin, Li,
   Li, Xing, Zhang, Gonzalez, and Stoica]{zheng2023judging}
@@ -380,6 +736,17 @@ Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao
   (NeurIPS 2023), Datasets and Benchmarks Track}, pages 46595--46623, 2023.
 \newblock URL
   \url{https://proceedings.neurips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract.html}.
+
+\bibitem[Zhu et~al.(2025)Zhu, Tian, Chen, Zhou, Guo, Liu, Yang, and
+  Shen]{zhu2025segagent}
+Muzhi Zhu, Yuzhuo Tian, Hao Chen, Chunluan Zhou, Qingpei Guo, Yang Liu, Ming
+  Yang, and Chunhua Shen.
+\newblock {SegAgent}: Exploring pixel understanding capabilities in {MLLMs} by
+  imitating human annotator trajectories.
+\newblock In \emph{IEEE/CVF Conference on Computer Vision and Pattern
+  Recognition (CVPR)}, pages 3686--3696, 2025.
+\newblock URL
+  \url{https://openaccess.thecvf.com/content/CVPR2025/html/Zhu_SegAgent_Exploring_Pixel_Understanding_Capabilities_in_MLLMs_by_Imitating_Human_CVPR_2025_paper.html}.
 
 \bibitem[Zhu et~al.(2026)Zhu, Lim, and Kan]{zhu2026overediting}
 Tongyao Zhu, Wei~Hern Lim, and Min-Yen Kan.
