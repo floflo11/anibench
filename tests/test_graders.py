@@ -88,6 +88,18 @@ def test_tiny_fragment_below_min_size_is_ignored(tmp_path):
     assert res["G2b"]["ok"], res
 
 
+def test_thin_seam_line_is_not_a_piece(tmp_path, one_piece_hand):
+    """A 1-px line left along a polygon cut (a seam artifact) is not a piece of the part: a piece
+    must have an interior, i.e. survive a 3x3 erosion."""
+    sc = one_piece_hand
+    d = write_task(tmp_path, sc.image, sc.hand, sc.allowed)
+    fr = sc.frames(offsets(sway(), 2))
+    fr[3][8, 10:50] = (150, 150, 150)  # a 40 px grey line over the background
+    assert grade(fr, d)["G2b"]["ok"]
+    fr[3][8:13, 10:15] = HAND  # a 5x5 blob is a piece
+    assert not grade(fr, d)["G2b"]["ok"]
+
+
 def test_pieces_merging_is_not_a_split(tmp_path, two_piece_part):
     sc = two_piece_part
     d = write_task(tmp_path, sc.image, sc.hand, sc.allowed)

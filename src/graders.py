@@ -26,6 +26,7 @@ SKULL_KEEP = 0.85
 G2B_MIN = 20       # px: a piece of the part at least this big counts as a piece
 G2B_EMBED = 0.75   # a footprint-free piece whose border is >= this fraction unchanged scenery is ignored
                    # (islands seen on references: 0.81-1.0 enclosed; 0.9 failed T12's lace sleeve)
+G2B_CORE = 4       # px: a piece must keep this many pixels after a 3x3 erosion (lines are not pieces)
 G2B_BG = 8         # original pixels within this distance of white are blank background, not scenery
 EIGHT = np.ones((3, 3), bool)
 
@@ -60,7 +61,8 @@ def pieces(mask, min_px):
 
 
 def part_pieces(mask, static, target, min_px):
-    """Count 8-connected pieces of mask with >= min_px pixels, skipping embedded islands: pieces
+    """Count 8-connected pieces of mask with >= min_px pixels and a body (>= G2B_CORE pixels left
+    after a 3x3 erosion, so 1-2 px lines do not count), skipping embedded islands: pieces
     with no pixel in the part's original footprint whose 1-px border is >= G2B_EMBED static
     scenery (unchanged, outside the footprint, not blank background in the original). See g2b."""
     lab, n = ndimage.label(mask, structure=EIGHT)
@@ -73,6 +75,8 @@ def part_pieces(mask, static, target, min_px):
             continue
         sl = tuple(slice(max(0, a.start - 1), a.stop + 1) for a in sl)
         piece = lab[sl] == i
+        if ndimage.binary_erosion(piece, structure=EIGHT).sum() < G2B_CORE:
+            continue
         if not (piece & target[sl]).any():
             ring = ndimage.binary_dilation(piece, structure=EIGHT) & ~piece
             if (ring & static[sl]).sum() >= G2B_EMBED * ring.sum():
@@ -127,6 +131,11 @@ def g2b(fgs, raw, fg0, region, target, skull=None, scenery0=None):
     ignored, and a model that repaints the reveal with a non-white colour that touches only the
     parent can add a piece (false alarm).
 
+    Thin lines. Models that cut the part out with a polygon often leave a faint 1-px seam along
+    the cut (qwen T01/T03); 20-30 px stretches of it are not pieces of the part. A piece must keep
+    G2B_CORE pixels after a 3x3 erosion; every real detached piece seen (fingertips, tips left
+    behind, the mutation pieces) has a body.
+
     Counting. Baseline = 8-connected pieces of the original part (fg0 & footprint, skull removed)
     with at least G2B_MIN px; frame t = the same count over part_pixels. A frame fails if it has
     more pieces than the baseline. Fewer pieces is not a failure: pieces merging (two earrings
@@ -137,7 +146,7 @@ def g2b(fgs, raw, fg0, region, target, skull=None, scenery0=None):
     base_mask = fg0 & region & target
     if skull is not None:
         base_mask &= ~skull
-    base = pieces(base_mask, G2B_MIN)
+    base = part_pieces(base_mask, np.zeros_like(base_mask), target, G2B_MIN)
     if scenery0 is None:
         scenery0 = fg0
     counts = [part_pieces(part_pixels(f, c, region, target, skull), scenery0 & ~target & ~c, target, G2B_MIN)
