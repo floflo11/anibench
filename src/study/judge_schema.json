@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "anibench-judge-record-v1",
+  "title": "anibench multimodal judge answer for one clip",
+  "description": "Same questions and codes as the human raters (tools/rater.html, src/study/common.py). One object per clip. A judge run is collected as JSONL (one object per line) or as a rating export {schema: 'anibench-rating-v1', rater_id: 'judge:<name>', rater_kind: 'judge', ratings: [...]}; src/study/analyze.py reads both.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["clip_id", "pass", "defects", "other_text", "confidence", "reason"],
+  "properties": {
+    "clip_id": {"type": "string", "description": "Copied from the input."},
+    "pass": {"type": "boolean", "description": "Did the animation do what was asked without breaking anything else?"},
+    "defects": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {"enum": ["outside_moved", "tore_split", "size_shape", "barely_moves", "wrong_pivot", "loop_jump", "other"]},
+      "description": "Empty if pass is true; at least one code if pass is false."
+    },
+    "other_text": {"type": "string", "description": "Required (non-empty) when defects contains 'other'; else empty."},
+    "confidence": {"type": "integer", "enum": [1, 2, 3], "description": "1 = unsure, 2 = fairly sure, 3 = certain."},
+    "reason": {"type": "string", "maxLength": 400, "description": "One or two sentences naming what you saw."}
+  },
+  "allOf": [
+    {"if": {"properties": {"pass": {"const": true}}}, "then": {"properties": {"defects": {"maxItems": 0}}}},
+    {"if": {"properties": {"pass": {"const": false}}}, "then": {"properties": {"defects": {"minItems": 1}}}},
+    {"if": {"properties": {"defects": {"contains": {"const": "other"}}}}, "then": {"properties": {"other_text": {"minLength": 1}}}}
+  ]
+}
