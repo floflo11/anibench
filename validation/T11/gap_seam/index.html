@@ -1,7 +1,7 @@
 <!doctype html><html><head><style>body{margin:0;background:#fff}canvas{display:block}</style></head><body>
 <script type="module">
 import * as THREE from './vendor/three.module.js';
-const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 10, "url": "./layer0d.png", "px": 695, "py": 246, "off": [0.021, -2.0]}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
+const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 10, "url": "./layer0d.png", "px": 695, "py": 246, "off": [0.019, -2.0]}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
 const W = CFG.W, H = CFG.H;
 const r = new THREE.WebGLRenderer({antialias:false, preserveDrawingBuffer:true});
 r.setPixelRatio(1); r.setSize(W, H); r.setClearColor(0xffffff, 1); r.toneMapping = THREE.NoToneMapping;

@@ -1,7 +1,7 @@
 <!doctype html><html><head><style>body{margin:0;background:#fff}canvas{display:block}</style></head><body>
 <script type="module">
 import * as THREE from './vendor/three.module.js';
-const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 22, "url": "./layer0d.png", "px": 232, "py": 192, "off": [-0.036, -2.0]}, {"kind": "rotate", "amp": 22, "url": "./layer1d.png", "px": 538, "py": 256, "off": [-0.419, -1.956]}, {"kind": "rotate", "amp": 22, "url": "./layer2d.png", "px": 781, "py": 256, "off": [0.267, -1.982]}, {"kind": "rotate", "amp": 22, "url": "./layer3d.png", "px": 1099, "py": 296, "off": [0.075, -1.999]}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
+const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 22, "url": "./layer0d.png", "px": 232, "py": 192, "off": [-0.036, -2.0]}, {"kind": "rotate", "amp": 22, "url": "./layer1d.png", "px": 538, "py": 256, "off": [-0.366, -1.966]}, {"kind": "rotate", "amp": 22, "url": "./layer2d.png", "px": 781, "py": 256, "off": [0.267, -1.982]}, {"kind": "rotate", "amp": 22, "url": "./layer3d.png", "px": 1099, "py": 296, "off": [0.075, -1.999]}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
 const W = CFG.W, H = CFG.H;
 const r = new THREE.WebGLRenderer({antialias:false, preserveDrawingBuffer:true});
 r.setPixelRatio(1); r.setSize(W, H); r.setClearColor(0xffffff, 1); r.toneMapping = THREE.NoToneMapping;
