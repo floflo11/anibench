@@ -25,12 +25,16 @@ G6_ORIG = 0.005
 SKULL_KEEP = 0.85
 G2B_MIN = 20       # px: a piece of the part at least this big counts as a piece in a frame
 G2B_MIN0 = 10      # px: pieces of the original part counted for the baseline (hysteresis, see g2b)
+G2B_EMBED = 0.9    # a footprint-free piece whose border is >= this fraction unchanged scenery is ignored
 EIGHT = np.ones((3, 3), bool)
 
 
+def raw_changed(a, b):
+    return np.abs(a.astype(np.int16) - b.astype(np.int16)).max(-1) > CHANGE_T
+
+
 def changed(a, b):
-    d = np.abs(a.astype(int) - b.astype(int)).max(-1) > CHANGE_T
-    return ndimage.binary_opening(d, structure=np.ones((3, 3)))
+    return ndimage.binary_opening(raw_changed(a, b), structure=np.ones((3, 3)))
 
 
 def foreground(img):
@@ -54,22 +58,47 @@ def pieces(mask, min_px):
     return int((sizes >= min_px).sum())
 
 
-def part_pixels(fg, ch, region, target, skull=None):
+def part_pieces(mask, static, target, min_px):
+    """Count 8-connected pieces of mask with >= min_px pixels, skipping embedded islands: pieces
+    with no pixel in the part's original footprint whose 1-px border is >= G2B_EMBED static
+    (unchanged, non-target) foreground. See g2b."""
+    lab, n = ndimage.label(mask, structure=EIGHT)
+    if n == 0:
+        return 0
+    sizes = np.bincount(lab.ravel())
+    count = 0
+    for i, sl in enumerate(ndimage.find_objects(lab), start=1):
+        if sizes[i] < min_px:
+            continue
+        sl = tuple(slice(max(0, a.start - 1), a.stop + 1) for a in sl)
+        piece = lab[sl] == i
+        if not (piece & target[sl]).any():
+            ring = ndimage.binary_dilation(piece, structure=EIGHT) & ~piece
+            if (ring & static[sl]).sum() >= G2B_EMBED * ring.sum():
+                continue
+        count += 1
+    return count
+
+
+def part_pixels(fg, diff, region, target, skull=None):
     """The target part's pixels in one frame (see g2b for the reasoning)."""
-    m = fg & region & (target | ch)
+    m = fg & region & (target | diff)
     if skull is not None:
         m &= ~skull
     return m
 
 
-def g2b(fgs, ch, fg0, region, target, skull=None):
+def g2b(fgs, raw, fg0, region, target, skull=None):
     """G2b Connectivity: the moving part must not come apart.
 
     Isolating the part in a later frame. The part moves, so its pixels cannot be found by a
     fixed mask, and the frames have no layer information. Inside the allowed region a
     foreground pixel in frame t is taken to belong to the part if
       (a) it lies in the part's original footprint (target.png), or
-      (b) it differs from the original image (`changed`, the same 3x3-opened difference G1/G4 use).
+      (b) it differs from the original image by more than CHANGE_T in some channel. This is the
+          raw difference, not the 3x3-opened `changed` map G1/G4 use against speckle: where the
+          part crosses a neighbour of similar colour only thin slivers register as changed, and
+          the opening would erase them and cut the part apart (it did on T05 and T19).
     Everything else in the region is foreground that is still exactly as in the original and
     lies outside the footprint: the parent limb, the body, neighbouring children. Those pixels
     are excluded, so the part cannot be "glued back together" through them. This is what G2
@@ -82,9 +111,17 @@ def g2b(fgs, ch, fg0, region, target, skull=None):
       - skull.png (hat tasks) marks the reveal the task expects to be repainted with hair; it is
         excluded in every frame, otherwise the repainted skull would stay behind as a "piece"
         when the hat lifts.
-    Known blind spots: part pixels that move onto an identically coloured non-target pixel are
-    excluded (harmless unless that band cuts across the part), and a model that repaints the
-    reveal with a non-white colour that touches only the parent can add a piece (false alarm).
+    Embedded islands. When the part passes over a neighbour of nearly the same colour (a hand
+    over a cheek, a navy sleeve over a navy jacket, a cream hat brim over a forehead), most of
+    it looks unchanged there and is excluded, and the few textured pixels that do register as
+    changed form islands surrounded on all sides by unchanged scenery. Such an island is
+    attached to the part through pixels that merely look the same, so a piece that has no pixel
+    in the original footprint and whose 1-px border is >= G2B_EMBED unchanged non-target
+    foreground is not counted. A piece left behind is in the footprint and always counts; a
+    piece dragged loose over background has white on its border and counts.
+    Known blind spots: a piece that drifts entirely onto a neighbour of the same colour is
+    ignored, and a model that repaints the reveal with a non-white colour that touches only the
+    parent can add a piece (false alarm).
 
     Counting. Baseline = 8-connected pieces of the original part (fg0 & footprint) with at least
     G2B_MIN0 px; frame t = pieces of part_pixels with at least G2B_MIN px. A frame fails if it
@@ -97,7 +134,8 @@ def g2b(fgs, ch, fg0, region, target, skull=None):
     if skull is not None:
         base_mask &= ~skull
     base = pieces(base_mask, G2B_MIN0)
-    counts = [pieces(part_pixels(f, c, region, target, skull), G2B_MIN) for f, c in zip(fgs, ch)]
+    counts = [part_pieces(part_pixels(f, c, region, target, skull), f & ~target & ~c, target, G2B_MIN)
+              for f, c in zip(fgs, raw)]
     worst = int(np.argmax(counts))
     return dict(ok=bool(counts[worst] <= base), value=int(counts[worst]), base=int(base), frame=worst)
 
@@ -150,7 +188,7 @@ def grade(frames, task_dir, checks=None):
         worst = max(blobs(f & region) for f in fgs)
         res["G2"] = dict(ok=bool(worst <= base + spec.get("blob_allow", 0)), value=int(worst), base=int(base))
     if "G2b" in checks:
-        res["G2b"] = g2b(fgs, ch, fg0, region, target, skull)
+        res["G2b"] = g2b(fgs, [raw_changed(f, orig) for f in frames], fg0, region, target, skull)
     if "G3" in checks:
         # net foreground lost or gained in the moving region, relative to the moving part's own area
         tarea = max(1, (fg0 & target).sum())

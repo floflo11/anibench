@@ -119,6 +119,28 @@ def test_new_stray_blob_outside_footprint_counts(tmp_path, one_piece_hand):
     assert not res["G2b"]["ok"], res
 
 
+def test_island_inside_unchanged_scenery_is_ignored(tmp_path, one_piece_hand):
+    """When the part passes over a neighbour of nearly the same colour, most of it looks
+    unchanged and only a textured stripe registers as changed: an island fully surrounded by
+    unchanged non-target foreground. That is a recolouring of the scenery, not a piece of the
+    part coming apart, so it does not count."""
+    sc = one_piece_hand
+    d = write_task(tmp_path, sc.image, sc.hand, sc.allowed)
+    fr = sc.frames(offsets(sway(), 2))
+    fr[3][46:52, 29:34] = HAND  # 30 px inside the static forearm (rows 40-60, cols 26-38)
+    res = grade(fr, d)
+    assert res["G2b"]["ok"], res
+
+
+def test_island_partly_on_background_still_counts(tmp_path, one_piece_hand):
+    sc = one_piece_hand
+    d = write_task(tmp_path, sc.image, sc.hand, sc.allowed)
+    fr = sc.frames(offsets(sway(), 2))
+    fr[3][46:52, 36:41] = HAND  # straddles the forearm's right edge: half its border is white
+    res = grade(fr, d)
+    assert not res["G2b"]["ok"], res
+
+
 def test_skull_fill_is_not_counted(tmp_path):
     """Hat tasks: the reveal under the hat (skull.png) is repainted with hair colour; that fill
     stays behind when the hat lifts and must not count as a detached piece."""
