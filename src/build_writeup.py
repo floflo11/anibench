@@ -44,7 +44,7 @@ def main():
 Models write three.js that runs, but they cut out the wrong pixels, rotate around the wrong joint and tear hands off.
 anibench gives a model a still image of cartoon characters plus one instruction (\"wave his raised hand from the wrist\",
 \"make her earrings swing\", \"lift her hat\") and asks for a three.js page that animates only that part. We render the page
-to 25 frames and score it with **six image-math checks**, not a model judge.
+to 25 frames and score it with **eight image-math checks**, not a model judge.
 
 {ranking}
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
@@ -81,16 +81,19 @@ Frames are rendered in headless Chromium with software WebGL, by calling `setTim
 
 | Check | Fails when | Catches |
 | --- | --- | --- |
-| G1 Isolation | Pixels change outside the region the moving part can sweep | Wrong part, whole image moving, other characters moving |
-| G2 Integrity | New separate pieces appear in the moving region | Detached fingers, torn fragments |
-| G3 Area | Foreground lost or gained by more than half the part's own area (hats: the head under it must stay filled) | Holes, missing or duplicated parts |
+| G1 Isolation | Pixels change outside the region the moving part can sweep (grown by 7.5% of the part's size, room for squash and stretch) | Wrong part, whole image moving, other characters moving |
+| G2 Integrity | New separate pieces (not faint halos) appear in the moving region | Detached fingers, torn fragments |
+| G2b Connectivity | The part itself, isolated from its neighbours, splits into more pieces than it started with | A fingertip or thumb that comes apart while still touching the arm |
+| G2c Residual | A piece of the part stays exactly where it was while the part's fitted rigid motion carries it 10+ px away | A tip left behind that the moving part slides past, ghost copies |
+| G3 Area | More than half the part is missing (by its fitted pose and by its pixel count; pixels hidden behind other parts are not missing), or the region gains more than half the part's area of new foreground (hats: the head under it must stay filled) | Holes, vanished or duplicated parts |
 | G4 Motion | Under 20% of the part's pixels change at peak | Frozen output, motion declared but not drawn |
-| G5 Pivot | Over 20% of the part's pixels at the joint change | Rotating around the wrong point |
+| G5 Pivot | Over 30% of the part's pixels at the joint change and its fitted motion does not keep the joint within 4 px | Rotating around the wrong point |
 | G6 Loop and fidelity | Frame at t=2 differs from t=0, or frame 0 differs from the image | Loop jumps, flipped or shifted images |
 
 ### Validation (before any model ran)
 
-For each of the 21 scored tasks we built a reference animation from hand-made part masks and pivots, plus 7 broken copies.
+For each of the 21 scored tasks we built a reference animation from hand-made part masks and pivots, plus 10 broken copies
+(whole image, missed thumb, hole, frozen, center pivot, no loop, wrong part, and three detachment copies).
 A check counts for a task only if the reference passes it ({kept_total} of {all_total} task-check pairs kept; see
 `validation/admission.md`). Broken copies caught where an intended check applies:
 
@@ -98,7 +101,10 @@ A check counts for a task only if the reference passes it ({kept_total} of {all_
 | --- | --- |
 """ + "\n".join(f"| {k.replace('_', ' ')} | {v[0]}/{v[1]} |" for k, v in caught.items()) + f"""
 
-The weakest check is **G2 on small fragments**: a leftover piece that keeps touching the moving part is not separated.
+Every copy whose part really comes apart is caught except two on the lace veil (T19), where the connectivity checks are
+dropped. Remaining blind spots: a missed piece that ends up hidden under the moving part (heads, jumps), a 6-degree veil
+flutter, and T07's no-loop copy (the earrings are too small for G6). The same checks run on synthetic layered characters,
+and on valid alternate animations in five styles to measure false fails; see `results/grader_v3.md`.
 
 ## Results
 
@@ -127,7 +133,8 @@ All runs are in `results/library/` as GIFs.
   the runner is ready to add them (`runs/jobs/full.json`).
 - Single-turn generation with one repair turn for outputs that don't run. An agent that renders and looks at its own output
   might do much better; that's the natural next experiment.
-- Checks are tolerant of faint artifacts (e.g. a light halo around a cut-out), and G2 misses small attached fragments.
+- Checks are tolerant of faint artifacts (e.g. a light halo around a cut-out). G2b counts a repaint of the uncovered area in a
+  neighbouring colour as a loose piece, its main source of false fails on valid animations (`results/grader_v3.md`).
 - Masks and pivots are hand-annotated on two images; more images and characters would make results more general.
 - No check scores motion quality (natural vs. robotic). Next step: a video-model judge, validated against human labels.
 
