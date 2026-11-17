@@ -1,0 +1,84 @@
+{
+ "id": "S005",
+ "tier": 1,
+ "image": "synth_S005",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the kid on the left tilt their head from side to side, pivoting at the neck; their hat stays on their head.",
+ "parts": [
+  "c0_neck",
+  "c0_ear_L",
+  "c0_ear_R",
+  "c0_head",
+  "c0_hair_front",
+  "c0_hat"
+ ],
+ "kind": "rotate",
+ "amp": 10.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   295,
+   440
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 17588,
+  "target_full_area_px": 18343,
+  "occlusion_pct": 4.12,
+  "chain_length": 1,
+  "min_dist_px": 0.0,
+  "style": "chibi",
+  "seed": 5000,
+  "motion": "nod",
+  "n_chars": 2,
+  "species": null,
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  },
+  "char_scale_u": 2.923,
+  "n_moving_parts": 6
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 5000,
+  "motion": "nod",
+  "movers": [
+   {
+    "parts": [
+     "c0_neck",
+     "c0_ear_L",
+     "c0_ear_R",
+     "c0_head",
+     "c0_hair_front",
+     "c0_hat"
+    ],
+    "pivot": [
+     295.2,
+     440.39
+    ],
+    "amp": 10.0,
+    "phase": "sym"
+   }
+  ],
+  "attempts": 1
+ }
+}

@@ -1,0 +1,84 @@
+{
+ "id": "S003",
+ "tier": 1,
+ "image": "synth_S003",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the robot on the right bend its raised arm further at the elbow and straighten it again; the upper arm stays still.",
+ "parts": [
+  "c2_forearm_R",
+  "c2_finger1_R",
+  "c2_finger2_R",
+  "c2_finger3_R",
+  "c2_thumb_R",
+  "c2_hand_R"
+ ],
+ "kind": "rotate",
+ "amp": 30.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   1094,
+   355
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 1991,
+  "target_full_area_px": 3055,
+  "occlusion_pct": 34.83,
+  "chain_length": 2,
+  "min_dist_px": 0.0,
+  "style": "robot",
+  "seed": 3000,
+  "motion": "bend_elbow",
+  "n_chars": 3,
+  "species": null,
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  },
+  "char_scale_u": 3.577,
+  "n_moving_parts": 6
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 3000,
+  "motion": "bend_elbow",
+  "movers": [
+   {
+    "parts": [
+     "c2_forearm_R",
+     "c2_finger1_R",
+     "c2_finger2_R",
+     "c2_finger3_R",
+     "c2_thumb_R",
+     "c2_hand_R"
+    ],
+    "pivot": [
+     1094.15,
+     354.86
+    ],
+    "amp": -30.0,
+    "phase": "one"
+   }
+  ],
+  "attempts": 1
+ }
+}

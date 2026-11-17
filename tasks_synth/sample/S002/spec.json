@@ -1,0 +1,122 @@
+{
+ "id": "S002",
+ "tier": 2,
+ "image": "synth_S002",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the kid wiggle the fingers and thumb of their raised hand; the palm stays still.",
+ "parts": [
+  "c0_finger1_L",
+  "c0_finger2_L",
+  "c0_finger3_L",
+  "c0_thumb_L"
+ ],
+ "kind": "rotate",
+ "amp": 20.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   395,
+   426
+  ],
+  [
+   404,
+   422
+  ],
+  [
+   413,
+   419
+  ],
+  [
+   413,
+   425
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 570,
+  "target_full_area_px": 1995,
+  "occlusion_pct": 71.43,
+  "chain_length": 4,
+  "min_dist_px": 0.0,
+  "style": "chibi",
+  "seed": 2000,
+  "motion": "wiggle_fingers",
+  "n_chars": 1,
+  "species": null,
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  },
+  "char_scale_u": 3.94,
+  "n_moving_parts": 4
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 2000,
+  "motion": "wiggle_fingers",
+  "movers": [
+   {
+    "parts": [
+     "c0_finger1_L"
+    ],
+    "pivot": [
+     394.69,
+     425.56
+    ],
+    "amp": 20.0,
+    "phase": "sym"
+   },
+   {
+    "parts": [
+     "c0_finger2_L"
+    ],
+    "pivot": [
+     404.0,
+     422.37
+    ],
+    "amp": -20.0,
+    "phase": "sym"
+   },
+   {
+    "parts": [
+     "c0_finger3_L"
+    ],
+    "pivot": [
+     413.32,
+     419.18
+    ],
+    "amp": 20.0,
+    "phase": "sym"
+   },
+   {
+    "parts": [
+     "c0_thumb_L"
+    ],
+    "pivot": [
+     413.28,
+     425.13
+    ],
+    "amp": -20.0,
+    "phase": "sym"
+   }
+  ],
+  "attempts": 1
+ }
+}

@@ -6,7 +6,8 @@ white as the base; every other run is an RGBA sprite. Unlike src/reference.py (w
 flat image and white-fill the hole), occluded and occluding parts are restored exactly, so a correct animation
 exists for every generated task. The page uses the same three.js template as src/reference.py.
 
-Usage: python src/synth/check_reference.py [tasks_dir] [max_tasks] [workers]
+Usage: python src/synth/check_reference.py [tasks_dir] [max_tasks] [workers] [start]
+(results of successive chunks are merged into results/synth_reference.json)
 Writes out/synth_ref/<id>/ (pages; gitignored) and results/synth_reference.json.
 """
 import json
@@ -127,11 +128,10 @@ def _worker(jobs, tasks_dir, q):
     R.close()
 
 
-def main(tasks_dir=ROOT / "tasks_synth", max_tasks=None, workers=2):
+def main(tasks_dir=ROOT / "tasks_synth", max_tasks=None, workers=2, start=0):
     tasks_dir = Path(tasks_dir)
     ids = sorted(p.name for p in tasks_dir.iterdir() if (p / "spec.json").exists())
-    if max_tasks:
-        ids = ids[:max_tasks]
+    ids = ids[start:start + max_tasks] if max_tasks else ids[start:]
     q = mp.Queue()
     ps = [mp.Process(target=_worker, args=(ids[i::workers], tasks_dir, q)) for i in range(workers)]
     for p in ps:
@@ -145,10 +145,14 @@ def main(tasks_dir=ROOT / "tasks_synth", max_tasks=None, workers=2):
         print(tid, bad, flush=True)
     for p in ps:
         p.join()
-    n_pass = sum(1 for g in res.values() if g.get("pass"))
-    summary = dict(tasks_dir=str(tasks_dir.relative_to(ROOT)) if tasks_dir.is_relative_to(ROOT) else str(tasks_dir),
-                   checked=len(res), passed=n_pass, results=dict(sorted(res.items())))
     out = ROOT / "results/synth_reference.json"
+    tdir = str(tasks_dir.relative_to(ROOT)) if tasks_dir.is_relative_to(ROOT) else str(tasks_dir)
+    if out.exists():  # merge with earlier chunks for the same task dir
+        old = json.loads(out.read_text())
+        if old.get("tasks_dir") == tdir:
+            res = {**old["results"], **res}
+    n_pass = sum(1 for g in res.values() if g.get("pass"))
+    summary = dict(tasks_dir=tdir, checked=len(res), passed=n_pass, results=dict(sorted(res.items())))
     out.write_text(json.dumps(summary, indent=1))
     print(f"reference passed {n_pass}/{len(res)}")
     return summary
@@ -156,4 +160,5 @@ def main(tasks_dir=ROOT / "tasks_synth", max_tasks=None, workers=2):
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    main(Path(a[0]) if a else ROOT / "tasks_synth", int(a[1]) if len(a) > 1 else None, int(a[2]) if len(a) > 2 else 2)
+    main(Path(a[0]) if a else ROOT / "tasks_synth", int(a[1]) if len(a) > 1 else None, int(a[2]) if len(a) > 2 else 2,
+         int(a[3]) if len(a) > 3 else 0)

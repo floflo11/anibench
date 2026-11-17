@@ -1,0 +1,82 @@
+{
+ "id": "S009",
+ "tier": 1,
+ "image": "synth_S009",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the bear on the left wave its raised hand, bending at the wrist.",
+ "parts": [
+  "c0_finger1_L",
+  "c0_finger2_L",
+  "c0_finger3_L",
+  "c0_thumb_L",
+  "c0_hand_L"
+ ],
+ "kind": "rotate",
+ "amp": 25.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   103,
+   320
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 1693,
+  "target_full_area_px": 2564,
+  "occlusion_pct": 33.97,
+  "chain_length": 3,
+  "min_dist_px": 0.0,
+  "style": "animal",
+  "seed": 9001,
+  "motion": "wave",
+  "n_chars": 3,
+  "species": "bear",
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  },
+  "char_scale_u": 4.292,
+  "n_moving_parts": 5
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 9001,
+  "motion": "wave",
+  "movers": [
+   {
+    "parts": [
+     "c0_finger1_L",
+     "c0_finger2_L",
+     "c0_finger3_L",
+     "c0_thumb_L",
+     "c0_hand_L"
+    ],
+    "pivot": [
+     103.36,
+     319.53
+    ],
+    "amp": 25.0,
+    "phase": "sym"
+   }
+  ],
+  "attempts": 2
+ }
+}

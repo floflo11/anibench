@@ -1,0 +1,90 @@
+{
+ "id": "S007",
+ "tier": 1,
+ "image": "synth_S007",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the pink earrings of the kid swing gently, as if in a breeze.",
+ "parts": [
+  "c0_earring_L",
+  "c0_earring_R"
+ ],
+ "kind": "rotate",
+ "amp": 20.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   440,
+   369
+  ],
+  [
+   643,
+   369
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 620,
+  "target_full_area_px": 1050,
+  "occlusion_pct": 40.95,
+  "chain_length": 2,
+  "min_dist_px": 0.0,
+  "style": "chibi",
+  "seed": 7000,
+  "motion": "swing_earring",
+  "n_chars": 1,
+  "species": null,
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  },
+  "char_scale_u": 4.754,
+  "n_moving_parts": 2
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 7000,
+  "motion": "swing_earring",
+  "movers": [
+   {
+    "parts": [
+     "c0_earring_L"
+    ],
+    "pivot": [
+     440.08,
+     368.69
+    ],
+    "amp": 20.0,
+    "phase": "sym"
+   },
+   {
+    "parts": [
+     "c0_earring_R"
+    ],
+    "pivot": [
+     642.59,
+     368.69
+    ],
+    "amp": 20.0,
+    "phase": "sym"
+   }
+  ],
+  "attempts": 1
+ }
+}

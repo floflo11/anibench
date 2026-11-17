@@ -1,0 +1,1147 @@
+{
+ "tasks_dir": "tasks_synth",
+ "checked": 40,
+ "passed": 40,
+ "results": {
+  "S001": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0035
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.294
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S002": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.304
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.796
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S003": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.325
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.487
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S004": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0946
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.683
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S005": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0278
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.472
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S006": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3884,
+    "skull_keep": 0.998
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.575
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S007": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2824
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.966
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S008": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3375
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.491
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S009": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1229
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.252
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.036
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S010": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3245
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.755
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S011": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0202
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.559
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S012": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0608
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.813
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.103
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S013": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1051
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.411
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S014": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1946,
+    "skull_keep": 0.998
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.666
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S015": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1363
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.894
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S016": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2227
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.538
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S017": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0031
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.287
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S018": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.4365
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.668
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S019": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1508
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.628
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S020": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.144
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.714
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S021": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0651
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.454
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S022": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2983,
+    "skull_keep": 0.995
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.747
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.073
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S023": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3834
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.934
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S024": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1679
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.543
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S025": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2614
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.368
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S026": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.4062
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.725
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S027": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3399
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.557
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S028": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0207
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.883
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S029": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0109
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.395
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S030": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2006,
+    "skull_keep": 0.999
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.725
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.028
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S031": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.4008
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.943
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S032": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1283
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.952
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S033": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.3272
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.306
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S034": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.4764
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.665
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S035": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0079
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.625
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S036": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2114
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.768
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S037": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0694
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.338
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S038": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.403,
+    "skull_keep": 0.996
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.846
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.006
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S039": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.2439
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.895
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "S040": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1431
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.977
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  }
+ }
+}

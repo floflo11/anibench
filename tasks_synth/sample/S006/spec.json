@@ -1,0 +1,73 @@
+{
+ "id": "S006",
+ "tier": 2,
+ "image": "synth_S006",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the cat on the left tip its hat up and back in greeting, pivoting on the right end of the brim (viewer's right).",
+ "parts": [
+  "c0_hat"
+ ],
+ "kind": "rotate_hat",
+ "amp": 15.0,
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   342,
+   262
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 3,
+ "graders_all": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "skull": true,
+ "factors": {
+  "target_area_px": 10537,
+  "target_full_area_px": 10716,
+  "occlusion_pct": 1.67,
+  "chain_length": 2,
+  "min_dist_px": 0.0,
+  "style": "animal",
+  "seed": 6000,
+  "motion": "tip_hat",
+  "n_chars": 3,
+  "species": "cat",
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  },
+  "char_scale_u": 4.133,
+  "n_moving_parts": 1
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 6000,
+  "motion": "tip_hat",
+  "movers": [
+   {
+    "parts": [
+     "c0_hat"
+    ],
+    "pivot": [
+     342.04,
+     261.67
+    ],
+    "amp": 15.0,
+    "phase": "one"
+   }
+  ],
+  "attempts": 1
+ }
+}

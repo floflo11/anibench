@@ -1,0 +1,86 @@
+{
+ "id": "S004",
+ "tier": 1,
+ "image": "synth_S004",
+ "width": 1200,
+ "height": 600,
+ "instruction": "Make the bear on the right raise its lowered arm out to the side from the shoulder and lower it again.",
+ "parts": [
+  "c1_upper_arm_L",
+  "c1_forearm_L",
+  "c1_finger1_L",
+  "c1_finger2_L",
+  "c1_finger3_L",
+  "c1_thumb_L",
+  "c1_hand_L"
+ ],
+ "kind": "rotate",
+ "amp": 30.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   858,
+   367
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 7331,
+  "target_full_area_px": 7381,
+  "occlusion_pct": 0.68,
+  "chain_length": 1,
+  "min_dist_px": 0.0,
+  "style": "animal",
+  "seed": 4001,
+  "motion": "raise_arm",
+  "n_chars": 2,
+  "species": "bear",
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  },
+  "char_scale_u": 4.619,
+  "n_moving_parts": 7
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 4001,
+  "motion": "raise_arm",
+  "movers": [
+   {
+    "parts": [
+     "c1_upper_arm_L",
+     "c1_forearm_L",
+     "c1_finger1_L",
+     "c1_finger2_L",
+     "c1_finger3_L",
+     "c1_thumb_L",
+     "c1_hand_L"
+    ],
+    "pivot": [
+     857.51,
+     367.16
+    ],
+    "amp": 30.0,
+    "phase": "one"
+   }
+  ],
+  "attempts": 2
+ }
+}

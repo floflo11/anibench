@@ -1,0 +1,86 @@
+{
+ "id": "S013",
+ "tier": 1,
+ "image": "synth_S013",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the tall person tilt their head from side to side, pivoting at the neck.",
+ "parts": [
+  "c0_neck",
+  "c0_earring_L",
+  "c0_earring_R",
+  "c0_ear_L",
+  "c0_ear_R",
+  "c0_head",
+  "c0_hair_front"
+ ],
+ "kind": "rotate",
+ "amp": 10.0,
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "pivots": [
+  [
+   502,
+   341
+  ]
+ ],
+ "area_tol": 0.5,
+ "blob_allow": 0,
+ "graders_all": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "factors": {
+  "target_area_px": 7827,
+  "target_full_area_px": 9673,
+  "occlusion_pct": 19.08,
+  "chain_length": 1,
+  "min_dist_px": 0.0,
+  "style": "lanky",
+  "seed": 13000,
+  "motion": "nod",
+  "n_chars": 1,
+  "species": null,
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  },
+  "char_scale_u": 4.532,
+  "n_moving_parts": 7
+ },
+ "synth": {
+  "generator": "synth-v1",
+  "scene_seed": 13000,
+  "motion": "nod",
+  "movers": [
+   {
+    "parts": [
+     "c0_neck",
+     "c0_earring_L",
+     "c0_earring_R",
+     "c0_ear_L",
+     "c0_ear_R",
+     "c0_head",
+     "c0_hair_front"
+    ],
+    "pivot": [
+     502.5,
+     340.94
+    ],
+    "amp": 10.0,
+    "phase": "sym"
+   }
+  ],
+  "attempts": 1
+ }
+}

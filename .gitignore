@@ -12,3 +12,7 @@ runs/*/T*/*/page_*/
 out/
 runs.log
 build/
+
+# synthetic tasks: regenerate with python src/synth/make_tasks.py; only the 10-task sample is tracked
+tasks_synth/*
+!tasks_synth/sample/

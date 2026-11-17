@@ -1,0 +1,865 @@
+[
+ {
+  "id": "S001",
+  "tier": 1,
+  "image": "synth_S001",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the robot on the right wave its raised hand, bending at the wrist.",
+  "parts": [
+   "c2_finger1_R",
+   "c2_finger2_R",
+   "c2_finger3_R",
+   "c2_thumb_R",
+   "c2_hand_R"
+  ],
+  "kind": "rotate",
+  "amp": 25.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    1094,
+    342
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 1729,
+   "target_full_area_px": 1743,
+   "occlusion_pct": 0.8,
+   "chain_length": 3,
+   "min_dist_px": 6.0,
+   "style": "robot",
+   "seed": 1000,
+   "motion": "wave",
+   "n_chars": 3,
+   "species": null,
+   "knobs": {
+    "occl": "none",
+    "prox": "far"
+   },
+   "char_scale_u": 3.5,
+   "n_moving_parts": 5
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 1000,
+   "motion": "wave",
+   "movers": [
+    {
+     "parts": [
+      "c2_finger1_R",
+      "c2_finger2_R",
+      "c2_finger3_R",
+      "c2_thumb_R",
+      "c2_hand_R"
+     ],
+     "pivot": [
+      1093.9,
+      341.65
+     ],
+     "amp": 25.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S002",
+  "tier": 2,
+  "image": "synth_S002",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the kid wiggle the fingers and thumb of their raised hand; the palm stays still.",
+  "parts": [
+   "c0_finger1_L",
+   "c0_finger2_L",
+   "c0_finger3_L",
+   "c0_thumb_L"
+  ],
+  "kind": "rotate",
+  "amp": 20.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    395,
+    426
+   ],
+   [
+    404,
+    422
+   ],
+   [
+    413,
+    419
+   ],
+   [
+    413,
+    425
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 570,
+   "target_full_area_px": 1995,
+   "occlusion_pct": 71.43,
+   "chain_length": 4,
+   "min_dist_px": 0.0,
+   "style": "chibi",
+   "seed": 2000,
+   "motion": "wiggle_fingers",
+   "n_chars": 1,
+   "species": null,
+   "knobs": {
+    "occl": "none",
+    "prox": "near"
+   },
+   "char_scale_u": 3.94,
+   "n_moving_parts": 4
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 2000,
+   "motion": "wiggle_fingers",
+   "movers": [
+    {
+     "parts": [
+      "c0_finger1_L"
+     ],
+     "pivot": [
+      394.69,
+      425.56
+     ],
+     "amp": 20.0,
+     "phase": "sym"
+    },
+    {
+     "parts": [
+      "c0_finger2_L"
+     ],
+     "pivot": [
+      404.0,
+      422.37
+     ],
+     "amp": -20.0,
+     "phase": "sym"
+    },
+    {
+     "parts": [
+      "c0_finger3_L"
+     ],
+     "pivot": [
+      413.32,
+      419.18
+     ],
+     "amp": 20.0,
+     "phase": "sym"
+    },
+    {
+     "parts": [
+      "c0_thumb_L"
+     ],
+     "pivot": [
+      413.28,
+      425.13
+     ],
+     "amp": -20.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S003",
+  "tier": 1,
+  "image": "synth_S003",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the robot on the right bend its raised arm further at the elbow and straighten it again; the upper arm stays still.",
+  "parts": [
+   "c2_forearm_R",
+   "c2_finger1_R",
+   "c2_finger2_R",
+   "c2_finger3_R",
+   "c2_thumb_R",
+   "c2_hand_R"
+  ],
+  "kind": "rotate",
+  "amp": 30.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    1094,
+    355
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 1991,
+   "target_full_area_px": 3055,
+   "occlusion_pct": 34.83,
+   "chain_length": 2,
+   "min_dist_px": 0.0,
+   "style": "robot",
+   "seed": 3000,
+   "motion": "bend_elbow",
+   "n_chars": 3,
+   "species": null,
+   "knobs": {
+    "occl": "some",
+    "prox": "far"
+   },
+   "char_scale_u": 3.577,
+   "n_moving_parts": 6
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 3000,
+   "motion": "bend_elbow",
+   "movers": [
+    {
+     "parts": [
+      "c2_forearm_R",
+      "c2_finger1_R",
+      "c2_finger2_R",
+      "c2_finger3_R",
+      "c2_thumb_R",
+      "c2_hand_R"
+     ],
+     "pivot": [
+      1094.15,
+      354.86
+     ],
+     "amp": -30.0,
+     "phase": "one"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S004",
+  "tier": 1,
+  "image": "synth_S004",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the bear on the right raise its lowered arm out to the side from the shoulder and lower it again.",
+  "parts": [
+   "c1_upper_arm_L",
+   "c1_forearm_L",
+   "c1_finger1_L",
+   "c1_finger2_L",
+   "c1_finger3_L",
+   "c1_thumb_L",
+   "c1_hand_L"
+  ],
+  "kind": "rotate",
+  "amp": 30.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    858,
+    367
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 7331,
+   "target_full_area_px": 7381,
+   "occlusion_pct": 0.68,
+   "chain_length": 1,
+   "min_dist_px": 0.0,
+   "style": "animal",
+   "seed": 4001,
+   "motion": "raise_arm",
+   "n_chars": 2,
+   "species": "bear",
+   "knobs": {
+    "occl": "none",
+    "prox": "far"
+   },
+   "char_scale_u": 4.619,
+   "n_moving_parts": 7
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 4001,
+   "motion": "raise_arm",
+   "movers": [
+    {
+     "parts": [
+      "c1_upper_arm_L",
+      "c1_forearm_L",
+      "c1_finger1_L",
+      "c1_finger2_L",
+      "c1_finger3_L",
+      "c1_thumb_L",
+      "c1_hand_L"
+     ],
+     "pivot": [
+      857.51,
+      367.16
+     ],
+     "amp": 30.0,
+     "phase": "one"
+    }
+   ],
+   "attempts": 2
+  }
+ },
+ {
+  "id": "S005",
+  "tier": 1,
+  "image": "synth_S005",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the kid on the left tilt their head from side to side, pivoting at the neck; their hat stays on their head.",
+  "parts": [
+   "c0_neck",
+   "c0_ear_L",
+   "c0_ear_R",
+   "c0_head",
+   "c0_hair_front",
+   "c0_hat"
+  ],
+  "kind": "rotate",
+  "amp": 10.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    295,
+    440
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 17588,
+   "target_full_area_px": 18343,
+   "occlusion_pct": 4.12,
+   "chain_length": 1,
+   "min_dist_px": 0.0,
+   "style": "chibi",
+   "seed": 5000,
+   "motion": "nod",
+   "n_chars": 2,
+   "species": null,
+   "knobs": {
+    "occl": "none",
+    "prox": "near"
+   },
+   "char_scale_u": 2.923,
+   "n_moving_parts": 6
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 5000,
+   "motion": "nod",
+   "movers": [
+    {
+     "parts": [
+      "c0_neck",
+      "c0_ear_L",
+      "c0_ear_R",
+      "c0_head",
+      "c0_hair_front",
+      "c0_hat"
+     ],
+     "pivot": [
+      295.2,
+      440.39
+     ],
+     "amp": 10.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S006",
+  "tier": 2,
+  "image": "synth_S006",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the cat on the left tip its hat up and back in greeting, pivoting on the right end of the brim (viewer's right).",
+  "parts": [
+   "c0_hat"
+  ],
+  "kind": "rotate_hat",
+  "amp": 15.0,
+  "graders": [
+   "G1",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    342,
+    262
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 3,
+  "graders_all": [
+   "G1",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "skull": true,
+  "factors": {
+   "target_area_px": 10537,
+   "target_full_area_px": 10716,
+   "occlusion_pct": 1.67,
+   "chain_length": 2,
+   "min_dist_px": 0.0,
+   "style": "animal",
+   "seed": 6000,
+   "motion": "tip_hat",
+   "n_chars": 3,
+   "species": "cat",
+   "knobs": {
+    "occl": "some",
+    "prox": "near"
+   },
+   "char_scale_u": 4.133,
+   "n_moving_parts": 1
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 6000,
+   "motion": "tip_hat",
+   "movers": [
+    {
+     "parts": [
+      "c0_hat"
+     ],
+     "pivot": [
+      342.04,
+      261.67
+     ],
+     "amp": 15.0,
+     "phase": "one"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S007",
+  "tier": 1,
+  "image": "synth_S007",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the pink earrings of the kid swing gently, as if in a breeze.",
+  "parts": [
+   "c0_earring_L",
+   "c0_earring_R"
+  ],
+  "kind": "rotate",
+  "amp": 20.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    440,
+    369
+   ],
+   [
+    643,
+    369
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 620,
+   "target_full_area_px": 1050,
+   "occlusion_pct": 40.95,
+   "chain_length": 2,
+   "min_dist_px": 0.0,
+   "style": "chibi",
+   "seed": 7000,
+   "motion": "swing_earring",
+   "n_chars": 1,
+   "species": null,
+   "knobs": {
+    "occl": "some",
+    "prox": "far"
+   },
+   "char_scale_u": 4.754,
+   "n_moving_parts": 2
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 7000,
+   "motion": "swing_earring",
+   "movers": [
+    {
+     "parts": [
+      "c0_earring_L"
+     ],
+     "pivot": [
+      440.08,
+      368.69
+     ],
+     "amp": 20.0,
+     "phase": "sym"
+    },
+    {
+     "parts": [
+      "c0_earring_R"
+     ],
+     "pivot": [
+      642.59,
+      368.69
+     ],
+     "amp": 20.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S032",
+  "tier": 1,
+  "image": "synth_S032",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the robot on the right wag its cable tail from its base.",
+  "parts": [
+   "c1_tail"
+  ],
+  "kind": "rotate",
+  "amp": 20.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    911,
+    475
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 857,
+   "target_full_area_px": 1088,
+   "occlusion_pct": 21.23,
+   "chain_length": 1,
+   "min_dist_px": 0.0,
+   "style": "robot",
+   "seed": 32000,
+   "motion": "wag_tail",
+   "n_chars": 2,
+   "species": null,
+   "knobs": {
+    "occl": "some",
+    "prox": "near"
+   },
+   "char_scale_u": 2.817,
+   "n_moving_parts": 1
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 32000,
+   "motion": "wag_tail",
+   "movers": [
+    {
+     "parts": [
+      "c1_tail"
+     ],
+     "pivot": [
+      910.87,
+      474.64
+     ],
+     "amp": 20.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ },
+ {
+  "id": "S009",
+  "tier": 1,
+  "image": "synth_S009",
+  "width": 1200,
+  "height": 600,
+  "instruction": "Make the bear on the left wave its raised hand, bending at the wrist.",
+  "parts": [
+   "c0_finger1_L",
+   "c0_finger2_L",
+   "c0_finger3_L",
+   "c0_thumb_L",
+   "c0_hand_L"
+  ],
+  "kind": "rotate",
+  "amp": 25.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    103,
+    320
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 1693,
+   "target_full_area_px": 2564,
+   "occlusion_pct": 33.97,
+   "chain_length": 3,
+   "min_dist_px": 0.0,
+   "style": "animal",
+   "seed": 9001,
+   "motion": "wave",
+   "n_chars": 3,
+   "species": "bear",
+   "knobs": {
+    "occl": "some",
+    "prox": "far"
+   },
+   "char_scale_u": 4.292,
+   "n_moving_parts": 5
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 9001,
+   "motion": "wave",
+   "movers": [
+    {
+     "parts": [
+      "c0_finger1_L",
+      "c0_finger2_L",
+      "c0_finger3_L",
+      "c0_thumb_L",
+      "c0_hand_L"
+     ],
+     "pivot": [
+      103.36,
+      319.53
+     ],
+     "amp": 25.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 2
+  }
+ },
+ {
+  "id": "S013",
+  "tier": 1,
+  "image": "synth_S013",
+  "width": 1024,
+  "height": 683,
+  "instruction": "Make the tall person tilt their head from side to side, pivoting at the neck.",
+  "parts": [
+   "c0_neck",
+   "c0_earring_L",
+   "c0_earring_R",
+   "c0_ear_L",
+   "c0_ear_R",
+   "c0_head",
+   "c0_hair_front"
+  ],
+  "kind": "rotate",
+  "amp": 10.0,
+  "graders": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "pivots": [
+   [
+    502,
+    341
+   ]
+  ],
+  "area_tol": 0.5,
+  "blob_allow": 0,
+  "graders_all": [
+   "G1",
+   "G2",
+   "G3",
+   "G4",
+   "G5",
+   "G6"
+  ],
+  "factors": {
+   "target_area_px": 7827,
+   "target_full_area_px": 9673,
+   "occlusion_pct": 19.08,
+   "chain_length": 1,
+   "min_dist_px": 0.0,
+   "style": "lanky",
+   "seed": 13000,
+   "motion": "nod",
+   "n_chars": 1,
+   "species": null,
+   "knobs": {
+    "occl": "some",
+    "prox": "far"
+   },
+   "char_scale_u": 4.532,
+   "n_moving_parts": 7
+  },
+  "synth": {
+   "generator": "synth-v1",
+   "scene_seed": 13000,
+   "motion": "nod",
+   "movers": [
+    {
+     "parts": [
+      "c0_neck",
+      "c0_earring_L",
+      "c0_earring_R",
+      "c0_ear_L",
+      "c0_ear_R",
+      "c0_head",
+      "c0_hair_front"
+     ],
+     "pivot": [
+      502.5,
+      340.94
+     ],
+     "amp": 10.0,
+     "phase": "sym"
+    }
+   ],
+   "attempts": 1
+  }
+ }
+]
