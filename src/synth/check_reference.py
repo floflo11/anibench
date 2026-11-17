@@ -25,9 +25,8 @@ from graders import grade  # noqa: E402
 from reference import PAGE as BASE_PAGE  # noqa: E402
 from synth.scene import build_scene  # noqa: E402
 
-_ROT = "if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * ph;"
-assert _ROT in BASE_PAGE
-PAGE = BASE_PAGE.replace(_ROT, "if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * (L.one ? ph2 : ph);")
+assert "(L.one ? ph2 : ph)" in BASE_PAGE  # one-sided rotations (L.one) are part of the shared template
+PAGE = BASE_PAGE
 N_FRAMES = 25
 
 

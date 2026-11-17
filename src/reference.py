@@ -62,7 +62,7 @@ const movers = [];
     for (const {g, mesh, L} of movers) {
       g.rotation.z = 0; g.scale.set(1, 1, 1); g.position.set(L.px, -L.py, 0); mesh.visible = true;
       if (CFG.frozen) continue;
-      if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * ph;
+      if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * (L.one ? ph2 : ph);
       else if (L.kind === 'lift') g.position.y += L.amp * ph2;
       else if (L.kind === 'squash') g.scale.y = 1 - L.amp * ph2;
       if (L.off) { g.position.x += L.off[0] * ph2; g.position.y -= L.off[1] * ph2; }
@@ -189,7 +189,11 @@ def plan_variant(spec, variant):
             ys, xs = np.nonzero(m)
             piv = (int(xs.mean()), int(ys.mean()))
         amp = spec["amp"]
-        if kind in ("rotate", "rotate_hat", "flutter"):
+        if kind == "rotate_hat":
+            # "tilt his hat up and back": one-sided, rest -> up -> rest (ph2). With the pivot at the brim's
+            # left end, a negative amp turns the hat counter-clockwise on screen, lifting its right side.
+            L = dict(kind="rotate", amp=-amp, one=True)
+        elif kind in ("rotate", "flutter"):
             L = dict(kind="rotate", amp=amp if kind != "flutter" else 6)
         elif kind == "translate_up":
             L = dict(kind="lift", amp=amp)
@@ -224,7 +228,7 @@ def place(mask, L, t, n_frames=25):
     """Where the page's layer L puts mask's pixels at time t (inverse nearest-neighbour mapping,
     the same transform as setTime: pivot group = translate(pivot + lift + drift) * rotate * scale)."""
     ph, ph2 = math.sin(math.pi * t), 0.5 - 0.5 * math.cos(math.pi * t)
-    th = L["amp"] * math.pi / 180 * ph if L["kind"] == "rotate" else 0.0
+    th = L["amp"] * math.pi / 180 * (ph2 if L.get("one") else ph) if L["kind"] == "rotate" else 0.0
     sy = 1 - L["amp"] * ph2 if L["kind"] == "squash" else 1.0
     dx, dy = (L["off"][0] * ph2, L["off"][1] * ph2) if "off" in L else (0.0, 0.0)
     if L["kind"] == "lift":
