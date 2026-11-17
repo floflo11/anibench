@@ -8,6 +8,13 @@
 #   scripts/run.sh full      Sonnet 5.5 and GPT-6.1 Sol on all 21 scored tasks, $TRIES times each
 #   scripts/run.sh others    OpenRouter models via the Terminus 2 agent (needs secret openrouter-api-key)
 #
+# Evaluation protocol (docs/protocol.md): three settings, each its own dataset anibench/<setting>@$TAG
+#   scripts/run.sh push-protocol           export + upload anibench/single, anibench/feedback, anibench/agent
+#   scripts/run.sh oracle-protocol         oracle on all three; reward 1 and probe_tests_visible 0 everywhere
+#   scripts/run.sh protocol <who> [sets]   who = claude | openai | other; $K samples per task per setting,
+#                                          each sample a separate run, imported into runs/ as it finishes
+#                                          (IDS=anibench-t01 limits it to one task, e.g. for a smoke test)
+#
 # Every run waits for completion (--connect) and saves results + outputs under out/<label>-<time>/.
 # Model names: check with `valkyrie run start --help` or staff; override CLAUDE_MODEL / OPENAI_MODEL.
 set -euo pipefail
@@ -24,6 +31,22 @@ OPENAI_AGENT="${OPENAI_AGENT:-codex-v1.0.0}"
 OTHER_AGENT="${OTHER_AGENT:-terminus2}"
 OTHER_MODELS="${OTHER_MODELS:-openrouter/google/gemini-4-carbon openrouter/x-ai/grok-4.7 openrouter/moonshotai/kimi-k3.1-pro openrouter/qwen/qwen3.8-27b}"
 LOG="${LOG:-runs.log}"
+DATASET="${DATASET:-$BENCH/core}"       # protocol modes set this to $BENCH/<setting>
+K="${K:-3}"                              # protocol samples per task per setting
+SETTINGS="${SETTINGS:-single feedback agent}"
+CLAUDE_LABEL="${CLAUDE_LABEL:-sonnet-cc}"
+OPENAI_LABEL="${OPENAI_LABEL:-sol-codex}"
+# Turn caps per setting. Passed as `-k max_turns N`, which Terminus 2 accepts (see `others`).
+# TODO(valkyrie): check `valkyrie run start --help` / the agent registry for the claude_code-v1.0.0 and
+# codex-v1.0.0 turn-cap kwarg; until then set CAP_KWARG_CLAUDE / CAP_KWARG_OPENAI to the right name,
+# or leave them empty to rely on the task's wall-clock budget (task.toml [agent] timeout_sec = 900).
+TURNS_single="${TURNS_single:-5}"
+TURNS_feedback="${TURNS_feedback:-10}"
+TURNS_agent="${TURNS_agent:-40}"
+CAP_KWARG_CLAUDE="${CAP_KWARG_CLAUDE:-}"
+CAP_KWARG_OPENAI="${CAP_KWARG_OPENAI:-}"
+CAP_KWARG_OTHER="${CAP_KWARG_OTHER:-max_turns}"
+LAST_DIR=""
 
 start() {  # start <label> <agent> <model|-> <task-ids|all> <secret flags...>
   local label="$1" agent="$2" model="$3" ids="$4"; shift 4
@@ -31,9 +54,10 @@ start() {  # start <label> <agent> <model|-> <task-ids|all> <secret flags...>
   [ "$ids" != "all" ] && sel=(--task-ids "$ids")
   [ "$model" != "-" ] && mod=(--model "$model")
   echo ">> $label"
-  out=$(valkyrie run start --agent "$agent" --dataset "$BENCH/core@$TAG" \
+  out=$(valkyrie run start --agent "$agent" --dataset "$DATASET@$TAG" \
         ${mod[@]+"${mod[@]}"} --provider modal --concurrency "$CONC" ${sel[@]+"${sel[@]}"} "$@" \
         --connect 2>&1 | tee /dev/stderr) || true
+  LAST_DIR=""
   rid=$(echo "$out" | grep -Eo '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}' | head -1 || true)
   echo "$(date -u +%FT%TZ) $rid $label $agent $model" >> "$LOG"
   if [ -n "$rid" ]; then
@@ -43,12 +67,26 @@ start() {  # start <label> <agent> <model|-> <task-ids|all> <secret flags...>
     valkyrie run results "$rid" --path "$dir/results.json" || echo "!! results download failed for $rid"
     valkyrie run outputs "$rid" --output-dir "$dir/outputs" || echo "!! outputs download failed for $rid"
     echo ">> saved $label ($rid) to $dir"
+    LAST_DIR="$dir"
   else
     echo "!! no run id for $label"
   fi
 }
-claude() { start "$1" "$CLAUDE_AGENT" "$CLAUDE_MODEL" "$2" -s ANTHROPIC_API_KEY anthropic-api-key; }
-openai() { start "$1" "$OPENAI_AGENT" "$OPENAI_MODEL" "$2" -s OPENAI_API_KEY openai-api-key; }
+claude() { start "$1" "$CLAUDE_AGENT" "$CLAUDE_MODEL" "$2" -s ANTHROPIC_API_KEY anthropic-api-key "${@:3}"; }
+openai() { start "$1" "$OPENAI_AGENT" "$OPENAI_MODEL" "$2" -s OPENAI_API_KEY openai-api-key "${@:3}"; }
+
+cap() {  # cap <kwarg-name|""> <setting>: agent kwargs for the setting's turn cap
+  local n="TURNS_$2"
+  [ -n "$1" ] && echo "-k $1 ${!n}"
+  return 0
+}
+import_last() {  # import_last <label> <setting> <try>
+  if [ -n "$LAST_DIR" ] && [ -f "$LAST_DIR/results.json" ]; then
+    python3 src/import_valkyrie.py "$LAST_DIR/results.json" "$1" --setting "$2" --try "$3"
+  else
+    echo "!! nothing to import for $1 $2 try $3; import by hand once results exist"
+  fi
+}
 
 case "${1:-}" in
   push)   valkyrie org use "$ORG"
@@ -65,5 +103,31 @@ case "${1:-}" in
             start "other-$(basename "$m")" "$OTHER_AGENT" "$m" all -s OPENROUTER_API_KEY openrouter-api-key -k max_turns 40
           done
           echo "others finished" ;;
-  *)      sed -n '2,14p' "$0"; exit 1 ;;
+  push-protocol)
+          valkyrie org use "$ORG"
+          for s in $SETTINGS; do
+            python3 src/export_harbor.py --setting "$s"
+            valkyrie dataset push "$BENCH/$s" "build/harbor-$s" --tag "$TAG"
+          done ;;
+  oracle-protocol)
+          for s in $SETTINGS; do DATASET="$BENCH/$s" start "oracle-$s" oracle - all; done ;;
+  protocol)
+          who="${2:?usage: scripts/run.sh protocol claude|openai|other [settings]}"
+          for s in ${3:-$SETTINGS}; do
+            DATASET="$BENCH/$s"
+            for i in $(seq 1 "$K"); do
+              case "$who" in
+                claude) claude "$s-$CLAUDE_LABEL-try$i" "${IDS:-all}" $(cap "$CAP_KWARG_CLAUDE" "$s"); import_last "$CLAUDE_LABEL" "$s" "$i" ;;
+                openai) openai "$s-$OPENAI_LABEL-try$i" "${IDS:-all}" $(cap "$CAP_KWARG_OPENAI" "$s"); import_last "$OPENAI_LABEL" "$s" "$i" ;;
+                other)  for m in $OTHER_MODELS; do
+                          lab="t2-$(basename "$m")"
+                          start "$s-$lab-try$i" "$OTHER_AGENT" "$m" "${IDS:-all}" -s OPENROUTER_API_KEY openrouter-api-key $(cap "$CAP_KWARG_OTHER" "$s")
+                          import_last "$lab" "$s" "$i"
+                        done ;;
+                *) echo "unknown: $who"; exit 1 ;;
+              esac
+            done
+          done
+          python3 src/report.py > /dev/null && echo "protocol finished; see results/protocol.md" ;;
+  *)      sed -n '2,19p' "$0"; exit 1 ;;
 esac
