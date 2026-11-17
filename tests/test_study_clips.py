@@ -151,15 +151,16 @@ def test_build_study_is_anonymized(tmp_path):
         return synth_frames(w=item["width"], h=item["height"])[1]
     out = tmp_path / "study"
     man, key = M.build_study(runs, out, n=4, seed=0, salt="test", frames_fn=frames_fn, fmt="webp", panel_w=200)
-    manifest = json.loads((out / "manifest.json").read_text())
+    manifest = json.loads((out / "rater/manifest.json").read_text())
     keyf = json.loads((out / "key.json").read_text())
     assert manifest["schema"] == MANIFEST_SCHEMA and keyf["schema"] == KEY_SCHEMA
     clips = manifest["clips"]
     assert len(clips) == 4 + len(M.ATTENTION)
     ids = [c["clip_id"] for c in clips]
     assert len(set(ids)) == len(ids)
-    text = (out / "manifest.json").read_text()
-    names = [p.name for p in (out / "clips").iterdir()]
+    text = (out / "rater/manifest.json").read_text()
+    names = [p.name for p in (out / "rater/clips").iterdir()]
+    assert sorted(p.name for p in (out / "rater").iterdir()) == ["clips", "manifest.json"]   # no key for raters
     for m in MODELS + ["alpha", "beta", "gamma", "frozen", "wrong_part", "attention", "validation", "variant"]:
         assert m not in text, m
     ids_re = "|".join(ids)
@@ -168,7 +169,7 @@ def test_build_study_is_anonymized(tmp_path):
         assert set(c) >= {"clip_id", "task", "instruction", "video", "still"}
         assert "model" not in c and "setting" not in c and "attention" not in c
         for k in ("video", "still", "sheet_full", "sheet_zoom"):
-            assert (out / c[k]).exists(), c[k]
+            assert (out / "rater" / c[k]).exists(), c[k]
         info = keyf["clips"][c["clip_id"]]
         assert info["task"] == c["task"]
     att = [k for k, v in keyf["clips"].items() if v["attention"]]

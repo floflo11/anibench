@@ -1,6 +1,6 @@
 """Build the clips, manifest and key for the human study (E4, docs/human_study.md).
 
-For every sampled run it writes, under <out>/clips/ (ids are random, nothing names the model):
+For every sampled run it writes, under <out>/rater/clips/ (ids are random, nothing names the model):
   <id>.mp4 (or .webp/.gif without ffmpeg)  the clip raters watch. Four synchronized panels:
                                            original still | animation, zoom of the original | zoom of the
                                            animation (the zoom box is the one zoom_gifs.py uses).
@@ -8,9 +8,10 @@ For every sampled run it writes, under <out>/clips/ (ids are random, nothing nam
   <id>_sheet.png, <id>_zoom.png            3x3 contact sheets of frames (t = 0 ... 1.92 s), full and zoomed,
                                            for judges that take images rather than video
 and two JSON files:
-  manifest.json  rater-facing: clip id, task, instruction, sizes, paths. No model, setting or grades.
-  key.json       private: clip id -> run, model, setting, grader results, attention-check flag and the
-                 expected answer. Raters never get this file.
+  rater/manifest.json  rater-facing: clip id, task, instruction, sizes, paths (relative to rater/).
+                       No model, setting or grades. Ship the whole rater/ folder (manifest + clips/).
+  key.json             private, next to rater/: clip id -> run, model, setting, grader results,
+                       attention-check flag and the expected answer. Raters never get this file.
 
 Five attention-check clips (reference solutions and obviously broken copies from validation/) are added
 to every study; they look like any other clip in the manifest and are flagged only in the key.
@@ -370,7 +371,8 @@ def build_study(runs, out, n=None, seed=0, salt=None, attention=True, frames_fn=
                 panel_w=600, study_id=None, log=print):
     """Sample n of `runs` (all if n is None), add the attention checks, write clips + manifest + key."""
     out = Path(out)
-    clips_dir = out / "clips"
+    rater_dir = out / "rater"
+    clips_dir = rater_dir / "clips"
     clips_dir.mkdir(parents=True, exist_ok=True)
     salt = salt or secrets.token_hex(8)
     chosen = stratified_sample(runs, n, seed) if n is not None else list(runs)
@@ -404,7 +406,7 @@ def build_study(runs, out, n=None, seed=0, salt=None, attention=True, frames_fn=
                     defects=[dict(code=c, label=lab) for c, lab, _ in DEFECTS], clips=entries)
     keyd = dict(schema=KEY_SCHEMA, study_id=study_id, created=now, seed=seed, salt=salt, n_requested=n,
                 clips=key)
-    (out / "manifest.json").write_text(json.dumps(manifest, indent=1))
+    (rater_dir / "manifest.json").write_text(json.dumps(manifest, indent=1))
     (out / "key.json").write_text(json.dumps(keyd, indent=1))
     return manifest, keyd
 
@@ -427,7 +429,8 @@ def main(argv=None):
     print(f"{len(runs)} candidate runs")
     man, key = build_study(runs, a.out, a.n, a.seed, a.salt, not a.no_attention, fmt=a.fmt, panel_w=a.panel,
                            study_id=a.study_id)
-    print(f"wrote {len(man['clips'])} clips to {a.out} (study {man['study_id']}); keep key.json away from raters")
+    print(f"wrote {len(man['clips'])} clips to {a.out}/rater (study {man['study_id']}); "
+          f"give raters only the rater/ folder, keep {a.out}/key.json")
 
 
 if __name__ == "__main__":
