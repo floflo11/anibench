@@ -19,6 +19,7 @@ Mask of a part (in this order):
 
 Usage:
     python src/annotations.py validate annotations/*.json
+    python src/annotations.py preview annotations/<image_id>.json [--out /tmp]
     python src/annotations.py tasks [--tasks annotations/tasks_pilot.json] [--out tasks]
 """
 import argparse
@@ -387,11 +388,39 @@ def generate_tasks(task_file=None, out_dir=None, ann_dir=ANN_DIR):
     return T.build(out=out_dir, task_file=task_file, ann_dir=ann_dir)
 
 
+def preview(ann, out_path):
+    """Overlay of the final part masks (after clip, exclude, outline) and pivots, for checking."""
+    from PIL import ImageDraw
+
+    cols = [(230, 25, 75), (60, 180, 75), (67, 99, 216), (245, 130, 49), (145, 30, 180), (66, 212, 244),
+            (240, 50, 230), (154, 99, 36)]
+    base = np.array(Image.open(image_path(ann)).convert("RGB")).astype(float)
+    ms, pv = masks(ann), pivots(ann)
+    img = base.copy()
+    movable = [p["name"] for p in ann["parts"] if p["pivot"] is not None]
+    for i, n in enumerate(movable):
+        img[ms[n]] = base[ms[n]] * 0.35 + np.array(cols[i % len(cols)]) * 0.65
+    for m in ann.get("masks", []):
+        edge = ms[m["name"]] & ~ndimage.binary_erosion(ms[m["name"]])
+        img[edge] = (0, 160, 0)
+    im = Image.fromarray(img.clip(0, 255).astype("uint8"))
+    d = ImageDraw.Draw(im)
+    for n in movable:
+        x, y = pv[n]
+        d.ellipse([x - 4, y - 4, x + 4, y + 4], outline=(0, 0, 0), width=2)
+        d.text((x + 6, y - 6), n, fill=(0, 0, 0))
+    im.save(out_path)
+    return out_path
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     sub = ap.add_subparsers(dest="cmd", required=True)
     v = sub.add_parser("validate", help="validate annotation files and print part areas")
     v.add_argument("files", nargs="+")
+    pr = sub.add_parser("preview", help="write <out>/<image_id>_preview.png showing the final masks and pivots")
+    pr.add_argument("files", nargs="+")
+    pr.add_argument("--out", default="/tmp")
     t = sub.add_parser("tasks", help="generate task directories")
     t.add_argument("--tasks", default=None, help="task definition file (default annotations/tasks_pilot.json)")
     t.add_argument("--out", default=None, help="output directory (default tasks/)")
@@ -409,6 +438,11 @@ def main(argv=None):
                 bad += 1
                 print(f"ERR {e}")
         return 1 if bad else 0
+    if a.cmd == "preview":
+        for f in a.files:
+            ann = load(f)
+            print(preview(ann, Path(a.out) / f"{ann['image_id']}_preview.png"))
+        return 0
     idx = generate_tasks(a.tasks, a.out)
     for s in idx:
         print(s["id"], s["kind"], s["graders"], s["pivots"])

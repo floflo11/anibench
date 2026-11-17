@@ -205,3 +205,8 @@ def test_migration_script_reproduces_committed_json():
 
     for name, ann in M.migrate().items():  # migrate() asserts every mask equals the legacy mask
         assert json.loads((ROOT / f"annotations/{name}.json").read_text()) == ann
+
+
+def test_preview_writes_overlay(tmp_path):
+    out = A.preview(A.load(ROOT / "annotations/lineup.json"), tmp_path / "p.png")
+    assert Image.open(out).size == (1200, 600)

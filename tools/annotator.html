@@ -1,0 +1,746 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>anibench annotator</title>
+<!-- Single self-contained file: no network, works from file://. Schema: docs/annotation_schema.md -->
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; font: 13px/1.35 system-ui, -apple-system, "Segoe UI", sans-serif; color: #1d1d1f; }
+  body { display: flex; }
+  #side { width: 360px; min-width: 360px; height: 100%; overflow-y: auto; border-right: 1px solid #d0d0d5; background: #f6f6f8; padding: 8px 10px 40px; }
+  #main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+  #wrap { flex: 1; position: relative; overflow: hidden; background: #8a8a90; }
+  #cv { position: absolute; inset: 0; width: 100%; height: 100%; cursor: crosshair; outline: none; }
+  #status { height: 26px; padding: 4px 10px; border-top: 1px solid #d0d0d5; background: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  #status b { font-weight: 600; }
+  #msg { color: #a33; margin-left: 12px; }
+  #msg.ok { color: #276b2e; }
+  h2 { font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: #555; margin: 14px 0 6px; }
+  label { display: block; margin: 4px 0; }
+  label > span { display: inline-block; width: 92px; color: #444; }
+  input[type=text], select, textarea { font: inherit; padding: 2px 4px; border: 1px solid #bbb; border-radius: 3px; background: #fff; }
+  label input[type=text], label select { width: calc(100% - 96px); }
+  button { font: inherit; padding: 3px 8px; margin: 2px 2px 2px 0; border: 1px solid #aaa; border-radius: 3px; background: #fff; cursor: pointer; }
+  button:hover { background: #eef; }
+  .row { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; }
+  #parts { list-style: none; padding: 0; margin: 0; border: 1px solid #ccc; background: #fff; max-height: 220px; overflow-y: auto; }
+  #parts li { padding: 3px 6px; cursor: pointer; display: flex; gap: 6px; align-items: center; border-bottom: 1px solid #eee; }
+  #parts li.sel { background: #dde6ff; font-weight: 600; }
+  #parts .sw { width: 12px; height: 12px; border-radius: 2px; flex: none; }
+  #parts .info { margin-left: auto; color: #777; font-weight: 400; font-size: 11px; }
+  #excl { border: 1px solid #ccc; background: #fff; max-height: 110px; overflow-y: auto; padding: 2px 6px; }
+  #excl label { margin: 1px 0; }
+  #problems { font-size: 12px; }
+  #problems .err { color: #a33; }
+  #problems .warn { color: #8a6100; }
+  #keys { font-size: 12px; border-collapse: collapse; width: 100%; }
+  #keys td { padding: 1px 4px; vertical-align: top; }
+  #keys td:first-child { white-space: nowrap; font-family: ui-monospace, Menlo, monospace; color: #333; }
+  #out { width: 100%; height: 90px; font: 11px ui-monospace, Menlo, monospace; }
+  .muted { color: #777; font-size: 12px; }
+  #drop { position: absolute; inset: 0; display: none; align-items: center; justify-content: center; font-size: 22px; color: #fff; background: rgba(40,60,160,.55); pointer-events: none; }
+  #placeholder { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); color: #fff; font-size: 16px; text-align: center; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="side">
+  <div class="row">
+    <button id="btnLoadImg" title="Load an image file">Load image…</button>
+    <button id="btnImport" title="Import an existing annotation JSON">Import JSON…</button>
+    <button id="btnExport" title="Export JSON (Ctrl+S)"><b>Export JSON</b></button>
+    <button id="btnRestore" style="display:none">Restore autosave</button>
+    <input type="file" id="fileImg" accept="image/*" hidden>
+    <input type="file" id="fileJson" accept=".json,application/json" hidden>
+  </div>
+  <div class="muted">Or drop an image / JSON file anywhere on the page.</div>
+
+  <h2>Image</h2>
+  <label><span>image_id</span><input type="text" id="imageId" placeholder="e.g. picnic01"></label>
+  <label><span>image path</span><input type="text" id="imagePath" placeholder="images/picnic01.png"></label>
+  <label><span>size</span><span id="imgSize" class="muted" style="width:auto">no image</span></label>
+  <label><span>foreground</span><input type="text" id="foreground" placeholder="optional mask PNG path"></label>
+
+  <h2>Metadata</h2>
+  <label><span>style</span><input type="text" id="m_style" placeholder="flat cartoon / watercolour / photo cutout"></label>
+  <label><span>subject</span><input type="text" id="m_subject" placeholder="two children at a picnic"></label>
+  <label><span>source</span><input type="text" id="m_source" placeholder="URL or generator + prompt"></label>
+  <label><span>license</span><input type="text" id="m_license" placeholder="CC0 / CC-BY-4.0 / own"></label>
+  <label><span>annotator</span><input type="text" id="m_annotator" placeholder="your name"></label>
+  <label><span>notes</span><input type="text" id="m_notes"></label>
+
+  <h2>Parts</h2>
+  <ul id="parts"></ul>
+  <div class="row">
+    <button id="btnAddPart" title="New part (N)">+ Part (N)</button>
+    <button id="btnDelPart" title="Delete the selected part (undo with Ctrl+Z)">Delete part</button>
+  </div>
+
+  <div id="editor">
+    <h2>Selected part</h2>
+    <label><span>name</span><input type="text" id="p_name" placeholder="C1_hand"></label>
+    <label><span>description</span><input type="text" id="p_desc" placeholder="raised hand; pivot at the wrist"></label>
+    <label><span>parent</span><select id="p_parent"></select></label>
+    <label><span>clip</span><select id="p_clip"><option value="foreground">foreground (default)</option><option value="none">none</option></select></label>
+    <label><input type="checkbox" id="p_whole"> whole character (no outline growth, no pivot)</label>
+    <label><span>pivot</span><span id="p_pivot" style="width:auto">none</span> <button id="btnPivot" title="Next click sets the pivot (P)">Set (P)</button><button id="btnClearPivot">Clear</button></label>
+    <div class="muted" id="p_counts"></div>
+    <div class="row"><button id="btnDelPoly" title="Delete the last finished polygon of this part">Delete last polygon</button></div>
+    <div style="margin-top:4px">exclude (parts carved out of this one):</div>
+    <div id="excl"></div>
+  </div>
+
+  <h2>Problems</h2>
+  <div id="problems" class="muted">none</div>
+
+  <h2>Keyboard</h2>
+  <table id="keys">
+    <tr><td>click</td><td>add a point to the polygon (click the first point to close)</td></tr>
+    <tr><td>Enter</td><td>close the polygon</td></tr>
+    <tr><td>Backspace</td><td>undo the last point (reopens the last polygon if none)</td></tr>
+    <tr><td>Esc</td><td>cancel the polygon / pivot mode</td></tr>
+    <tr><td>P, Shift+click</td><td>set the pivot of the selected part</td></tr>
+    <tr><td>H</td><td>next polygon is a hole (cut out of the part)</td></tr>
+    <tr><td>K</td><td>next polygon is a keep/skull mask for the part</td></tr>
+    <tr><td>N</td><td>new part (then type its name, Enter)</td></tr>
+    <tr><td>[ ] or 1–9</td><td>select previous / next / n-th part</td></tr>
+    <tr><td>drag a vertex</td><td>move it (selected part)</td></tr>
+    <tr><td>wheel, + −</td><td>zoom; F or 0 fits the image</td></tr>
+    <tr><td>Space+drag, right-drag</td><td>pan</td></tr>
+    <tr><td>V</td><td>show / hide part fills</td></tr>
+    <tr><td>Ctrl+Z, Ctrl+Y</td><td>undo, redo</td></tr>
+    <tr><td>Ctrl+S</td><td>export JSON</td></tr>
+  </table>
+
+  <h2>Exported JSON</h2>
+  <textarea id="out" readonly placeholder="Export to see the JSON here (also downloaded as <image_id>.json)"></textarea>
+</div>
+
+<div id="main">
+  <div id="wrap">
+    <canvas id="cv" tabindex="0"></canvas>
+    <div id="placeholder">Load an image (button or drop a file)</div>
+    <div id="drop">Drop image or JSON</div>
+  </div>
+  <div id="status"><span id="st"></span><span id="msg"></span></div>
+</div>
+
+<script>
+"use strict";
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const cv = $("cv"), ctx = cv.getContext("2d"), wrap = $("wrap");
+  const COLORS = ["#e6194b", "#3cb44b", "#4363d8", "#f58231", "#911eb4", "#42d4f4", "#f032e6", "#bfef45",
+                  "#469990", "#9a6324", "#800000", "#808000", "#000075", "#fabed4", "#ffd8b1", "#aaffc3"];
+  const META_KEYS = ["style", "subject", "source", "license", "annotator", "notes"];
+  const STORE_KEY = "anibench-annotator-v1";
+
+  // ---------------------------------------------------------------- state
+  let S = blankState();
+  let img = null;               // HTMLImageElement or null
+  let imgName = "";
+  let draft = { pts: [], kind: "part" };   // polygon being drawn; kind: part | hole | keep
+  let pivotMode = false;
+  let showFills = true;
+  let view = { s: 1, ox: 0, oy: 0 };
+  let hover = null;            // image coords under the cursor
+  let undoStack = [], redoStack = [];
+  let dirty = false;
+
+  function blankState() {
+    return { imageId: "", imagePath: "", width: 0, height: 0, foreground: "",
+             metadata: { style: "", subject: "", source: "", license: "", annotator: "", notes: "" },
+             extraTop: {}, extraMeta: {}, parts: [], sel: -1 };
+  }
+  function newPart(name) {
+    return { name, description: "", pivot: null, parent: null, exclude: [], clip: "foreground",
+             polygons: [], holes: [], keep: null, extra: {} };
+  }
+  const cur = () => (S.sel >= 0 && S.sel < S.parts.length ? S.parts[S.sel] : null);
+
+  function snapshot() { return JSON.stringify(S); }
+  function pushUndo() {
+    undoStack.push(snapshot());
+    if (undoStack.length > 300) undoStack.shift();
+    redoStack = [];
+    dirty = true;
+  }
+  function undo() {
+    if (draft.pts.length) { draft = { pts: [], kind: "part" }; render(); return; }
+    if (!undoStack.length) { flash("nothing to undo"); return; }
+    redoStack.push(snapshot()); S = JSON.parse(undoStack.pop()); refreshAll(); flash("undone", true);
+  }
+  function redo() {
+    if (!redoStack.length) { flash("nothing to redo"); return; }
+    undoStack.push(snapshot()); S = JSON.parse(redoStack.pop()); refreshAll(); flash("redone", true);
+  }
+  function changed() { dirty = true; autosave(); refreshPanel(); render(); }
+
+  // ---------------------------------------------------------------- geometry / view
+  const r1 = (v) => Math.round(v * 10) / 10;
+  // image coords: pixel (i, j) has its centre at (i, j); canvas corner space is shifted by 0.5
+  function toImage(cx, cy) { return [r1((cx - view.ox) / view.s - 0.5), r1((cy - view.oy) / view.s - 0.5)]; }
+  function toClient(x, y) { return [view.ox + (x + 0.5) * view.s, view.oy + (y + 0.5) * view.s]; }
+  function fit() {
+    const W = S.width || 800, H = S.height || 600, r = wrap.getBoundingClientRect();
+    view.s = Math.min((r.width - 20) / W, (r.height - 20) / H);
+    if (!(view.s > 0)) view.s = 1;
+    view.ox = (r.width - W * view.s) / 2; view.oy = (r.height - H * view.s) / 2;
+    render();
+  }
+  function zoomAt(f, cx, cy) {
+    const ns = Math.min(64, Math.max(0.05, view.s * f));
+    view.ox = cx - (cx - view.ox) * ns / view.s; view.oy = cy - (cy - view.oy) * ns / view.s; view.s = ns;
+    render();
+  }
+
+  // ---------------------------------------------------------------- rendering
+  function resize() {
+    const r = wrap.getBoundingClientRect(), d = window.devicePixelRatio || 1;
+    cv.width = Math.max(1, Math.round(r.width * d)); cv.height = Math.max(1, Math.round(r.height * d));
+    render();
+  }
+  function pathPoly(pts) {
+    ctx.moveTo(pts[0][0] + 0.5, pts[0][1] + 0.5);
+    for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i][0] + 0.5, pts[i][1] + 0.5);
+    ctx.closePath();
+  }
+  function color(i) { return COLORS[i % COLORS.length]; }
+  function render() {
+    const d = window.devicePixelRatio || 1;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, cv.width, cv.height);
+    ctx.setTransform(d * view.s, 0, 0, d * view.s, d * view.ox, d * view.oy);
+    const lw = 1.5 / view.s;
+    if (S.width) {
+      ctx.fillStyle = "#fff"; ctx.fillRect(0, 0, S.width, S.height);
+      if (img) { ctx.imageSmoothingEnabled = view.s < 2; ctx.drawImage(img, 0, 0); }
+    }
+    $("placeholder").style.display = img ? "none" : "block";
+    $("placeholder").textContent = img ? "" : (S.width ? `Load the image ${S.imagePath || ""} to see it` : "Load an image (button or drop a file)");
+    S.parts.forEach((p, i) => {
+      const c = color(i), sel = i === S.sel;
+      if (p.polygons.length || p.holes.length) {
+        ctx.beginPath();
+        p.polygons.forEach(pathPoly); p.holes.forEach(pathPoly);
+        if (showFills) { ctx.globalAlpha = sel ? 0.35 : 0.2; ctx.fillStyle = c; ctx.fill("evenodd"); ctx.globalAlpha = 1; }
+        ctx.lineWidth = sel ? 2 * lw : lw; ctx.strokeStyle = c; ctx.stroke();
+      }
+      if (p.keep && p.keep.polygons.length) {
+        ctx.beginPath(); p.keep.polygons.forEach(pathPoly);
+        ctx.setLineDash([4 / view.s, 3 / view.s]); ctx.lineWidth = lw; ctx.strokeStyle = c; ctx.stroke(); ctx.setLineDash([]);
+      }
+      if (sel) {  // vertex handles
+        ctx.fillStyle = "#fff"; ctx.strokeStyle = c; ctx.lineWidth = lw;
+        const hs = 3 / view.s;
+        const all = p.polygons.concat(p.holes, p.keep ? p.keep.polygons : []);
+        if (all.reduce((n, q) => n + q.length, 0) < 3000)
+          all.forEach((q) => q.forEach(([x, y]) => { ctx.fillRect(x + 0.5 - hs / 2, y + 0.5 - hs / 2, hs, hs); }));
+      }
+      if (p.pivot) {
+        const [x, y] = p.pivot, R = (sel ? 7 : 5) / view.s;
+        ctx.beginPath(); ctx.arc(x + 0.5, y + 0.5, R, 0, 2 * Math.PI);
+        ctx.moveTo(x + 0.5 - 1.6 * R, y + 0.5); ctx.lineTo(x + 0.5 + 1.6 * R, y + 0.5);
+        ctx.moveTo(x + 0.5, y + 0.5 - 1.6 * R); ctx.lineTo(x + 0.5, y + 0.5 + 1.6 * R);
+        ctx.lineWidth = 3 * lw; ctx.strokeStyle = "#fff"; ctx.stroke();
+        ctx.lineWidth = 1.5 * lw; ctx.strokeStyle = sel ? "#000" : c; ctx.stroke();
+      }
+    });
+    if (draft.pts.length) {
+      const c = draft.kind === "hole" ? "#000" : draft.kind === "keep" ? "#0a0" : (S.sel >= 0 ? color(S.sel) : "#000");
+      ctx.beginPath();
+      ctx.moveTo(draft.pts[0][0] + 0.5, draft.pts[0][1] + 0.5);
+      for (const [x, y] of draft.pts.slice(1)) ctx.lineTo(x + 0.5, y + 0.5);
+      if (hover) ctx.lineTo(hover[0] + 0.5, hover[1] + 0.5);
+      ctx.lineWidth = 2 * lw; ctx.strokeStyle = "#fff"; ctx.stroke();
+      ctx.lineWidth = lw; ctx.strokeStyle = c; ctx.setLineDash(draft.kind === "part" ? [] : [4 / view.s, 3 / view.s]); ctx.stroke(); ctx.setLineDash([]);
+      const hs = 5 / view.s;
+      draft.pts.forEach(([x, y], k) => { ctx.fillStyle = k === 0 ? "#ff0" : c; ctx.fillRect(x + 0.5 - hs / 2, y + 0.5 - hs / 2, hs, hs); });
+    }
+    refreshStatus();
+  }
+  function refreshStatus() {
+    const p = cur();
+    let mode;
+    if (pivotMode) mode = `<b>Pivot</b>: click to set the pivot of ${esc(p ? p.name : "?")} (Esc cancels)`;
+    else if (draft.pts.length) mode = `<b>Drawing ${draft.kind === "part" ? "polygon" : draft.kind === "hole" ? "HOLE" : "KEEP mask"}</b> for ${esc(p ? p.name : "?")}: ${draft.pts.length} points (Enter closes, Backspace undoes)`;
+    else if (p) mode = `<b>${esc(p.name)}</b>: click to start a ${draft.kind === "part" ? "polygon" : draft.kind === "hole" ? "HOLE" : "KEEP mask"}`;
+    else mode = S.width ? "Press N to add a part" : "Load an image";
+    const pos = hover ? ` &nbsp; x ${hover[0]}, y ${hover[1]}` : "";
+    $("st").innerHTML = mode + pos + ` &nbsp; zoom ${Math.round(view.s * 100)}%`;
+  }
+  let msgTimer = 0;
+  function flash(t, ok) {
+    const m = $("msg"); m.textContent = t; m.className = ok ? "ok" : "";
+    clearTimeout(msgTimer); msgTimer = setTimeout(() => { m.textContent = ""; }, 5000);
+  }
+  const esc = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+  // ---------------------------------------------------------------- side panel
+  function refreshAll() { refreshFields(); refreshPanel(); render(); autosave(); }
+  function refreshFields() {
+    $("imageId").value = S.imageId; $("imagePath").value = S.imagePath; $("foreground").value = S.foreground || "";
+    for (const k of META_KEYS) $("m_" + k).value = S.metadata[k] || "";
+    $("imgSize").textContent = S.width ? `${S.width} × ${S.height}${img ? "" : " (image not loaded)"}` : "no image";
+  }
+  function refreshPanel() {
+    const ul = $("parts"); ul.innerHTML = "";
+    S.parts.forEach((p, i) => {
+      const li = document.createElement("li");
+      if (i === S.sel) li.className = "sel";
+      li.innerHTML = `<span class="sw" style="background:${color(i)}"></span><span>${i < 9 ? i + 1 + ". " : ""}${esc(p.name || "(unnamed)")}</span>` +
+        `<span class="info">${p.polygons.length} poly${p.pivot ? " · pivot" : ""}${p.parent ? " · ↑" + esc(p.parent) : ""}</span>`;
+      li.onclick = () => select(i);
+      ul.appendChild(li);
+    });
+    const p = cur();
+    $("editor").style.opacity = p ? 1 : 0.4;
+    for (const id of ["p_name", "p_desc", "p_parent", "p_clip", "p_whole", "btnPivot", "btnClearPivot", "btnDelPoly"]) $(id).disabled = !p;
+    if (p) {
+      if (document.activeElement !== $("p_name")) $("p_name").value = p.name;
+      if (document.activeElement !== $("p_desc")) $("p_desc").value = p.description || "";
+      const sel = $("p_parent"); sel.innerHTML = "";
+      sel.appendChild(new Option("(none: top-level)", ""));
+      S.parts.forEach((q) => { if (q !== p) sel.appendChild(new Option(q.name, q.name)); });
+      sel.value = p.parent || "";
+      $("p_clip").value = p.clip || "foreground";
+      $("p_whole").checked = p.extra.outline_px === 0;
+      $("p_pivot").textContent = p.pivot ? `[${p.pivot[0]}, ${p.pivot[1]}]` : "none";
+      $("p_counts").textContent = `${p.polygons.length} polygon(s), ${p.holes.length} hole(s), ${p.keep ? p.keep.polygons.length : 0} keep polygon(s)` +
+        (p.keep ? ` → mask "${p.keep.name}"` : "");
+      const ex = $("excl"); ex.innerHTML = "";
+      S.parts.forEach((q) => {
+        if (q === p) return;
+        const l = document.createElement("label"), cb = document.createElement("input");
+        cb.type = "checkbox"; cb.checked = p.exclude.includes(q.name); cb.dataset.part = q.name;
+        cb.onchange = () => { pushUndo(); p.exclude = cb.checked ? p.exclude.concat([q.name]) : p.exclude.filter((n) => n !== q.name); changed(); };
+        l.appendChild(cb); l.appendChild(document.createTextNode(" " + q.name)); ex.appendChild(l);
+      });
+      if (S.parts.length < 2) ex.innerHTML = '<span class="muted">no other parts</span>';
+    } else {
+      $("p_name").value = ""; $("p_desc").value = ""; $("p_pivot").textContent = "none"; $("p_counts").textContent = ""; $("excl").innerHTML = "";
+    }
+    const pr = check(), box = $("problems");
+    box.className = pr.errors.length || pr.warnings.length ? "" : "muted";
+    box.innerHTML = pr.errors.map((e) => `<div class="err">error: ${esc(e)}</div>`).join("") +
+                    pr.warnings.map((e) => `<div class="warn">warning: ${esc(e)}</div>`).join("") || "none";
+  }
+  function select(i) {
+    if (i < 0 || i >= S.parts.length) return;
+    if (draft.pts.length && i !== S.sel) { draft = { pts: [], kind: "part" }; flash("unfinished polygon discarded"); }
+    S.sel = i; pivotMode = false; refreshPanel(); render();
+  }
+  function addPart() {
+    if (!S.width) { flash("load an image (or import a JSON) first"); return; }
+    pushUndo();
+    const last = cur() || S.parts[S.parts.length - 1];
+    const m = last && /^([A-Za-z0-9]+)_/.exec(last.name);
+    const prefix = m ? m[1] : "C1";
+    let k = S.parts.length + 1, name;
+    do { name = `${prefix}_part${k++}`; } while (S.parts.some((p) => p.name === name));
+    const p = newPart(name);
+    const body = S.parts.find((q) => q.name === prefix + "_body");
+    if (body) p.parent = body.name;
+    S.parts.push(p); S.sel = S.parts.length - 1; draft = { pts: [], kind: "part" };
+    changed();
+    $("p_name").focus(); $("p_name").select();
+  }
+  function deletePart() {
+    const p = cur(); if (!p) return;
+    pushUndo();
+    S.parts.splice(S.sel, 1);
+    for (const q of S.parts) {
+      if (q.parent === p.name) q.parent = null;
+      q.exclude = q.exclude.filter((n) => n !== p.name);
+    }
+    S.sel = Math.min(S.sel, S.parts.length - 1); draft = { pts: [], kind: "part" };
+    changed(); flash(`deleted ${p.name} (Ctrl+Z to undo)`, true);
+  }
+  function renamePart(p, name) {
+    name = name.trim();
+    if (name === p.name) return;
+    pushUndo();
+    for (const q of S.parts) {
+      if (q.parent === p.name) q.parent = name;
+      q.exclude = q.exclude.map((n) => (n === p.name ? name : n));
+    }
+    if (p.keep && p.keep.auto) p.keep.name = keepName(name);
+    p.name = name;
+    if (/_body$/.test(name) && !p.polygons.length && p.extra.outline_px === undefined) { p.extra.outline_px = 0; p.parent = null; }
+    changed();
+  }
+  const keepName = (n) => (/_hat$/.test(n) ? n.replace(/_hat$/, "_skull") : n + "_keep");
+
+  // ---------------------------------------------------------------- drawing actions
+  function addPoint(pt) {
+    const p = cur();
+    if (!p) { flash(S.width ? "press N to add a part first" : "load an image first"); return; }
+    draft.pts.push(pt); render();
+  }
+  function closePoly() {
+    const p = cur();
+    if (!p || !draft.pts.length) return;
+    if (draft.pts.length < 3) { flash("a polygon needs at least 3 points"); return; }
+    pushUndo();
+    const poly = draft.pts.map(([x, y]) => [x, y]);
+    if (draft.kind === "hole") p.holes.push(poly);
+    else if (draft.kind === "keep") {
+      if (!p.keep) p.keep = { name: keepName(p.name), polygons: [], auto: true, extra: {} };
+      p.keep.polygons.push(poly);
+    } else p.polygons.push(poly);
+    draft = { pts: [], kind: "part" };
+    changed();
+  }
+  function backspace() {
+    const p = cur();
+    if (draft.pts.length) { draft.pts.pop(); if (!draft.pts.length) draft.kind = "part"; render(); return; }
+    if (!p) return;
+    // reopen the most recently finished polygon of this part (part polygons, then holes, then keep)
+    let kind = null;
+    if (p.polygons.length) kind = "part"; else if (p.holes.length) kind = "hole"; else if (p.keep && p.keep.polygons.length) kind = "keep";
+    if (!kind) { flash("nothing to undo for this part"); return; }
+    pushUndo();
+    const list = kind === "part" ? p.polygons : kind === "hole" ? p.holes : p.keep.polygons;
+    const poly = list.pop();
+    if (kind === "keep" && !p.keep.polygons.length) p.keep = null;
+    draft = { pts: poly.slice(0, -1), kind };
+    changed(); flash("reopened the last polygon", true);
+  }
+  function deleteLastPoly() {
+    const p = cur(); if (!p || !p.polygons.length) { flash("no polygon to delete"); return; }
+    pushUndo(); p.polygons.pop(); changed();
+  }
+  function setPivot(pt) {
+    const p = cur(); if (!p) return;
+    pushUndo(); p.pivot = pt; pivotMode = false;
+    if (p.extra.outline_px === 0 && /_body$/.test(p.name)) flash("note: a whole character usually has no pivot");
+    changed();
+  }
+
+  // ---------------------------------------------------------------- validation (mirrors src/annotations.py)
+  function check() {
+    const errors = [], warnings = [];
+    if (!S.width) errors.push("no image loaded");
+    if (!S.imageId.trim()) errors.push("image_id is empty");
+    if (!S.imagePath.trim()) errors.push("image path is empty");
+    if (!S.parts.length) errors.push("no parts");
+    const names = new Set();
+    for (const p of S.parts) {
+      const n = p.name.trim();
+      if (!n) errors.push("a part has no name");
+      else if (names.has(n)) errors.push(`duplicate part name ${n}`);
+      names.add(n);
+      if (!p.polygons.length) errors.push(`${n}: no polygon`);
+      for (const q of p.polygons.concat(p.holes)) if (q.length < 3) errors.push(`${n}: polygon with < 3 points`);
+      if (p.parent && !S.parts.some((q) => q.name === p.parent)) errors.push(`${n}: parent ${p.parent} is not a part`);
+      if (p.parent && !p.pivot) warnings.push(`${n}: no pivot`);
+      if (!p.parent && p.extra.outline_px !== 0 && !/_body$/.test(n)) warnings.push(`${n}: no parent`);
+      for (const e of p.exclude) if (!S.parts.some((q) => q.name === e)) errors.push(`${n}: exclude ${e} is not a part`);
+      let c = p.parent, seen = new Set([n]);
+      while (c) { if (seen.has(c)) { errors.push(`${n}: parent chain has a cycle`); break; } seen.add(c); const q = S.parts.find((x) => x.name === c); c = q ? q.parent : null; }
+      if (p.pivot && S.width && (p.pivot[0] < 0 || p.pivot[1] < 0 || p.pivot[0] >= S.width || p.pivot[1] >= S.height)) warnings.push(`${n}: pivot outside the image`);
+    }
+    const keepNames = S.parts.filter((p) => p.keep).map((p) => p.keep.name);
+    for (const k of keepNames) if (names.has(k) || keepNames.filter((x) => x === k).length > 1) errors.push(`mask name ${k} clashes`);
+    if (!S.metadata.license.trim()) warnings.push("license is empty (exported as \"unknown\")");
+    if (!S.metadata.source.trim()) warnings.push("source is empty (exported as \"unknown\")");
+    return { errors, warnings };
+  }
+
+  // ---------------------------------------------------------------- JSON export / import
+  function toDoc() {
+    const meta = {};
+    for (const k of ["style", "subject", "source", "license"]) meta[k] = S.metadata[k].trim() || "unknown";
+    for (const k of ["annotator", "notes"]) if (S.metadata[k].trim()) meta[k] = S.metadata[k].trim();
+    Object.assign(meta, S.extraMeta);
+    const doc = { schema_version: 1, image_id: S.imageId.trim(),
+                  image: { path: S.imagePath.trim(), width: S.width, height: S.height } };
+    if (S.foreground.trim()) doc.foreground = S.foreground.trim();
+    Object.assign(doc, S.extraTop);
+    doc.metadata = meta;
+    doc.parts = S.parts.map((p) => {
+      const o = { name: p.name.trim() };
+      if (p.description.trim()) o.description = p.description.trim();
+      o.pivot = p.pivot ? [p.pivot[0], p.pivot[1]] : null;
+      o.parent = p.parent || null;
+      if (p.exclude.length) o.exclude = p.exclude.slice();
+      o.clip = p.clip || "foreground";
+      Object.assign(o, p.extra);
+      o.polygons = p.polygons;
+      if (p.holes.length) o.holes = p.holes;
+      return o;
+    });
+    const masks = [];
+    for (const p of S.parts) if (p.keep && p.keep.polygons.length) {
+      const m = { name: p.keep.name, role: "keep", part: p.name.trim() };
+      Object.assign(m, p.keep.extra);
+      m.polygons = p.keep.polygons;
+      masks.push(m);
+    }
+    if (masks.length) doc.masks = masks;
+    return doc;
+  }
+  // pretty JSON with one polygon per line
+  function serialize(v, ind, key) {
+    ind = ind || "";
+    if ((key === "polygons" || key === "holes") && Array.isArray(v))
+      return "[\n" + v.map((q) => ind + "  [" + q.map((pt) => `[${pt[0]}, ${pt[1]}]`).join(", ") + "]").join(",\n") + "\n" + ind + "]";
+    if (Array.isArray(v)) {
+      if (v.every((x) => x === null || typeof x !== "object")) return JSON.stringify(v).replace(/,/g, ", ");
+      return "[\n" + v.map((x) => ind + "  " + serialize(x, ind + "  ")).join(",\n") + "\n" + ind + "]";
+    }
+    if (v && typeof v === "object") {
+      const ks = Object.keys(v);
+      if (!ks.length) return "{}";
+      return "{\n" + ks.map((k) => ind + "  " + JSON.stringify(k) + ": " + serialize(v[k], ind + "  ", k)).join(",\n") + "\n" + ind + "}";
+    }
+    return JSON.stringify(v);
+  }
+  function exportJSON() {
+    if (draft.pts.length >= 3) closePoly();
+    const pr = check();
+    if (pr.errors.length) { flash("cannot export: " + pr.errors[0] + (pr.errors.length > 1 ? ` (+${pr.errors.length - 1} more)` : "")); refreshPanel(); return null; }
+    const text = serialize(toDoc()) + "\n";
+    $("out").value = text;
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([text], { type: "application/json" }));
+    a.download = (S.imageId.trim() || "annotation") + ".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+    dirty = false;
+    flash(`exported ${a.download}` + (pr.warnings.length ? ` (${pr.warnings.length} warning(s))` : ""), true);
+    return text;
+  }
+  const KNOWN_TOP = ["schema_version", "image_id", "image", "foreground", "metadata", "parts", "masks"];
+  const KNOWN_PART = ["name", "description", "pivot", "parent", "exclude", "clip", "polygons", "holes"];
+  function fromDoc(doc) {
+    if (!doc || typeof doc !== "object" || !Array.isArray(doc.parts)) throw new Error("not an annotation file (no parts list)");
+    if (doc.schema_version !== 1) throw new Error("schema_version must be 1");
+    const im = doc.image || {};
+    const s = blankState();
+    s.imageId = doc.image_id || ""; s.imagePath = im.path || ""; s.width = im.width | 0; s.height = im.height | 0;
+    s.foreground = doc.foreground || "";
+    for (const k of Object.keys(doc)) if (!KNOWN_TOP.includes(k)) s.extraTop[k] = doc[k];
+    const md = doc.metadata || {};
+    for (const k of Object.keys(md)) { if (META_KEYS.includes(k)) s.metadata[k] = String(md[k]); else s.extraMeta[k] = md[k]; }
+    s.parts = doc.parts.map((o) => {
+      const p = newPart(String(o.name || ""));
+      p.description = o.description || ""; p.pivot = Array.isArray(o.pivot) ? [o.pivot[0], o.pivot[1]] : null;
+      p.parent = o.parent || null; p.exclude = Array.isArray(o.exclude) ? o.exclude.slice() : [];
+      p.clip = o.clip || "foreground"; p.polygons = o.polygons || []; p.holes = o.holes || [];
+      for (const k of Object.keys(o)) if (!KNOWN_PART.includes(k)) p.extra[k] = o[k];
+      return p;
+    });
+    for (const m of doc.masks || []) {
+      const p = s.parts.find((q) => q.name === m.part);
+      if (!p) throw new Error(`mask ${m.name} refers to unknown part ${m.part}`);
+      const extra = {};
+      for (const k of Object.keys(m)) if (!["name", "role", "part", "polygons"].includes(k)) extra[k] = m[k];
+      if (!p.keep) p.keep = { name: m.name, polygons: [], auto: false, extra };
+      p.keep.polygons = p.keep.polygons.concat(m.polygons || []);
+    }
+    s.sel = s.parts.length ? 0 : -1;
+    return s;
+  }
+  function importText(text, fname) {
+    let doc;
+    try { doc = JSON.parse(text); } catch (e) { flash("not valid JSON: " + e.message); return false; }
+    let s;
+    try { s = fromDoc(doc); } catch (e) { flash("cannot import: " + e.message); return false; }
+    pushUndo();
+    if (img && (img.naturalWidth !== s.width || img.naturalHeight !== s.height)) {
+      flash(`warning: JSON is ${s.width}×${s.height} but the loaded image is ${img.naturalWidth}×${img.naturalHeight}`);
+      img = null;
+    } else flash(`imported ${fname || "JSON"}: ${s.parts.length} parts`, true);
+    S = s; draft = { pts: [], kind: "part" }; dirty = false;
+    refreshAll(); fit();
+    return true;
+  }
+  function loadImageURL(url, name) {
+    const im = new Image();
+    im.onload = () => {
+      if (S.parts.length && (S.width !== im.naturalWidth || S.height !== im.naturalHeight)) {
+        flash(`warning: image is ${im.naturalWidth}×${im.naturalHeight}, annotation says ${S.width}×${S.height}; sizes updated`);
+      } else flash(`loaded ${name} (${im.naturalWidth}×${im.naturalHeight})`, true);
+      img = im; imgName = name;
+      S.width = im.naturalWidth; S.height = im.naturalHeight;
+      if (!S.imagePath) S.imagePath = "images/" + name;
+      if (!S.imageId) S.imageId = name.replace(/\.[^.]+$/, "").replace(/[^A-Za-z0-9_-]+/g, "_");
+      refreshAll(); fit(); cv.focus();
+    };
+    im.onerror = () => flash("could not read the image " + name);
+    im.src = url;
+  }
+  function readFile(f) {
+    const r = new FileReader();
+    if (/\.json$/i.test(f.name) || f.type === "application/json") {
+      r.onload = () => importText(r.result, f.name); r.readAsText(f);
+    } else {
+      r.onload = () => loadImageURL(r.result, f.name); r.readAsDataURL(f);
+    }
+  }
+
+  // ---------------------------------------------------------------- autosave
+  let saveTimer = 0;
+  function autosave() {
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => {
+      try { if (S.parts.length) localStorage.setItem(STORE_KEY, JSON.stringify({ t: Date.now(), state: S })); } catch (e) { /* storage may be unavailable */ }
+    }, 300);
+  }
+  function offerRestore() {
+    let saved = null;
+    try { saved = JSON.parse(localStorage.getItem(STORE_KEY) || "null"); } catch (e) { saved = null; }
+    if (!saved || !saved.state || !saved.state.parts || !saved.state.parts.length) return;
+    const b = $("btnRestore");
+    b.style.display = "";
+    b.textContent = `Restore autosave (${saved.state.imageId || "?"}, ${saved.state.parts.length} parts, ${new Date(saved.t).toLocaleString()})`;
+    b.onclick = () => { pushUndo(); S = saved.state; draft = { pts: [], kind: "part" }; refreshAll(); fit(); b.style.display = "none"; flash("restored; load the image again to see it", true); };
+  }
+
+  // ---------------------------------------------------------------- events
+  $("btnLoadImg").onclick = () => $("fileImg").click();
+  $("btnImport").onclick = () => $("fileJson").click();
+  $("btnExport").onclick = () => exportJSON();
+  $("fileImg").onchange = (e) => { if (e.target.files[0]) readFile(e.target.files[0]); e.target.value = ""; };
+  $("fileJson").onchange = (e) => {
+    const f = e.target.files[0]; e.target.value = "";
+    if (!f) return;
+    const r = new FileReader(); r.onload = () => importText(r.result, f.name); r.readAsText(f);
+  };
+  $("btnAddPart").onclick = addPart;
+  $("btnDelPart").onclick = deletePart;
+  $("btnPivot").onclick = () => { if (cur()) { pivotMode = true; render(); cv.focus(); } };
+  $("btnClearPivot").onclick = () => { const p = cur(); if (p && p.pivot) { pushUndo(); p.pivot = null; changed(); } };
+  $("btnDelPoly").onclick = deleteLastPoly;
+
+  const bindText = (id, set) => {
+    const el = $(id);
+    el.addEventListener("focus", () => { el._before = snapshot(); });
+    el.addEventListener("input", () => { set(el.value); dirty = true; autosave(); render(); });
+    el.addEventListener("change", () => { if (el._before && el._before !== snapshot()) { undoStack.push(el._before); redoStack = []; } el._before = snapshot(); refreshPanel(); });
+  };
+  bindText("imageId", (v) => { S.imageId = v; });
+  bindText("imagePath", (v) => { S.imagePath = v; });
+  bindText("foreground", (v) => { S.foreground = v; });
+  for (const k of META_KEYS) bindText("m_" + k, (v) => { S.metadata[k] = v; });
+  bindText("p_desc", (v) => { const p = cur(); if (p) p.description = v; });
+  $("p_name").addEventListener("change", () => { const p = cur(); if (p) renamePart(p, $("p_name").value); });
+  $("p_parent").onchange = () => { const p = cur(); if (!p) return; pushUndo(); p.parent = $("p_parent").value || null; changed(); };
+  $("p_clip").onchange = () => { const p = cur(); if (!p) return; pushUndo(); p.clip = $("p_clip").value; changed(); };
+  $("p_whole").onchange = () => {
+    const p = cur(); if (!p) return; pushUndo();
+    if ($("p_whole").checked) { p.extra.outline_px = 0; p.parent = null; } else delete p.extra.outline_px;
+    changed();
+  };
+  // Enter / Escape in a side-panel text field commits it and returns focus to the canvas
+  document.querySelectorAll("#side input[type=text]").forEach((el) => el.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === "Escape") { e.preventDefault(); el.dispatchEvent(new Event("change")); el.blur(); cv.focus(); }
+  }));
+
+  let drag = null;   // {kind: 'pan'|'vertex', ...}
+  let spaceDown = false;
+  function nearestVertex(cx, cy) {
+    const p = cur(); if (!p) return null;
+    let best = null, bd = 7 * 7;
+    const lists = [p.polygons, p.holes, p.keep ? p.keep.polygons : []];
+    lists.forEach((L) => L.forEach((q) => q.forEach((pt, k) => {
+      const [sx, sy] = toClient(pt[0], pt[1]), d = (sx - cx) ** 2 + (sy - cy) ** 2;
+      if (d < bd) { bd = d; best = { poly: q, k }; }
+    })));
+    return best;
+  }
+  const local = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  cv.addEventListener("contextmenu", (e) => e.preventDefault());
+  cv.addEventListener("mousedown", (e) => {
+    cv.focus();
+    const [cx, cy] = local(e);
+    if (e.button === 2 || e.button === 1 || spaceDown) { drag = { kind: "pan", x: cx, y: cy, ox: view.ox, oy: view.oy }; e.preventDefault(); return; }
+    if (e.button !== 0) return;
+    const v = !draft.pts.length && !pivotMode && !e.shiftKey ? nearestVertex(cx, cy) : null;
+    drag = { kind: v ? "vertex" : "click", v, x: cx, y: cy, moved: false, shift: e.shiftKey };
+  });
+  window.addEventListener("mousemove", (e) => {
+    const [cx, cy] = local(e);
+    if (S.width) {
+      const pt = toImage(cx, cy);
+      hover = pt[0] >= -0.5 && pt[1] >= -0.5 && pt[0] < S.width + 0.5 && pt[1] < S.height + 0.5 ? pt : null;
+    }
+    if (drag && drag.kind === "pan") { view.ox = drag.ox + cx - drag.x; view.oy = drag.oy + cy - drag.y; render(); return; }
+    if (drag && drag.kind === "vertex") {
+      if (!drag.moved && Math.hypot(cx - drag.x, cy - drag.y) > 3) { drag.moved = true; pushUndo(); }
+      if (drag.moved) { const pt = toImage(cx, cy); drag.v.poly[drag.v.k] = pt; render(); return; }
+    }
+    if (e.target === cv || drag) render();
+  });
+  window.addEventListener("mouseup", (e) => {
+    if (!drag) return;
+    const d = drag; drag = null;
+    if (d.kind === "pan") return;
+    if (d.kind === "vertex" && d.moved) { changed(); return; }
+    if (e.target !== cv) return;
+    const [cx, cy] = local(e);
+    if (!S.width) { flash("load an image first"); return; }
+    const pt = toImage(cx, cy);
+    if (pivotMode || d.shift) { if (cur()) setPivot(pt); else flash("select a part first"); return; }
+    if (draft.pts.length >= 3) {
+      const [fx, fy] = toClient(draft.pts[0][0], draft.pts[0][1]);
+      if (Math.hypot(fx - cx, fy - cy) <= 8) { closePoly(); return; }
+    }
+    addPoint(pt);
+  });
+  cv.addEventListener("wheel", (e) => { e.preventDefault(); const [cx, cy] = local(e); zoomAt(Math.exp(-e.deltaY * 0.0015), cx, cy); }, { passive: false });
+
+  window.addEventListener("keydown", (e) => {
+    const t = e.target, typing = t && (t.tagName === "INPUT" && t.type === "text" || t.tagName === "TEXTAREA" || t.tagName === "SELECT");
+    const mod = e.ctrlKey || e.metaKey;
+    if (mod && (e.key === "s" || e.key === "S")) { e.preventDefault(); if (typing) t.dispatchEvent(new Event("change")); exportJSON(); return; }
+    if (typing) return;
+    if (mod && !e.shiftKey && (e.key === "z" || e.key === "Z")) { e.preventDefault(); undo(); return; }
+    if (mod && (e.key === "y" || e.key === "Y" || (e.shiftKey && (e.key === "z" || e.key === "Z")))) { e.preventDefault(); redo(); return; }
+    if (mod || e.altKey) return;
+    const k = e.key;
+    if (k === " ") { spaceDown = true; e.preventDefault(); return; }
+    if (k === "Enter") { e.preventDefault(); closePoly(); return; }
+    if (k === "Backspace" || k === "Delete") { e.preventDefault(); backspace(); return; }
+    if (k === "Escape") { draft = { pts: [], kind: "part" }; pivotMode = false; render(); return; }
+    if (k === "p" || k === "P") { if (cur()) { pivotMode = true; render(); } else flash("select a part first"); return; }
+    if (k === "h" || k === "H") { draft.kind = draft.kind === "hole" ? "part" : "hole"; render(); return; }
+    if (k === "k" || k === "K") { draft.kind = draft.kind === "keep" ? "part" : "keep"; render(); return; }
+    if (k === "n" || k === "N") { e.preventDefault(); addPart(); return; }
+    if (k === "[") { select(Math.max(0, S.sel - 1)); return; }
+    if (k === "]") { select(Math.min(S.parts.length - 1, S.sel + 1)); return; }
+    if (/^[1-9]$/.test(k)) { select(+k - 1); return; }
+    if (k === "f" || k === "F" || k === "0") { fit(); return; }
+    if (k === "+" || k === "=") { const r = wrap.getBoundingClientRect(); zoomAt(1.25, r.width / 2, r.height / 2); return; }
+    if (k === "-" || k === "_") { const r = wrap.getBoundingClientRect(); zoomAt(0.8, r.width / 2, r.height / 2); return; }
+    if (k === "v" || k === "V") { showFills = !showFills; render(); return; }
+  });
+  window.addEventListener("keyup", (e) => { if (e.key === " ") spaceDown = false; });
+
+  // drag and drop of files
+  let dragDepth = 0;
+  window.addEventListener("dragenter", (e) => { e.preventDefault(); dragDepth++; $("drop").style.display = "flex"; });
+  window.addEventListener("dragleave", () => { if (--dragDepth <= 0) { dragDepth = 0; $("drop").style.display = "none"; } });
+  window.addEventListener("dragover", (e) => e.preventDefault());
+  window.addEventListener("drop", (e) => {
+    e.preventDefault(); dragDepth = 0; $("drop").style.display = "none";
+    const fs = Array.from(e.dataTransfer.files || []);
+    fs.sort((a, b) => (/\.json$/i.test(a.name) ? 1 : 0) - (/\.json$/i.test(b.name) ? 1 : 0));  // image first
+    fs.forEach(readFile);
+  });
+  window.addEventListener("beforeunload", (e) => { if (dirty && S.parts.length) { e.preventDefault(); e.returnValue = ""; } });
+  window.addEventListener("resize", resize);
+
+  // hooks for automated tests (tests/test_annotator.py)
+  window.annotator = {
+    get state() { return S; }, get draft() { return draft; }, get view() { return view; },
+    toClient: (x, y) => { const r = cv.getBoundingClientRect(); const [a, b] = toClient(x, y); return [a + r.left, b + r.top]; },
+    toDoc, serialize, check, importText, loadImageURL,
+  };
+
+  refreshAll(); resize(); fit(); offerRestore();
+})();
+</script>
+</body>
+</html>
