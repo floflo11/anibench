@@ -48,3 +48,57 @@ Working hypothesis under test: the core capability anibench measures is the cut-
 - Transfer Learning for Pose Estimation of Illustrated Characters [chen2022illustratedpose] (CVF WACV 2022, pp. 793-802; numbers from https://ar5iv.labs.arxiv.org/html/2108.01819). A COCO-pretrained keypoint model scores PCKh@50 0.696 on illustrated characters; domain transfer with 4,000 annotated illustrations reaches 0.787. Joints on drawings need domain data.
 - Animated Drawings (existing key smith2023animateddrawings; details below in Q5): pose mAP 0.09 without fine-tuning on children's drawings, 0.85 to 0.90 after.
 - I found no paper that evaluates frontier general-purpose MLLMs (GPT, Gemini, Claude) on zero-shot joint localization with PCK. This is a gap.
+
+## Q3. Tool use for segmentation
+
+- SAM 3 [carion2025sam3] (https://arxiv.org/abs/2511.16719, 20 Nov 2025, v2 28 Mar 2026; no venue on page). Concept prompts are "simple noun phrases"; the page says nothing about part concepts. SAM 3 Agent (Appendix G of https://arxiv.org/html/2511.16719v2, read at offset 500000): an MLLM planner with four tools (segment_phrase, examine_each_mask, select_masks_and_return, report_no_mask). ReasonSeg test gIoU: 74.0 with Gemini 2.5 Pro, 70.8 with Qwen2.5-VL-72B, versus 57.5 for Seg-Zero-7B. OmniLabel AP 44.4 (Qwen3-VL-235B Thinking) vs 32.0 best prior. The appendix does not report the same MLLMs without the tool, so the tool's own gain is not isolated.
+- But a text-prompted SAM call does not solve parts: SAM 3 (text) scores 33.05 gIoU on PascalPart against 85.32 on Pascal objects [mehrab2026ophrg, Table 1].
+- Seg-Zero [liu2025segzero] (https://huggingface.co/papers/2503.06520, 9 Mar 2025): a reasoning model emits positional prompts for a frozen segmenter; zero-shot ReasonSeg 57.5, +18% over LISA-7B.
+- SegAgent [zhu2025segagent] (CVF CVPR 2025, pp. 3686-3696): the MLLM emits text click points to an interactive segmenter over several steps, imitating annotators; no decoder or special tokens. No numbers in the abstract.
+- LLMSeg (Q1): iterative zoomed refinement is the largest gain (+7.5 cIoU ReasonSeg, +15.2 RefCOCO), at about 7x the model calls.
+- Visual Sketchpad [hu2024sketchpad] (NeurIPS 2024): drawing with detection and segmentation tools gives +8.6% on vision tasks on average; GPT-4o with Sketchpad 80.3% on V*Bench.
+- ViperGPT [suris2023vipergpt] (ICCV 2023, pp. 11888-11898): the model writes Python against an API of vision modules; no training.
+- PyVision [zhao2025pyvision] (Q2): model-written Python tools, +31.1% for Claude-4.0-Sonnet on VLMsAreBlind-mini.
+- ScreenSpot-Pro (Q2): narrowing the search region 18.9% to 48.1%.
+- Classical image-processing code beats a learned segmenter on drawings: Animated Drawings [smith2023animateddrawings] (existing; numbers from https://arxiv.org/pdf/2303.12741v2): on 571 random demo drawings, an adaptive-threshold, morphological-closing, flood-fill pipeline yields an animation-ready mask in 42.4% of cases, versus 24.7% for a fine-tuned Mask R-CNN (2,500 training samples). All three stages (box, mask, pose) succeed in 39.4% vs 23.3%. Failure modes of the classical pipeline: body parts drawn separately, limbs touching at non-joint points, non-watertight outlines. This is the most direct evidence that a code-writing agent's "flood fill" route is viable on line art, and also that it is not reliable.
+- I found no study that measures an LLM agent writing classical segmentation code (thresholds, flood fill) for a named part. Gap.
+
+## Q4. Layers, amodal completion, revealed-region fill
+
+- See-through [lin2026seethrough] (existing; https://arxiv.org/html/2602.03749v1): 19 semantic RGBA layers per anime character, each "fully inpainted", trained from Live2D models; LaMa fills depth-split strata. Table 1: full model LPIPS 0.1549, PSNR 18.30 vs a SAM+LaMa baseline LPIPS 0.2880, PSNR 12.28, FID 81.1 vs 18.4. No joints or pivots. Note: the HTML author line reads "... Chun Wang, Stephen Choy ...", while the existing bib entry has "Choy, Stephen Chun Wang"; worth a re-check by the authors.
+- Bunraku [chen2026bunraku] (existing; https://arxiv.org/html/2607.27348v1): stage 1 initialized from Qwen-Image-Layered and fine-tuned on 10K Live2D models with an 8x32 layer taxonomy and an occlusion-mask loss (lambda_occ = 0.1). Deformation is per-vertex keypose offsets, not skeletal pivots; per-vertex direction cosine 0.768 mean on 50 held-out characters. No layer IoU or inpainting metric in the part read.
+- Qwen-Image-Layered [yin2025qwenimagelayered] (https://arxiv.org/abs/2512.15603, 17 Dec 2025): variable-count RGBA decomposition trained on PSD-derived data; abstract claims better decomposition, no numbers.
+- LayerDiffuse [zhang2024layerdiffuse] (https://lllyasviel.github.io/pages/layerdiffuse; ACM TOG 43(4), Art. 100, SIGGRAPH 2024): latent transparency, 1M layer pairs, 97% user preference over generate-then-matte.
+- pix2gestalt [ozguroglu2024pix2gestalt] (CVPR 2024, pp. 3931-3940): zero-shot amodal completion by diffusion, including artwork.
+- Open-World Amodal Appearance Completion [ao2025amodal] (CVPR 2025, pp. 6490-6499): training-free segmentation, occlusion analysis and inpainting; outputs RGBA objects.
+- O-Bench [liu2025obench] (https://arxiv.org/abs/2508.04059, 6 Aug 2025): 22 MLLMs show a significant gap to humans on occlusion perception; scaling and "thinking" do not close it. No numbers on the abstract page.
+- LaMa [suvorov2022lama] (WACV 2022, pp. 2149-2159): standard large-mask inpainter.
+- Image-editing benchmarks (existing ye2025imgedit, qian2025giebench): removal is a scored edit type but judged by GPT-4o or masks, and models over-modify. None asks a code-writing model to fill a revealed region.
+- Gap: no benchmark measures whether a general model, without a generative inpainter, can fill the region a moved part reveals.
+
+## Q5. Cut-out and puppet animation from a single image
+
+- Animated Drawings [smith2023animateddrawings] (existing). Segmentation: classical pipeline (above). Joints: 17 COCO keypoints from a fine-tuned top-down heatmap model; pose mAP 0.09 without fine-tuning, 0.85 with 2,000 clean samples, 0.90 with 177,666 noisy samples. Evaluation is "animation-ready" success judged by visual inspection on 571 drawings: pose 90.2%, image-processing mask 42.4%, Mask R-CNN mask 24.7%. Users edited 20% of masks in a 5,000-image sample. This is the one prior evaluation of segmentation through the animation it enables.
+- ARAP [igarashi2005arap] (https://www-ui.is.s.u-tokyo.ac.jp/~takeo/research/rigid; ACM TOG 24(3), SIGGRAPH 2005): handle-driven deformation of a 2D triangle mesh, no skeleton needed; two closed-form steps (rotation, then scale).
+- Illustrated-character pose [chen2022illustratedpose] (Q2): COCO-trained keypoints transfer poorly to drawings (PCKh@50 0.696 to 0.787 with 4,000 annotated drawings).
+- See-through and Bunraku (Q4): layer decomposition with inpainting; deformers or vertex offsets rather than joints. Neither reports a joint or pivot error metric.
+- Articulate-Anything [le2025articulateanything] (existing; ICLR 2025 proceedings page): VLM-written articulation code with an actor-critic loop over rendered results; 75% success on PartNet-Mobility vs 8.7-11.6% for prior work. Joint parameters are judged through the rendered result, not a coordinate error.
+- DrawingSpinUp (SIGGRAPH Asia 2024, project page https://lordliang.github.io/DrawingSpinUp): 3D route; qualitative evaluation only. Not added.
+
+## Q6. Measuring cut-out quality directly
+
+- Region: Mask IoU; insensitive to boundary error on large parts [cheng2021boundaryiou].
+- Boundary: Boundary IoU [cheng2021boundaryiou], default d = 2% of image diagonal (about 27 px on our 1200x600 pilot images, too wide for a 3,000 px hand; use a part-relative or fixed small d). Boundary F-measure / contour accuracy as in DAVIS [perazzi2016davis]; Boundary IoU paper notes boundary F can jump from 1 to 0 and saturates for small objects with large d.
+- Thin structures: IoU_thin [liew2021thinobject]; clDice, skeleton overlap that guarantees topology preservation [shit2021cldice].
+- Joints: PCK-style normalized distance (as reported by PoseLLM, chen2022illustratedpose).
+- Through an action: Animated Drawings' animation-ready rate; PointArena's Point-Act (pointing used to drive a robot, rated by users); Articulate-Anything's simulation success. None of these measures segmentation through a deterministic, automatically checked action.
+
+### Pilot descriptors (my computation on tasks/T01-T24 target masks, 2026-11-17)
+
+Target area: median 14,834 px (min 345, T07 earrings; max 168,764). Fraction of target pixels removed by a 7x7 opening (structures narrower than about 7 px): median 0.5%, hands 1.4% to 3.1%, earrings 13.3%. Largest inscribed radius: hands 18 to 30 px. So the pilot contains few thin structures in the morphological sense; the detached-thumb failure arises at extremities (tips far from the joint), not at sub-7-px structures. This motivates an extremity-recall metric in addition to thin recall.
+
+## Q7. Synthesis (see sections/cutout.tex for the argued version)
+
+- Not solved for parts. Whole-object localization by frontier models is close to specialists at the box level (LLMSeg box AP 64.2 vs SAM 3 69.1), but part-level masks are weak for every class of system (GSEval part 10 to 23 gIoU; PascalPart 33 gIoU even for SAM 3; InstructPart 4.5 to 35.7 gIoU), and boundaries lag (LLMSeg mask AP 47.2 vs 62.2).
+- Weakest measured sub-step: boundary-accurate part extent, including extremities. Joint estimation on drawings is an unmeasured risk for general models (specialists need domain data: mAP 0.09 untuned on children's drawings). Fill is unmeasured for general models; specialized generative decomposers exist.
+- Tools: large measured gains from zooming and segmenter calls, but text-prompted SAM does not resolve parts; point-prompted segmenters would reduce the task to localization plus pivot plus fill.
