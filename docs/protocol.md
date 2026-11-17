@@ -108,19 +108,19 @@ use `--agent terminus2 --model openrouter/<model> -s OPENROUTER_API_KEY openrout
 - **Wall clock:** 900 s per task in every setting, from `task.toml`. It applies to any agent.
 - **Turn cap for Terminus 2:** `-k max_turns N` (already used by `scripts/run.sh others`). The protocol
   passes 5 / 10 / 40.
-- **TODO(valkyrie): turn cap for `claude_code-v1.0.0` and `codex-v1.0.0`.** The kwarg name is unknown. Check:
-  - `valkyrie run start --help`
+- **TODO(valkyrie): turn cap for `claude_code-v1.0.0` and `codex-v1.0.0`.** Checked 2026-11-16: `valkyrie run start --help` only
+  offers generic `-k/--kwarg KEY VALUE` passthrough and lists no agent-specific keys, so the name depends on the agent. Still to check:
   - The agent definitions in `vals-ai/public-agent-registry` (`examples/claude_code-v1.0.0`,
     `examples/codex-v1.0.0`), for a `max_turns` (Claude Code CLI `--max-turns`) or equivalent kwarg.
 
   Once it is known, set `CAP_KWARG_CLAUDE=<name>` / `CAP_KWARG_OPENAI=<name>`. While they are empty, those
   agents run with only the wall-clock budget, and the turn limit in `single`/`feedback` rests on the
   instruction alone.
-- **TODO(valkyrie): multiple attempts per run.** Check whether `valkyrie run start` has an
-  attempts/repeats flag. If it does, one run can hold all K samples: import with
-  `--try 1`, and repeated task ids become `<setting>-1 … <setting>-K`.
-- **TODO(valkyrie): token or cost caps,** if Valkyrie exposes them. Otherwise record cost per run from
-  the console output.
+- **Multiple attempts (checked 2026-11-16):** `valkyrie run start` has `-n/--count N` (1 to 10), which starts N
+  independent runs. `scripts/run.sh` keeps one `run start` per sample so each run ID maps to one `--try i`
+  import, but `-n K` is a valid alternative when importing by run ID.
+- **Labels:** `-l/--label TEXT` attaches a label to a run. Use `<setting>-<model>-try<i>` to make runs easy to find.
+- **Token or cost caps:** `run start --help` exposes none. Record cost per run from the console output.
 
 ## 4. Import and report
 - `src/import_valkyrie.py <results.json> <label> --setting <s> --try <i>` writes
