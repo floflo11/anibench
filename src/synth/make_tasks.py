@@ -1,10 +1,15 @@
 """Write synthetic tasks in the exact anibench task format.
 
-tasks_synth/SNNN/{spec.json, prompt.md, image.png, allowed.png, target.png, skull.png?} + tasks_synth/index.json
+tasks_synth/SNNN/{spec.json, prompt.md, image.png, allowed.png, target.png, parts.png, skull.png?} + tasks_synth/index.json
 
 Every task is screened before it is kept: the reference animation (layer-exact, see check_reference.py) is
-simulated in numpy and graded with src/graders.py. A seed whose reference fails is replaced by the next seed for
-the same slot (seed = 1000 * slot + attempt) and the rejection is logged in index.json.
+simulated in numpy and graded with every candidate check (graders.candidate_checks). A seed whose reference fails
+one of the task's core checks (G1-G6, as many as apply to the kind) is replaced by the next seed for the same
+slot (seed = 1000 * slot + attempt) and the rejection is logged in rejected.json. The checks added after the
+generator was written (G2b connectivity, G2c residual) are admitted per task instead, the rule raster tasks
+follow (validation/admission.md): kept in spec["graders"] when the reference passes them, dropped otherwise
+(spec["dropped"]). Rejecting seeds for them would bias the set against occluded parts, where the reference's
+exact reveals defeat them (see results/grader_v3.md).
 
 Usage: python src/synth/make_tasks.py [N] [out_dir]
 """
@@ -20,6 +25,7 @@ from scipy import ndimage
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "src"))
 
+from graders import candidate_checks, grade  # noqa: E402
 from tasks import PROMPT, SUFFIX, rotate_mask  # noqa: E402
 from synth.scene import MOTIONS, build_scene  # noqa: E402
 from synth.factors import compute_factors, target_masks  # noqa: E402
@@ -98,6 +104,15 @@ def skull_mask(sc):
     return under & hat
 
 
+def mover_labels(sc, vis):
+    """parts.png: label k = the visible pixels of the k-th mover (the parts that rotate together about pivot k)."""
+    lab = np.zeros(vis.shape, np.uint8)
+    for k, mv in enumerate(sc.task["movers"], start=1):
+        for p in mv["parts"]:
+            lab[sc.visible_mask(p)] = k
+    return lab
+
+
 def save_mask(m, p):
     Image.fromarray((m * 255).astype(np.uint8)).save(p)
 
@@ -118,7 +133,10 @@ def make_spec(task_id, sc):
     spec = dict(id=task_id, tier=TIER.get(m, 1), image=f"synth_{task_id}", width=sc.width, height=sc.height,
                 instruction=instruction(sc), parts=list(sc.task["targets"]), kind=kind, amp=round(amp, 2),
                 graders=graders, pivots=pivots, area_tol=0.5, blob_allow=3 if kind == "rotate_hat" else 0,
-                graders_all=list(graders))
+                graders_all=candidate_checks({"graders": graders}),
+                # pixels of the moving part hidden behind other parts: G3 lets the part grow by this much when it
+                # swings out from behind them
+                hidden_px=int(f["target_full_area_px"] - f["target_area_px"]))
     if kind == "rotate_hat":
         spec["skull"] = True
     spec["factors"] = f
@@ -136,6 +154,7 @@ def write_task(task_id, seed, motion, out_root, sc=None):
     Image.fromarray(sc.composite()).save(d / "image.png")
     vis, _ = target_masks(sc)
     save_mask(vis, d / "target.png")
+    Image.fromarray(mover_labels(sc, vis)).save(d / "parts.png")
     save_mask(allowed_region(sc), d / "allowed.png")
     if spec.get("skull"):
         save_mask(skull_mask(sc), d / "skull.png")
@@ -145,7 +164,7 @@ def write_task(task_id, seed, motion, out_root, sc=None):
 
 
 def generate(n=160, out=ROOT / "tasks_synth", max_attempts=10):
-    from synth.check_reference import simulate_grade
+    from synth.check_reference import simulate
     out = Path(out)
     out.mkdir(parents=True, exist_ok=True)
     index, rejected = [], []
@@ -156,12 +175,17 @@ def generate(n=160, out=ROOT / "tasks_synth", max_attempts=10):
             seed = 1000 * (i + 1) + att
             sc = build_scene(seed, motion)
             spec = write_task(tid, seed, motion, out, sc=sc)
-            g = simulate_grade(sc, out / tid)
+            g = grade(simulate(sc), out / tid, checks=spec["graders_all"])
+            core = [k for k in spec["graders"] if k in g]
+            failed = [k for k in core if not g[k]["ok"]]
             if spec["factors"]["target_area_px"] < MIN_VISIBLE:
-                g = {"pass": False, "visible": {"ok": False}}
-            if g["pass"]:
+                failed = ["visible"]
+            if not failed:
+                spec["graders"] = [k for k in spec["graders_all"] if g[k]["ok"]]
+                spec["dropped"] = [k for k in spec["graders_all"] if not g[k]["ok"]]
                 break
-            rejected.append(dict(id=tid, seed=seed, motion=motion, failed=[k for k, v in g.items() if k != "pass" and not v["ok"]],
+            rejected.append(dict(id=tid, seed=seed, motion=motion, failed=failed,
+                                 values={k: g[k].get("value") for k in failed if k in g},
                                  factors={k: spec["factors"][k] for k in ("occlusion_pct", "min_dist_px", "target_area_px", "style")},
                                  knobs=spec["factors"]["knobs"]))
             shutil.rmtree(out / tid)

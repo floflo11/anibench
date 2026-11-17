@@ -1,7 +1,7 @@
 <!doctype html><html><head><style>body{margin:0;background:#fff}canvas{display:block}</style></head><body>
 <script type="module">
 import * as THREE from './vendor/three.module.js';
-const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 25, "url": "./layer0.png", "px": 968, "py": 220}, {"kind": "rotate", "amp": 25, "url": "./layer1.png", "px": 1062, "py": 204}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
+const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 25, "url": "./layer0.png", "px": 968, "py": 217}, {"kind": "rotate", "amp": 25, "url": "./layer1.png", "px": 1062, "py": 200}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
 const W = CFG.W, H = CFG.H;
 const r = new THREE.WebGLRenderer({antialias:false, preserveDrawingBuffer:true});
 r.setPixelRatio(1); r.setSize(W, H); r.setClearColor(0xffffff, 1); r.toneMapping = THREE.NoToneMapping;
@@ -27,7 +27,7 @@ const movers = [];
     for (const {g, mesh, L} of movers) {
       g.rotation.z = 0; g.scale.set(1, 1, 1); g.position.set(L.px, -L.py, 0); mesh.visible = true;
       if (CFG.frozen) continue;
-      if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * ph;
+      if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * (L.one ? ph2 : ph);
       else if (L.kind === 'lift') g.position.y += L.amp * ph2;
       else if (L.kind === 'squash') g.scale.y = 1 - L.amp * ph2;
       if (L.off) { g.position.x += L.off[0] * ph2; g.position.y -= L.off[1] * ph2; }

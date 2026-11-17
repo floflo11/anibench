@@ -3,7 +3,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.2321
+    "value": 0.23142
    },
    "G2": {
     "ok": false,
@@ -16,17 +16,26 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1747
+    "value": 0.1747,
+    "loss": 0.0,
+    "gain": 0.1747
    },
    "G4": {
     "ok": true,
     "value": 0.415
    },
    "G5": {
-    "ok": false,
-    "value": 0.279
+    "ok": true,
+    "value": 0.279,
+    "frac": 0.279,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -51,9 +60,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0344
+    "value": 0.0108,
+    "loss": 0.0108,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -61,7 +77,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -69,41 +87,6 @@
     "first_vs_orig": 0.0
    },
    "pass": true
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 1.0
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "missed_thumb": {
    "G1": {
@@ -121,9 +104,16 @@
     "base": 1,
     "frame": 18
    },
+   "G2c": {
+    "ok": false,
+    "value": 81,
+    "frame": 17
+   },
    "G3": {
     "ok": true,
-    "value": 0.0438
+    "value": 0.0226,
+    "loss": 0.0226,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -131,7 +121,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -144,6 +136,50 @@
     "base": 1,
     "worst": 2
    }
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.6836,
+    "loss": 0.6836,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 1.0
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
   },
   "frozen": {
    "G1": {
@@ -161,52 +197,26 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.03
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.488
+    "ok": false,
+    "value": 0.0
    },
    "G5": {
-    "ok": false,
-    "value": 0.527
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -231,9 +241,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0331
+    "value": 0.0094,
+    "loss": 0.0094,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -241,7 +258,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.007
+    "value": 0.007,
+    "frac": 0.007,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -250,10 +269,10 @@
    },
    "pass": false
   },
-  "wrong_part": {
+  "center_pivot": {
    "G1": {
-    "ok": false,
-    "value": 0.00283
+    "ok": true,
+    "value": 0.0
    },
    "G2": {
     "ok": true,
@@ -266,17 +285,26 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0044,
+    "loss": 0.0044,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.0
+    "ok": true,
+    "value": 0.488
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.527,
+    "frac": 0.527,
+    "disp": 13.57
    },
    "G6": {
     "ok": true,
@@ -301,9 +329,16 @@
     "base": 1,
     "frame": 16
    },
+   "G2c": {
+    "ok": false,
+    "value": 44,
+    "frame": 16
+   },
    "G3": {
     "ok": true,
-    "value": 0.0347
+    "value": 0.0121,
+    "loss": 0.0121,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -311,7 +346,102 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.00283
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "gap_seam": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 11
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0118,
+    "loss": 0.0118,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.591
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.119,
+    "frac": 0.119,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -341,9 +471,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0331
+    "value": 0.0108,
+    "loss": 0.0108,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -351,7 +488,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -364,49 +503,53 @@
     "base": 1,
     "worst": 4
    }
-  },
-  "gap_seam": {
+  }
+ },
+ "T02": {
+  "whole": {
    "G1": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.23004
    },
    "G2": {
-    "ok": false,
+    "ok": true,
     "value": 2,
-    "base": 1
+    "base": 2
    },
    "G2b": {
     "ok": false,
-    "value": 2,
+    "value": 4,
     "base": 1,
-    "frame": 11
+    "frame": 17
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0304
+    "value": 0.1519,
+    "loss": 0.0,
+    "gain": 0.1519
    },
    "G4": {
     "ok": true,
-    "value": 0.591
+    "value": 0.532
    },
    "G5": {
-    "ok": true,
-    "value": 0.119
+    "ok": false,
+    "value": 0.731,
+    "frac": 0.731,
+    "disp": 11.91
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  }
- },
- "T02": {
+   "pass": false
+  },
   "ref": {
    "G1": {
     "ok": true,
@@ -423,29 +566,38 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2591
+    "value": 0.0392,
+    "loss": 0.0392,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.657
    },
    "G5": {
-    "ok": false,
-    "value": 0.355
+    "ok": true,
+    "value": 0.355,
+    "frac": 0.355,
+    "disp": 0.83
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false
+   "pass": true
   },
-  "whole": {
+  "hole": {
    "G1": {
-    "ok": false,
-    "value": 0.23144
+    "ok": true,
+    "value": 0.0
    },
    "G2": {
     "ok": true,
@@ -453,22 +605,31 @@
     "base": 2
    },
    "G2b": {
-    "ok": false,
-    "value": 4,
+    "ok": true,
+    "value": 1,
     "base": 1,
-    "frame": 17
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
-    "ok": true,
-    "value": 0.1519
+    "ok": false,
+    "value": 0.907,
+    "loss": 0.907,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.532
+    "value": 0.995
    },
    "G5": {
     "ok": false,
-    "value": 0.731
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -493,17 +654,26 @@
     "base": 1,
     "frame": 1
    },
+   "G2c": {
+    "ok": false,
+    "value": 50,
+    "frame": 2
+   },
    "G3": {
     "ok": true,
-    "value": 0.2471
+    "value": 0.0351,
+    "loss": 0.0351,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.645
    },
    "G5": {
-    "ok": false,
-    "value": 0.355
+    "ok": true,
+    "value": 0.355,
+    "frac": 0.355,
+    "disp": 0.83
    },
    "G6": {
     "ok": true,
@@ -516,41 +686,6 @@
     "base": 1,
     "worst": 2
    }
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.995
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "frozen": {
    "G1": {
@@ -568,9 +703,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -578,7 +720,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -590,7 +734,7 @@
   "center_pivot": {
    "G1": {
     "ok": true,
-    "value": 1e-05
+    "value": 0.0
    },
    "G2": {
     "ok": true,
@@ -603,9 +747,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1182
+    "value": 0.0312,
+    "loss": 0.0312,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -613,7 +764,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 14.8
    },
    "G6": {
     "ok": true,
@@ -638,17 +791,26 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0298
+    "value": 0.0034,
+    "loss": 0.0034,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.65
    },
    "G5": {
-    "ok": false,
-    "value": 0.33
+    "ok": true,
+    "value": 0.33,
+    "frac": 0.33,
+    "disp": 0.83
    },
    "G6": {
     "ok": false,
@@ -673,9 +835,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -683,7 +852,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -708,17 +879,26 @@
     "base": 1,
     "frame": 1
    },
+   "G2c": {
+    "ok": false,
+    "value": 37,
+    "frame": 2
+   },
    "G3": {
     "ok": true,
-    "value": 0.2502
+    "value": 0.0358,
+    "loss": 0.0358,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.648
    },
    "G5": {
-    "ok": false,
-    "value": 0.355
+    "ok": true,
+    "value": 0.355,
+    "frac": 0.355,
+    "disp": 0.83
    },
    "G6": {
     "ok": true,
@@ -748,17 +928,26 @@
     "base": 1,
     "frame": 6
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2588
+    "value": 0.0418,
+    "loss": 0.0418,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.657
    },
    "G5": {
-    "ok": false,
-    "value": 0.355
+    "ok": true,
+    "value": 0.355,
+    "frac": 0.355,
+    "disp": 0.72
    },
    "G6": {
     "ok": true,
@@ -788,17 +977,26 @@
     "base": 1,
     "frame": 8
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2807
+    "value": 0.0639,
+    "loss": 0.0639,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.611
    },
    "G5": {
-    "ok": false,
-    "value": 0.244
+    "ok": true,
+    "value": 0.244,
+    "frac": 0.244,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -821,8 +1019,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -830,9 +1028,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0456
+    "value": 0.0126,
+    "loss": 0.0126,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -840,7 +1045,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.122
+    "value": 0.122,
+    "frac": 0.122,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -852,12 +1059,12 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.23098
+    "value": 0.23023
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": false,
@@ -865,9 +1072,16 @@
     "base": 1,
     "frame": 13
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3246
+    "value": 0.3246,
+    "loss": 0.0,
+    "gain": 0.3246
    },
    "G4": {
     "ok": true,
@@ -875,7 +1089,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 0.45
+    "value": 0.45,
+    "frac": 0.45,
+    "disp": 16.55
    },
    "G6": {
     "ok": true,
@@ -891,8 +1107,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -900,9 +1116,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 61,
+    "frame": 18
+   },
    "G3": {
     "ok": true,
-    "value": 0.0535
+    "value": 0.0278,
+    "loss": 0.0278,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -910,54 +1133,21 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.122
+    "value": 0.122,
+    "frac": 0.122,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true,
+   "pass": false,
    "oracle": {
     "split": false,
     "base": 1,
     "worst": 1
    }
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 3,
-    "base": 3
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.999
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "frozen": {
    "G1": {
@@ -966,8 +1156,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -975,9 +1165,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -985,7 +1182,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -994,15 +1193,15 @@
    },
    "pass": false
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -1010,17 +1209,26 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0365
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.668,
+    "loss": 0.668,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.498
+    "value": 0.999
    },
    "G5": {
     "ok": false,
-    "value": 0.392
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1036,8 +1244,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -1045,9 +1253,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0448
+    "value": 0.0139,
+    "loss": 0.0139,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1055,7 +1270,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.079
+    "value": 0.079,
+    "frac": 0.079,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -1064,15 +1281,15 @@
    },
    "pass": false
   },
-  "wrong_part": {
+  "center_pivot": {
    "G1": {
-    "ok": false,
-    "value": 0.00386
+    "ok": true,
+    "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -1080,17 +1297,26 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0061,
+    "loss": 0.0061,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.0
+    "ok": true,
+    "value": 0.498
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.392,
+    "frac": 0.392,
+    "disp": 10.55
    },
    "G6": {
     "ok": true,
@@ -1106,8 +1332,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
@@ -1115,9 +1341,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 41,
+    "frame": 18
+   },
    "G3": {
     "ok": true,
-    "value": 0.0469
+    "value": 0.0169,
+    "loss": 0.0169,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1125,47 +1358,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.122
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": true,
-   "oracle": {
-    "split": false,
-    "base": 1,
-    "worst": 1
-   }
-  },
-  "detach_tip": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 3
-   },
-   "G2b": {
-    "ok": false,
-    "value": 4,
-    "base": 1,
-    "frame": 6
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0526
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.566
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.122
+    "value": 0.122,
+    "frac": 0.122,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1174,10 +1369,54 @@
    },
    "pass": false,
    "oracle": {
-    "split": true,
+    "split": false,
     "base": 1,
-    "worst": 4
+    "worst": 1
    }
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.00386
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
   },
   "gap_seam": {
    "G1": {
@@ -1186,8 +1425,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 4,
-    "base": 3
+    "value": 3,
+    "base": 2
    },
    "G2b": {
     "ok": false,
@@ -1195,9 +1434,16 @@
     "base": 1,
     "frame": 12
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0491
+    "value": 0.0209,
+    "loss": 0.0209,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1205,7 +1451,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.162
+    "value": 0.162,
+    "frac": 0.162,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1218,13 +1466,62 @@
     "base": 1,
     "worst": 2
    }
+  },
+  "detach_tip": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 5,
+    "base": 2
+   },
+   "G2b": {
+    "ok": false,
+    "value": 4,
+    "base": 1,
+    "frame": 6
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0152,
+    "loss": 0.0152,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.566
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.122,
+    "frac": 0.122,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 4
+   }
   }
  },
  "T04": {
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.22733
+    "value": 0.22476
    },
    "G2": {
     "ok": true,
@@ -1237,9 +1534,16 @@
     "base": 1,
     "frame": 15
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1197
+    "value": 0.0556,
+    "loss": 0.0,
+    "gain": 0.0556
    },
    "G4": {
     "ok": true,
@@ -1247,7 +1551,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 22.78
    },
    "G6": {
     "ok": true,
@@ -1262,8 +1568,8 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1
    },
    "G2b": {
@@ -1272,9 +1578,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.192
+    "value": 0.0431,
+    "loss": 0.0431,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1282,7 +1595,53 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.106
+    "value": 0.106,
+    "frac": 0.106,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.8128,
+    "loss": 0.8128,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.976
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1298,7 +1657,7 @@
    },
    "G2": {
     "ok": false,
-    "value": 3,
+    "value": 2,
     "base": 1
    },
    "G2b": {
@@ -1307,9 +1666,16 @@
     "base": 1,
     "frame": 3
    },
+   "G2c": {
+    "ok": false,
+    "value": 79,
+    "frame": 3
+   },
    "G3": {
     "ok": true,
-    "value": 0.1768
+    "value": 0.0391,
+    "loss": 0.0391,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1317,7 +1683,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.106
+    "value": 0.106,
+    "frac": 0.106,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1331,14 +1699,14 @@
     "worst": 2
    }
   },
-  "hole": {
+  "center_pivot": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1
    },
    "G2b": {
@@ -1347,17 +1715,26 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0348,
+    "loss": 0.0348,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.976
+    "value": 0.566
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 0.802,
+    "frac": 0.802,
+    "disp": 20.84
    },
    "G6": {
     "ok": true,
@@ -1382,91 +1759,30 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 1e-05
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1362
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.566
+    "ok": false,
+    "value": 0.0
    },
    "G5": {
-    "ok": false,
-    "value": 0.802
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "no_loop": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 2,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0252
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.71
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.067
-   },
-   "G6": {
-    "ok": false,
-    "loop": 0.00891,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -1487,9 +1803,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -1497,7 +1820,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1506,45 +1831,49 @@
    },
    "pass": false
   },
-  "detach_small": {
+  "no_loop": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1
    },
    "G2b": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1,
-    "frame": 1
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1835
+    "value": 0.0042,
+    "loss": 0.0042,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.715
+    "value": 0.71
    },
    "G5": {
     "ok": true,
-    "value": 0.106
+    "value": 0.067,
+    "frac": 0.067,
+    "disp": null
    },
    "G6": {
-    "ok": true,
-    "loop": 0.0,
+    "ok": false,
+    "loop": 0.00891,
     "first_vs_orig": 0.0
    },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
+   "pass": false
   },
   "detach_tip": {
    "G1": {
@@ -1553,7 +1882,7 @@
    },
    "G2": {
     "ok": false,
-    "value": 4,
+    "value": 3,
     "base": 1
    },
    "G2b": {
@@ -1562,9 +1891,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1953
+    "value": 0.046,
+    "loss": 0.046,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1572,7 +1908,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.106
+    "value": 0.106,
+    "frac": 0.106,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1586,14 +1924,63 @@
     "worst": 3
    }
   },
+  "detach_small": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": false,
+    "value": 44,
+    "frame": 3
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0417,
+    "loss": 0.0417,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.715
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.106,
+    "frac": 0.106,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
+  },
   "gap_seam": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1
    },
    "G2b": {
@@ -1602,9 +1989,16 @@
     "base": 1,
     "frame": 11
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2095
+    "value": 0.0619,
+    "loss": 0.0619,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1612,7 +2006,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.092
+    "value": 0.092,
+    "frac": 0.092,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1644,9 +2040,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1218
+    "value": 0.0512,
+    "loss": 0.0512,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1654,7 +2057,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1666,7 +2071,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.18902
+    "value": 0.18857
    },
    "G2": {
     "ok": true,
@@ -1679,9 +2084,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0427
+    "value": 0.0371,
+    "loss": 0.0,
+    "gain": 0.0371
    },
    "G4": {
     "ok": true,
@@ -1689,7 +2101,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.028
+    "value": 0.028,
+    "frac": 0.028,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1714,9 +2128,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 58,
+    "frame": 6
+   },
    "G3": {
     "ok": true,
-    "value": 0.1263
+    "value": 0.0563,
+    "loss": 0.0563,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1724,7 +2145,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1737,41 +2160,6 @@
     "base": 1,
     "worst": 1
    }
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 2,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.998
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "frozen": {
    "G1": {
@@ -1789,9 +2177,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -1799,7 +2194,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1808,14 +2205,14 @@
    },
    "pass": false
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 2,
     "base": 1
    },
    "G2b": {
@@ -1824,17 +2221,26 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0798
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.8631,
+    "loss": 0.8631,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.449
+    "value": 0.998
    },
    "G5": {
     "ok": false,
-    "value": 0.36
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1859,9 +2265,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1218
+    "value": 0.0512,
+    "loss": 0.0512,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1869,7 +2282,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.044
+    "value": 0.044,
+    "frac": 0.044,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -1877,6 +2292,148 @@
     "first_vs_orig": 0.0
    },
    "pass": false
+  },
+  "detach_small": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 2
+   },
+   "G2c": {
+    "ok": false,
+    "value": 35,
+    "frame": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.051,
+    "loss": 0.051,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.493
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0309,
+    "loss": 0.0309,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.449
+   },
+   "G5": {
+    "ok": false,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 14.36
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "gap_seam": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 12
+   },
+   "G2c": {
+    "ok": false,
+    "value": 109,
+    "frame": 17
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0488,
+    "loss": 0.0488,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.438
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.095,
+    "frac": 0.095,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
   },
   "wrong_part": {
    "G1": {
@@ -1894,9 +2451,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -1904,7 +2468,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1912,46 +2478,6 @@
     "first_vs_orig": 0.0
    },
    "pass": false
-  },
-  "detach_small": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 2,
-    "base": 1
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 2
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1214
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.493
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.06
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
   },
   "detach_tip": {
    "G1": {
@@ -1969,9 +2495,16 @@
     "base": 1,
     "frame": 15
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1163
+    "value": 0.0495,
+    "loss": 0.0495,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1979,7 +2512,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1991,6 +2526,463 @@
     "split": true,
     "base": 1,
     "worst": 5
+   }
+  }
+ },
+ "T06": {
+  "whole": {
+   "G1": {
+    "ok": false,
+    "value": 0.18329
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 4,
+    "base": 1,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0465,
+    "loss": 0.0,
+    "gain": 0.0465
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.399
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.095,
+    "frac": 0.095,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "ref": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0417,
+    "loss": 0.0417,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.456
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.892,
+    "loss": 0.892,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 1.0
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "missed_thumb": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 3
+   },
+   "G2c": {
+    "ok": false,
+    "value": 95,
+    "frame": 3
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0419,
+    "loss": 0.0419,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.449
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.025,
+    "loss": 0.025,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.338
+   },
+   "G5": {
+    "ok": false,
+    "value": 0.35,
+    "frac": 0.35,
+    "disp": 19.49
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "frozen": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.00402
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "no_loop": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0417,
+    "loss": 0.0417,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.451
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": false,
+    "loop": 0.01415,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "detach_tip": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 4
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0421,
+    "loss": 0.0421,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.457
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
+  },
+  "detach_small": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": false,
+    "value": 38,
+    "frame": 1
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0418,
+    "loss": 0.0418,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.453
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
    }
   },
   "gap_seam": {
@@ -2009,416 +3001,16 @@
     "base": 1,
     "frame": 12
    },
-   "G3": {
-    "ok": true,
-    "value": 0.1007
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.438
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.095
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  }
- },
- "T06": {
-  "ref": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
+   "G2c": {
     "ok": false,
-    "value": 3,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
+    "value": 196,
+    "frame": 17
    },
    "G3": {
     "ok": true,
-    "value": 0.0667
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.456
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.18683
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 4,
-    "base": 1,
-    "frame": 1
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1031
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.399
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.095
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 3,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 1.0
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "missed_thumb": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 4,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 3
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0666
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.449
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  },
-  "frozen": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 0.0001
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0516
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.338
-   },
-   "G5": {
-    "ok": false,
-    "value": 0.35
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "no_loop": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 3,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0667
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.451
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": false,
-    "loop": 0.01415,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.00402
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "detach_small": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 3,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 1
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0667
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.453
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  },
-  "detach_tip": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 4,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 4
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0674
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.457
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  },
-  "gap_seam": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 3,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 12
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0643
+    "value": 0.0466,
+    "loss": 0.0466,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2426,7 +3018,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.05
+    "value": 0.05,
+    "frac": 0.05,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2442,41 +3036,6 @@
   }
  },
  "T07": {
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.23103
-   },
-   "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 5
-   },
-   "G2b": {
-    "ok": false,
-    "value": 6,
-    "base": 2,
-    "frame": 3
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.8174
-   },
-   "G4": {
-    "ok": true,
-    "value": 1.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "ref": {
    "G1": {
     "ok": true,
@@ -2484,8 +3043,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 5,
-    "base": 5
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2493,17 +3052,26 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4058
+    "value": 0.0312,
+    "loss": 0.0312,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.954
+    "value": 0.891
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.722,
+    "frac": 0.722,
+    "disp": 0.73
    },
    "G6": {
     "ok": true,
@@ -2512,33 +3080,42 @@
    },
    "pass": true
   },
-  "hole": {
+  "whole": {
    "G1": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.22844
    },
    "G2": {
-    "ok": true,
+    "ok": false,
     "value": 5,
-    "base": 5
+    "base": 3
    },
    "G2b": {
-    "ok": true,
-    "value": 2,
+    "ok": false,
+    "value": 6,
     "base": 2,
+    "frame": 4
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": false,
-    "value": 1.0
+    "value": 1.3452,
+    "loss": 0.0,
+    "gain": 1.3452
    },
    "G4": {
     "ok": true,
-    "value": 0.986
+    "value": 0.976
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2554,8 +3131,57 @@
    },
    "G2": {
     "ok": true,
-    "value": 5,
-    "base": 5
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": false,
+    "value": 3,
+    "base": 2,
+    "frame": 17
+   },
+   "G2c": {
+    "ok": false,
+    "value": 68,
+    "frame": 17
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0757,
+    "loss": 0.0757,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.481
+   },
+   "G5": {
+    "ok": false,
+    "value": 0.722,
+    "frac": 0.722,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 2,
+    "worst": 3
+   }
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2563,29 +3189,33 @@
     "base": 2,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.2348
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9287,
+    "loss": 0.9287,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.458
+    "value": 0.98
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.972,
+    "frac": 0.972,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true,
-   "oracle": {
-    "split": false,
-    "base": 2,
-    "worst": 2
-   }
+   "pass": false
   },
   "frozen": {
    "G1": {
@@ -2594,8 +3224,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 5,
-    "base": 5
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2603,9 +3233,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -2613,7 +3250,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2628,9 +3267,9 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 5
+    "ok": true,
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2638,52 +3277,26 @@
     "base": 2,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0609
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.026
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.0028
-   },
-   "G2": {
-    "ok": true,
-    "value": 5,
-    "base": 5
-   },
-   "G2b": {
-    "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0245,
+    "loss": 0.0245,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.0
+    "ok": true,
+    "value": 0.388
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 8.22
    },
    "G6": {
     "ok": true,
@@ -2699,8 +3312,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 5,
-    "base": 5
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2708,24 +3321,77 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4058
+    "value": 0.0423,
+    "loss": 0.0423,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.933
+    "value": 0.884
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.722,
+    "frac": 0.722,
+    "disp": 0.82
    },
    "G6": {
     "ok": true,
-    "loop": 0.0008,
+    "loop": 0.00097,
     "first_vs_orig": 0.0
    },
    "pass": true
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.0028
+   },
+   "G2": {
+    "ok": true,
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
   },
   "detach_small": {
    "G1": {
@@ -2734,26 +3400,35 @@
    },
    "G2": {
     "ok": true,
-    "value": 5,
-    "base": 5
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": false,
     "value": 3,
     "base": 2,
-    "frame": 6
+    "frame": 16
+   },
+   "G2c": {
+    "ok": false,
+    "value": 34,
+    "frame": 17
    },
    "G3": {
     "ok": true,
-    "value": 0.3478
+    "value": 0.0624,
+    "loss": 0.0624,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.713
+    "value": 0.71
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.722,
+    "frac": 0.722,
+    "disp": 0.68
    },
    "G6": {
     "ok": true,
@@ -2774,26 +3449,35 @@
    },
    "G2": {
     "ok": false,
-    "value": 7,
-    "base": 5
+    "value": 5,
+    "base": 3
    },
    "G2b": {
     "ok": false,
     "value": 4,
     "base": 2,
-    "frame": 4
+    "frame": 5
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3652
+    "value": 0.0401,
+    "loss": 0.0401,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.951
+    "value": 0.893
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.722,
+    "frac": 0.722,
+    "disp": 0.61
    },
    "G6": {
     "ok": true,
@@ -2813,9 +3497,9 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 5
+    "ok": true,
+    "value": 3,
+    "base": 3
    },
    "G2b": {
     "ok": true,
@@ -2823,24 +3507,33 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3768
+    "value": 0.029,
+    "loss": 0.029,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.933
+    "value": 0.898
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.861,
+    "frac": 0.861,
+    "disp": 2.22
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false,
+   "pass": true,
    "oracle": {
     "split": false,
     "base": 2,
@@ -2849,10 +3542,54 @@
   }
  },
  "T08": {
+  "ref": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 4,
+    "base": 2
+   },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0184,
+    "loss": 0.0184,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.487
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.072,
+    "frac": 0.072,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.22741
+    "value": 0.22234
    },
    "G2": {
     "ok": true,
@@ -2865,9 +3602,16 @@
     "base": 2,
     "frame": 2
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0447
+    "value": 0.0371,
+    "loss": 0.0,
+    "gain": 0.0371
    },
    "G4": {
     "ok": true,
@@ -2875,77 +3619,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 0.952
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "ref": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 2,
-    "base": 2,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1797
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.487
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.072
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 10,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 2,
-    "base": 2,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.992
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
+    "value": 0.952,
+    "frac": 0.952,
+    "disp": 9.91
    },
    "G6": {
     "ok": true,
@@ -2961,7 +3637,7 @@
    },
    "G2": {
     "ok": false,
-    "value": 5,
+    "value": 3,
     "base": 2
    },
    "G2b": {
@@ -2970,9 +3646,16 @@
     "base": 2,
     "frame": 16
    },
+   "G2c": {
+    "ok": false,
+    "value": 67,
+    "frame": 3
+   },
    "G3": {
     "ok": true,
-    "value": 0.171
+    "value": 0.0189,
+    "loss": 0.0189,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2980,7 +3663,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.072
+    "value": 0.072,
+    "frac": 0.072,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3010,9 +3695,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -3020,7 +3712,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3029,14 +3723,14 @@
    },
    "pass": false
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
     "ok": false,
-    "value": 4,
+    "value": 7,
     "base": 2
    },
    "G2b": {
@@ -3045,17 +3739,26 @@
     "base": 2,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.1416
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9299,
+    "loss": 0.9299,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.296
+    "value": 0.992
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3071,7 +3774,7 @@
    },
    "G2": {
     "ok": false,
-    "value": 6,
+    "value": 4,
     "base": 2
    },
    "G2b": {
@@ -3080,9 +3783,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1538
+    "value": 0.0184,
+    "loss": 0.0184,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3090,7 +3800,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.062
+    "value": 0.062,
+    "frac": 0.062,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -3098,6 +3810,99 @@
     "first_vs_orig": 0.0
    },
    "pass": false
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 2
+   },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.03,
+    "loss": 0.03,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.296
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 13.95
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "detach_small": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 2
+   },
+   "G2b": {
+    "ok": false,
+    "value": 4,
+    "base": 2,
+    "frame": 16
+   },
+   "G2c": {
+    "ok": false,
+    "value": 39,
+    "frame": 2
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0183,
+    "loss": 0.0183,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.478
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.072,
+    "frac": 0.072,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 2,
+    "worst": 4
+   }
   },
   "wrong_part": {
    "G1": {
@@ -3115,9 +3920,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -3125,7 +3937,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3134,86 +3948,6 @@
    },
    "pass": false
   },
-  "detach_small": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 5,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 4,
-    "base": 2,
-    "frame": 16
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1743
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.478
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.072
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 2,
-    "worst": 4
-   }
-  },
-  "detach_tip": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 6,
-    "base": 2
-   },
-   "G2b": {
-    "ok": false,
-    "value": 4,
-    "base": 2,
-    "frame": 5
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1856
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.493
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.072
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 2,
-    "worst": 4
-   }
-  },
   "gap_seam": {
    "G1": {
     "ok": true,
@@ -3221,7 +3955,7 @@
    },
    "G2": {
     "ok": false,
-    "value": 5,
+    "value": 4,
     "base": 2
    },
    "G2b": {
@@ -3230,17 +3964,26 @@
     "base": 2,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1793
+    "value": 0.0161,
+    "loss": 0.0161,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.482
    },
    "G5": {
-    "ok": false,
-    "value": 0.278
+    "ok": true,
+    "value": 0.278,
+    "frac": 0.278,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3253,9 +3996,102 @@
     "base": 2,
     "worst": 3
    }
+  },
+  "detach_tip": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 4,
+    "base": 2
+   },
+   "G2b": {
+    "ok": false,
+    "value": 4,
+    "base": 2,
+    "frame": 5
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0189,
+    "loss": 0.0189,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.493
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.072,
+    "frac": 0.072,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 2,
+    "worst": 4
+   }
   }
  },
  "T09": {
+  "whole": {
+   "G1": {
+    "ok": false,
+    "value": 0.2344
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 2
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0113,
+    "loss": 0.0,
+    "gain": 0.0113
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.208
+   },
+   "G5": {
+    "ok": false,
+    "value": 0.405,
+    "frac": 0.405,
+    "disp": 5.85
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "ref": {
    "G1": {
     "ok": true,
@@ -3272,9 +4108,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0138
+    "value": 0.0024,
+    "loss": 0.0024,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3282,7 +4125,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3291,10 +4136,10 @@
    },
    "pass": true
   },
-  "whole": {
+  "hole": {
    "G1": {
-    "ok": false,
-    "value": 0.23545
+    "ok": true,
+    "value": 0.0
    },
    "G2": {
     "ok": true,
@@ -3302,22 +4147,31 @@
     "base": 2
    },
    "G2b": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1,
-    "frame": 2
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
-    "ok": true,
-    "value": 0.0117
+    "ok": false,
+    "value": 0.9715,
+    "loss": 0.9715,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.208
+    "value": 0.999
    },
    "G5": {
     "ok": false,
-    "value": 0.405
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3342,9 +4196,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0193
+    "value": 0.0091,
+    "loss": 0.0091,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3352,7 +4213,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3366,7 +4229,7 @@
     "worst": 1
    }
   },
-  "hole": {
+  "center_pivot": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -3382,17 +4245,26 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0018,
+    "loss": 0.0018,
+    "gain": 0.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.999
+    "ok": false,
+    "value": 0.189
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 0.489,
+    "frac": 0.489,
+    "disp": 9.43
    },
    "G6": {
     "ok": true,
@@ -3417,91 +4289,30 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0112
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
-    "value": 0.189
+    "value": 0.0
    },
    "G5": {
-    "ok": false,
-    "value": 0.489
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "no_loop": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0129
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.369
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": false,
-    "loop": 0.00967,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -3522,9 +4333,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -3532,11 +4350,57 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "no_loop": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 2,
+    "base": 2
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0025,
+    "loss": 0.0025,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.369
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": false,
+    "loop": 0.00967,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -3557,9 +4421,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.015
+    "value": 0.0044,
+    "loss": 0.0044,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3567,7 +4438,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3597,9 +4470,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0172
+    "value": 0.0027,
+    "loss": 0.0027,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3607,7 +4487,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3637,17 +4519,26 @@
     "base": 1,
     "frame": 12
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.014
+    "value": 0.0033,
+    "loss": 0.0033,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.371
    },
    "G5": {
-    "ok": false,
-    "value": 0.233
+    "ok": true,
+    "value": 0.233,
+    "frac": 0.233,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3670,26 +4561,35 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0121
+    "value": 0.0062,
+    "loss": 0.0062,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.466
+    "value": 0.465
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3701,30 +4601,39 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.16816
+    "value": 0.16188
    },
    "G2": {
-    "ok": true,
+    "ok": false,
     "value": 3,
-    "base": 3
+    "base": 2
    },
    "G2b": {
     "ok": false,
     "value": 4,
-    "base": 2,
+    "base": 1,
     "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0573
+    "value": 0.0548,
+    "loss": 0.0,
+    "gain": 0.0548
    },
    "G4": {
     "ok": true,
-    "value": 0.459
+    "value": 0.458
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 14.67
    },
    "G6": {
     "ok": true,
@@ -3740,18 +4649,25 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0139
+    "value": 0.0081,
+    "loss": 0.0081,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3759,7 +4675,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3769,8 +4687,8 @@
    "pass": true,
    "oracle": {
     "split": false,
-    "base": 2,
-    "worst": 2
+    "base": 1,
+    "worst": 1
    }
   },
   "hole": {
@@ -3780,18 +4698,25 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": false,
-    "value": 1.0
+    "value": 0.9759,
+    "loss": 0.9759,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3799,7 +4724,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3815,18 +4742,25 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -3834,7 +4768,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3846,30 +4782,39 @@
   "center_pivot": {
    "G1": {
     "ok": true,
-    "value": 2e-05
+    "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0086
+    "value": 0.0032,
+    "loss": 0.0032,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.339
+    "value": 0.338
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 14.86
    },
    "G6": {
     "ok": true,
@@ -3885,30 +4830,39 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0121
+    "value": 0.0062,
+    "loss": 0.0062,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.463
+    "value": 0.462
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": false,
-    "loop": 0.03625,
+    "loop": 0.03617,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -3916,30 +4870,39 @@
   "wrong_part": {
    "G1": {
     "ok": false,
-    "value": 0.00903
+    "value": 0.00731
    },
    "G2": {
     "ok": false,
-    "value": 4,
-    "base": 3
+    "value": 3,
+    "base": 2
    },
    "G2b": {
     "ok": false,
-    "value": 3,
-    "base": 2,
-    "frame": 1
+    "value": 4,
+    "base": 1,
+    "frame": 14
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0228
+    "value": 0.0217,
+    "loss": 0.0,
+    "gain": 0.0217
    },
    "G4": {
     "ok": false,
-    "value": 0.001
+    "value": 0.0
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3955,18 +4918,25 @@
    },
    "G2": {
     "ok": true,
-    "value": 3,
-    "base": 3
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0126
+    "value": 0.0066,
+    "loss": 0.0066,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3974,7 +4944,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3984,8 +4956,8 @@
    "pass": true,
    "oracle": {
     "split": false,
-    "base": 2,
-    "worst": 2
+    "base": 1,
+    "worst": 1
    }
   },
   "detach_tip": {
@@ -3994,19 +4966,26 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 4,
-    "base": 3
+    "ok": true,
+    "value": 2,
+    "base": 2
    },
    "G2b": {
     "ok": false,
-    "value": 3,
-    "base": 2,
-    "frame": 12
+    "value": 2,
+    "base": 1,
+    "frame": 6
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0124
+    "value": 0.0064,
+    "loss": 0.0064,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4014,7 +4993,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4024,8 +5005,8 @@
    "pass": false,
    "oracle": {
     "split": true,
-    "base": 2,
-    "worst": 3
+    "base": 1,
+    "worst": 2
    }
   },
   "gap_seam": {
@@ -4035,26 +5016,35 @@
    },
    "G2": {
     "ok": false,
-    "value": 4,
-    "base": 3
+    "value": 3,
+    "base": 2
    },
    "G2b": {
     "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0106
+    "value": 0.0054,
+    "loss": 0.0054,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.47
+    "value": 0.469
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4064,8 +5054,8 @@
    "pass": false,
    "oracle": {
     "split": false,
-    "base": 2,
-    "worst": 2
+    "base": 1,
+    "worst": 1
    }
   }
  },
@@ -4073,7 +5063,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.22527
+    "value": 0.223
    },
    "G2": {
     "ok": false,
@@ -4086,9 +5076,16 @@
     "base": 1,
     "frame": 13
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0907
+    "value": 0.0907,
+    "loss": 0.0,
+    "gain": 0.0907
    },
    "G4": {
     "ok": true,
@@ -4096,7 +5093,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 0.873
+    "value": 0.873,
+    "frac": 0.873,
+    "disp": 15.14
    },
    "G6": {
     "ok": true,
@@ -4121,9 +5120,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0178
+    "value": 0.0035,
+    "loss": 0.0035,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4131,7 +5137,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4139,41 +5147,6 @@
     "first_vs_orig": 0.0
    },
    "pass": true
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 2,
-    "base": 2
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.999
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "missed_thumb": {
    "G1": {
@@ -4191,9 +5164,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0248
+    "value": 0.0119,
+    "loss": 0.0119,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4201,7 +5181,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4215,7 +5197,7 @@
     "worst": 1
    }
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -4231,17 +5213,26 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0143
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9187,
+    "loss": 0.9187,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.218
+    "value": 0.999
    },
    "G5": {
     "ok": false,
-    "value": 0.491
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4266,9 +5257,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -4276,7 +5274,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4285,33 +5285,42 @@
    },
    "pass": false
   },
-  "wrong_part": {
+  "center_pivot": {
    "G1": {
     "ok": true,
-    "value": 0.00149
+    "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 3,
+    "ok": true,
+    "value": 2,
     "base": 2
    },
    "G2b": {
-    "ok": false,
-    "value": 3,
+    "ok": true,
+    "value": 1,
     "base": 1,
-    "frame": 1
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0165
+    "value": 0.0039,
+    "loss": 0.0039,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.001
+    "ok": true,
+    "value": 0.218
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.491,
+    "frac": 0.491,
+    "disp": 11.63
    },
    "G6": {
     "ok": true,
@@ -4336,9 +5345,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0177
+    "value": 0.0035,
+    "loss": 0.0035,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4346,7 +5362,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -4355,10 +5373,10 @@
    },
    "pass": false
   },
-  "detach_tip": {
+  "wrong_part": {
    "G1": {
     "ok": true,
-    "value": 0.0
+    "value": 0.00109
    },
    "G2": {
     "ok": false,
@@ -4367,33 +5385,37 @@
    },
    "G2b": {
     "ok": false,
-    "value": 2,
+    "value": 3,
     "base": 1,
-    "frame": 5
+    "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0205
+    "value": 0.0165,
+    "loss": 0.0,
+    "gain": 0.0165
    },
    "G4": {
-    "ok": true,
-    "value": 0.428
+    "ok": false,
+    "value": 0.001
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
+   "pass": false
   },
   "detach_small": {
    "G1": {
@@ -4411,9 +5433,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0197
+    "value": 0.0061,
+    "loss": 0.0061,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4421,7 +5450,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4433,6 +5464,55 @@
     "split": false,
     "base": 1,
     "worst": 1
+   }
+  },
+  "detach_tip": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 2
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 5
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0037,
+    "loss": 0.0037,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.428
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
    }
   },
   "gap_seam": {
@@ -4451,9 +5531,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0165
+    "value": 0.0029,
+    "loss": 0.0029,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4461,7 +5548,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.1
+    "value": 0.1,
+    "frac": 0.1,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4483,9 +5572,9 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 8,
-    "base": 7
+    "ok": true,
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": true,
@@ -4493,34 +5582,43 @@
     "base": 4,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1671
+    "value": 0.0296,
+    "loss": 0.0296,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.656
    },
    "G5": {
-    "ok": false,
-    "value": 0.36
+    "ok": true,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 0.96
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false
+   "pass": true
   },
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.22145
+    "value": 0.16303
    },
    "G2": {
     "ok": false,
     "value": 8,
-    "base": 7
+    "base": 6
    },
    "G2b": {
     "ok": false,
@@ -4528,9 +5626,16 @@
     "base": 4,
     "frame": 15
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1461
+    "value": 0.1363,
+    "loss": 0.0,
+    "gain": 0.1363
    },
    "G4": {
     "ok": true,
@@ -4538,7 +5643,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 22.78
    },
    "G6": {
     "ok": true,
@@ -4554,8 +5661,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 9,
-    "base": 7
+    "value": 7,
+    "base": 6
    },
    "G2b": {
     "ok": false,
@@ -4563,17 +5670,26 @@
     "base": 4,
     "frame": 3
    },
+   "G2c": {
+    "ok": false,
+    "value": 79,
+    "frame": 3
+   },
    "G3": {
     "ok": true,
-    "value": 0.1595
+    "value": 0.0287,
+    "loss": 0.0287,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.639
    },
    "G5": {
-    "ok": false,
-    "value": 0.36
+    "ok": true,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 0.96
    },
    "G6": {
     "ok": true,
@@ -4587,15 +5703,15 @@
     "worst": 6
    }
   },
-  "hole": {
+  "frozen": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 8,
-    "base": 7
+    "ok": true,
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": true,
@@ -4603,17 +5719,26 @@
     "base": 4,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.99
+    "ok": false,
+    "value": 0.0
    },
    "G5": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4622,15 +5747,15 @@
    },
    "pass": false
   },
-  "frozen": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 7,
-    "base": 7
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": true,
@@ -4638,17 +5763,26 @@
     "base": 4,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.7246,
+    "loss": 0.7246,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.0
+    "ok": true,
+    "value": 0.99
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4663,9 +5797,9 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 8,
-    "base": 7
+    "ok": true,
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": true,
@@ -4673,17 +5807,26 @@
     "base": 4,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0272
+    "value": 0.0046,
+    "loss": 0.0046,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.649
    },
    "G5": {
-    "ok": false,
-    "value": 0.36
+    "ok": true,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 0.96
    },
    "G6": {
     "ok": false,
@@ -4695,12 +5838,12 @@
   "center_pivot": {
    "G1": {
     "ok": true,
-    "value": 2e-05
+    "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 7,
-    "base": 7
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": true,
@@ -4708,9 +5851,16 @@
     "base": 4,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.098
+    "value": 0.0208,
+    "loss": 0.0208,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4718,42 +5868,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 7,
-    "base": 7
-   },
-   "G2b": {
-    "ok": true,
-    "value": 4,
-    "base": 4,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0064
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.112
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.007
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 22.89
    },
    "G6": {
     "ok": true,
@@ -4768,9 +5885,9 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 8,
-    "base": 7
+    "ok": true,
+    "value": 6,
+    "base": 6
    },
    "G2b": {
     "ok": false,
@@ -4778,17 +5895,26 @@
     "base": 4,
     "frame": 17
    },
+   "G2c": {
+    "ok": false,
+    "value": 44,
+    "frame": 3
+   },
    "G3": {
     "ok": true,
-    "value": 0.1616
+    "value": 0.0282,
+    "loss": 0.0282,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.643
    },
    "G5": {
-    "ok": false,
-    "value": 0.36
+    "ok": true,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 0.96
    },
    "G6": {
     "ok": true,
@@ -4802,6 +5928,50 @@
     "worst": 7
    }
   },
+  "wrong_part": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 6,
+    "base": 6
+   },
+   "G2b": {
+    "ok": true,
+    "value": 4,
+    "base": 4,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0015,
+    "loss": 0.0015,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.112
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.007,
+    "frac": 0.007,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "gap_seam": {
    "G1": {
     "ok": true,
@@ -4809,8 +5979,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 9,
-    "base": 7
+    "value": 8,
+    "base": 6
    },
    "G2b": {
     "ok": false,
@@ -4818,17 +5988,26 @@
     "base": 4,
     "frame": 12
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1812
+    "value": 0.0453,
+    "loss": 0.0453,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.64
    },
    "G5": {
-    "ok": false,
-    "value": 0.244
+    "ok": true,
+    "value": 0.244,
+    "frac": 0.244,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4849,8 +6028,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 18,
-    "base": 7
+    "value": 16,
+    "base": 6
    },
    "G2b": {
     "ok": false,
@@ -4858,17 +6037,26 @@
     "base": 4,
     "frame": 6
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1691
+    "value": 0.0294,
+    "loss": 0.0294,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.656
    },
    "G5": {
-    "ok": false,
-    "value": 0.36
+    "ok": true,
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 0.96
    },
    "G6": {
     "ok": true,
@@ -4887,7 +6075,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.18505
+    "value": 0.18044
    },
    "G2b": {
     "ok": true,
@@ -4895,9 +6083,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
     "value": 0.056,
+    "loss": 0.0,
+    "gain": 0.056,
     "skull_keep": 1.0
    },
    "G4": {
@@ -4911,7 +6106,7 @@
    },
    "pass": false
   },
-  "ref": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -4922,9 +6117,50 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9538,
+    "loss": 0.9538,
+    "gain": 0.0329,
+    "skull_keep": 1.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.959
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2821,
+    "value": 0.2988,
+    "loss": 0.2988,
+    "gain": 0.0329,
     "skull_keep": 1.0
    },
    "G4": {
@@ -4938,7 +6174,7 @@
    },
    "pass": true
   },
-  "hole": {
+  "ref": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -4949,14 +6185,55 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
-    "ok": false,
-    "value": 0.9309,
+    "ok": true,
+    "value": 0.2988,
+    "loss": 0.2988,
+    "gain": 0.0329,
     "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.959
+    "value": 0.917
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.03032
+   },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0,
+    "skull_keep": 1.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
    },
    "G6": {
     "ok": true,
@@ -4976,9 +6253,16 @@
     "base": 2,
     "frame": 10
    },
+   "G2c": {
+    "ok": false,
+    "value": 114,
+    "frame": 10
+   },
    "G3": {
     "ok": true,
-    "value": 0.2821,
+    "value": 0.2988,
+    "loss": 0.2988,
+    "gain": 0.0295,
     "skull_keep": 1.0
    },
    "G4": {
@@ -4997,32 +6281,44 @@
     "worst": 3
    }
   },
-  "center_pivot": {
+  "detach_tip": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2b": {
-    "ok": true,
-    "value": 2,
+    "ok": false,
+    "value": 4,
     "base": 2,
+    "frame": 7
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.2821,
+    "value": 0.3094,
+    "loss": 0.3094,
+    "gain": 0.0305,
     "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.917
+    "value": 0.918
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 2,
+    "worst": 4
+   }
   },
   "frozen": {
    "G1": {
@@ -5035,36 +6331,16 @@
     "base": 2,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0,
-    "skull_keep": 1.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.03032
-   },
-   "G2b": {
-    "ok": true,
-    "value": 2,
-    "base": 2,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
     "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0,
     "skull_keep": 1.0
    },
    "G4": {
@@ -5089,9 +6365,16 @@
     "base": 2,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2821,
+    "value": 0.2988,
+    "loss": 0.2988,
+    "gain": 0.0411,
     "skull_keep": 1.0
    },
    "G4": {
@@ -5105,38 +6388,6 @@
    },
    "pass": false
   },
-  "detach_tip": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2b": {
-    "ok": false,
-    "value": 4,
-    "base": 2,
-    "frame": 7
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.2919,
-    "skull_keep": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.918
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 2,
-    "worst": 4
-   }
-  },
   "detach_small": {
    "G1": {
     "ok": true,
@@ -5148,9 +6399,16 @@
     "base": 2,
     "frame": 9
    },
+   "G2c": {
+    "ok": false,
+    "value": 35,
+    "frame": 9
+   },
    "G3": {
     "ok": true,
-    "value": 0.2821,
+    "value": 0.2988,
+    "loss": 0.2988,
+    "gain": 0.0317,
     "skull_keep": 1.0
    },
    "G4": {
@@ -5174,7 +6432,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.17536
+    "value": 0.16901
    },
    "G2b": {
     "ok": false,
@@ -5182,9 +6440,16 @@
     "base": 1,
     "frame": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1674,
+    "value": 0.1509,
+    "loss": 0.0,
+    "gain": 0.1509,
     "skull_keep": 0.994
    },
    "G4": {
@@ -5193,38 +6458,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "ref": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.3178,
-    "skull_keep": 0.966
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.853
-   },
-   "G5": {
-    "ok": false,
-    "value": 0.409
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 12.99
    },
    "G6": {
     "ok": true,
@@ -5244,10 +6480,17 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": false,
-    "value": 0.8008,
-    "skull_keep": 0.997
+    "value": 0.9476,
+    "loss": 0.9476,
+    "gain": 0.1069,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
@@ -5255,7 +6498,89 @@
    },
    "G5": {
     "ok": false,
-    "value": 1.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "ref": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1069,
+    "loss": 0.0014,
+    "gain": 0.1069,
+    "skull_keep": 1.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.852
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.409,
+    "frac": 0.409,
+    "disp": 1.19
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.00034
+   },
+   "G2b": {
+    "ok": false,
+    "value": 2,
+    "base": 1,
+    "frame": 10
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0393,
+    "loss": 0.0393,
+    "gain": 0.0,
+    "skull_keep": 0.995
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.651
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 42.1
    },
    "G6": {
     "ok": true,
@@ -5273,20 +6598,29 @@
     "ok": false,
     "value": 2,
     "base": 1,
-    "frame": 2
+    "frame": 7
+   },
+   "G2c": {
+    "ok": false,
+    "value": 106,
+    "frame": 7
    },
    "G3": {
     "ok": true,
-    "value": 0.3177,
-    "skull_keep": 0.966
+    "value": 0.1069,
+    "loss": 0.0026,
+    "gain": 0.1069,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.848
+    "value": 0.847
    },
    "G5": {
-    "ok": false,
-    "value": 0.409
+    "ok": true,
+    "value": 0.409,
+    "frac": 0.409,
+    "disp": 1.19
    },
    "G6": {
     "ok": true,
@@ -5300,29 +6634,38 @@
     "worst": 2
    }
   },
-  "center_pivot": {
+  "wrong_part": {
    "G1": {
-    "ok": true,
-    "value": 0.00124
+    "ok": false,
+    "value": 0.01199
    },
    "G2b": {
     "ok": false,
-    "value": 2,
+    "value": 3,
     "base": 1,
-    "frame": 17
+    "frame": 14
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1124,
-    "skull_keep": 0.995
+    "value": 0.0748,
+    "loss": 0.0,
+    "gain": 0.0748,
+    "skull_keep": 1.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.653
+    "ok": false,
+    "value": 0.003
    },
    "G5": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -5342,9 +6685,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
     "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0,
     "skull_keep": 1.0
    },
    "G4": {
@@ -5353,38 +6703,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.01418
-   },
-   "G2b": {
-    "ok": false,
-    "value": 3,
-    "base": 1,
-    "frame": 14
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0748,
-    "skull_keep": 1.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.003
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -5404,22 +6725,31 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3178,
-    "skull_keep": 0.966
+    "value": 0.1072,
+    "loss": 0.0013,
+    "gain": 0.1072,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.853
+    "value": 0.852
    },
    "G5": {
-    "ok": false,
-    "value": 0.365
+    "ok": true,
+    "value": 0.409,
+    "frac": 0.409,
+    "disp": 0.64
    },
    "G6": {
     "ok": false,
-    "loop": 0.03921,
+    "loop": 0.03982,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -5431,22 +6761,31 @@
    },
    "G2b": {
     "ok": false,
-    "value": 3,
+    "value": 2,
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3106,
-    "skull_keep": 0.966
+    "value": 0.1049,
+    "loss": 0.0013,
+    "gain": 0.1049,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.856
+    "value": 0.86
    },
    "G5": {
     "ok": false,
-    "value": 0.409
+    "value": 0.409,
+    "frac": 0.409,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -5469,20 +6808,29 @@
     "ok": false,
     "value": 2,
     "base": 1,
-    "frame": 1
+    "frame": 6
+   },
+   "G2c": {
+    "ok": false,
+    "value": 37,
+    "frame": 6
    },
    "G3": {
     "ok": true,
-    "value": 0.3177,
-    "skull_keep": 0.966
+    "value": 0.1069,
+    "loss": 0.0022,
+    "gain": 0.1069,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
-    "value": 0.851
+    "value": 0.85
    },
    "G5": {
-    "ok": false,
-    "value": 0.409
+    "ok": true,
+    "value": 0.409,
+    "frac": 0.409,
+    "disp": 1.19
    },
    "G6": {
     "ok": true,
@@ -5507,25 +6855,34 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3123,
-    "skull_keep": 0.965
+    "value": 0.1006,
+    "loss": 0.0013,
+    "gain": 0.1006,
+    "skull_keep": 1.0
    },
    "G4": {
     "ok": true,
     "value": 0.851
    },
    "G5": {
-    "ok": false,
-    "value": 0.904
+    "ok": true,
+    "value": 0.748,
+    "frac": 0.748,
+    "disp": 2.54
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false,
+   "pass": true,
    "oracle": {
     "split": false,
     "base": 1,
@@ -5550,9 +6907,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0084
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5568,7 +6932,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.21573
+    "value": 0.21519
    },
    "G2": {
     "ok": true,
@@ -5581,9 +6945,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.015
+    "value": 0.0001,
+    "loss": 0.0001,
+    "gain": 0.0001
    },
    "G4": {
     "ok": true,
@@ -5612,9 +6983,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0106
+    "value": 0.0021,
+    "loss": 0.0021,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5632,37 +7010,6 @@
     "worst": 1
    }
   },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.95
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "frozen": {
    "G1": {
     "ok": true,
@@ -5679,13 +7026,58 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
     "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9993,
+    "loss": 0.9993,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.95
    },
    "G6": {
     "ok": true,
@@ -5710,9 +7102,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0084
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5741,9 +7140,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0084
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5772,9 +7178,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0091
+    "value": 0.0007,
+    "loss": 0.0007,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5795,7 +7208,7 @@
   "wrong_part": {
    "G1": {
     "ok": true,
-    "value": 0.00048
+    "value": 0.0
    },
    "G2": {
     "ok": true,
@@ -5808,9 +7221,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0089
+    "value": 0.0087,
+    "loss": 0.0087,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -5839,9 +7259,16 @@
     "base": 1,
     "frame": 4
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0083
+    "value": 0.0007,
+    "loss": 0.0007,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5877,9 +7304,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0745
+    "value": 0.0716,
+    "loss": 0.0716,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5891,37 +7325,6 @@
     "first_vs_orig": 0.0
    },
    "pass": true
-  },
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.15875
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0001
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.31
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "missed_thumb": {
    "G1": {
@@ -5939,9 +7342,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0745
+    "value": 0.0716,
+    "loss": 0.0716,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -5959,10 +7369,10 @@
     "worst": 1
    }
   },
-  "hole": {
+  "whole": {
    "G1": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.15659
    },
    "G2": {
     "ok": true,
@@ -5975,13 +7385,20 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0001,
+    "loss": 0.0,
+    "gain": 0.0001
    },
    "G4": {
     "ok": true,
-    "value": 1.0
+    "value": 0.31
    },
    "G6": {
     "ok": true,
@@ -6006,13 +7423,58 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
     "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9987,
+    "loss": 0.9987,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 1.0
    },
    "G6": {
     "ok": true,
@@ -6037,9 +7499,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0745
+    "value": 0.0716,
+    "loss": 0.0716,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6068,9 +7537,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0745
+    "value": 0.0716,
+    "loss": 0.0716,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6082,37 +7558,6 @@
     "first_vs_orig": 0.0
    },
    "pass": true
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.04424
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "detach_small": {
    "G1": {
@@ -6130,9 +7575,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0745
+    "value": 0.0716,
+    "loss": 0.0716,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6150,6 +7602,44 @@
     "worst": 1
    }
   },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.04424
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "detach_tip": {
    "G1": {
     "ok": true,
@@ -6166,9 +7656,16 @@
     "base": 1,
     "frame": 4
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0838
+    "value": 0.0809,
+    "loss": 0.0809,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6188,37 +7685,6 @@
   }
  },
  "T17": {
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.25005
-   },
-   "G2": {
-    "ok": false,
-    "value": 5,
-    "base": 3
-   },
-   "G2b": {
-    "ok": false,
-    "value": 3,
-    "base": 1,
-    "frame": 1
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0117
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.379
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "ref": {
    "G1": {
     "ok": true,
@@ -6235,9 +7701,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 52,
+    "frame": 5
+   },
    "G3": {
     "ok": true,
-    "value": 0.1348
+    "value": 0.1205,
+    "loss": 0.1205,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6248,31 +7721,38 @@
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true
+   "pass": false
   },
-  "hole": {
+  "whole": {
    "G1": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.22664
    },
    "G2": {
     "ok": false,
-    "value": 4,
+    "value": 5,
     "base": 3
    },
    "G2b": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 3,
     "base": 1,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0117,
+    "loss": 0.0,
+    "gain": 0.0117
    },
    "G4": {
     "ok": true,
-    "value": 0.987
+    "value": 0.379
    },
    "G6": {
     "ok": true,
@@ -6297,9 +7777,16 @@
     "base": 1,
     "frame": 3
    },
+   "G2c": {
+    "ok": false,
+    "value": 125,
+    "frame": 5
+   },
    "G3": {
     "ok": true,
-    "value": 0.1346
+    "value": 0.1203,
+    "loss": 0.1203,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6317,37 +7804,6 @@
     "worst": 2
    }
   },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 4,
-    "base": 3
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1307
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.411
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "frozen": {
    "G1": {
     "ok": true,
@@ -6364,9 +7820,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -6378,6 +7841,120 @@
     "first_vs_orig": 0.0
    },
    "pass": false
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": false,
+    "value": 52,
+    "frame": 19
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.9998,
+    "loss": 0.9998,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.987
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "no_loop": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": false,
+    "value": 66,
+    "frame": 8
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1205,
+    "loss": 0.1205,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.581
+   },
+   "G6": {
+    "ok": false,
+    "loop": 0.07417,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1203,
+    "loss": 0.1203,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.411
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
   },
   "wrong_part": {
    "G1": {
@@ -6395,9 +7972,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -6410,36 +7994,48 @@
    },
    "pass": false
   },
-  "no_loop": {
+  "detach_small": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 4,
+    "ok": true,
+    "value": 3,
     "base": 3
    },
    "G2b": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 2,
     "base": 1,
-    "frame": 0
+    "frame": 2
+   },
+   "G2c": {
+    "ok": false,
+    "value": 52,
+    "frame": 5
    },
    "G3": {
     "ok": true,
-    "value": 0.1348
+    "value": 0.1204,
+    "loss": 0.1204,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
     "value": 0.581
    },
    "G6": {
-    "ok": false,
-    "loop": 0.07417,
+    "ok": true,
+    "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
   },
   "detach_tip": {
    "G1": {
@@ -6457,9 +8053,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": false,
+    "value": 63,
+    "frame": 5
+   },
    "G3": {
     "ok": true,
-    "value": 0.134
+    "value": 0.1205,
+    "loss": 0.1205,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6476,76 +8079,9 @@
     "base": 1,
     "worst": 5
    }
-  },
-  "detach_small": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 3,
-    "base": 3
-   },
-   "G2b": {
-    "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 2
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1347
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.581
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
   }
  },
  "T18": {
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.18452
-   },
-   "G2": {
-    "ok": false,
-    "value": 3,
-    "base": 1
-   },
-   "G2b": {
-    "ok": false,
-    "value": 3,
-    "base": 1,
-    "frame": 3
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0043
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.361
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "ref": {
    "G1": {
     "ok": true,
@@ -6562,9 +8098,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 60,
+    "frame": 5
+   },
    "G3": {
     "ok": true,
-    "value": 0.1233
+    "value": 0.1204,
+    "loss": 0.1204,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6575,31 +8118,38 @@
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true
+   "pass": false
   },
-  "hole": {
+  "whole": {
    "G1": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.16636
    },
    "G2": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 3,
     "base": 1
    },
    "G2b": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 3,
     "base": 1,
+    "frame": 3
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
-    "ok": false,
-    "value": 1.0
+    "ok": true,
+    "value": 0.0012,
+    "loss": 0.0,
+    "gain": 0.0012
    },
    "G4": {
     "ok": true,
-    "value": 1.0
+    "value": 0.361
    },
    "G6": {
     "ok": true,
@@ -6614,8 +8164,8 @@
     "value": 0.0
    },
    "G2": {
-    "ok": false,
-    "value": 2,
+    "ok": true,
+    "value": 1,
     "base": 1
    },
    "G2b": {
@@ -6624,9 +8174,16 @@
     "base": 1,
     "frame": 2
    },
+   "G2c": {
+    "ok": false,
+    "value": 118,
+    "frame": 4
+   },
    "G3": {
     "ok": true,
-    "value": 0.1232
+    "value": 0.1203,
+    "loss": 0.1203,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6644,7 +8201,7 @@
     "worst": 2
    }
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -6660,20 +8217,27 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 60,
+    "frame": 19
+   },
    "G3": {
-    "ok": true,
-    "value": 0.1224
+    "ok": false,
+    "value": 0.9995,
+    "loss": 0.9995,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.425
+    "value": 1.0
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": true
+   "pass": false
   },
   "frozen": {
    "G1": {
@@ -6691,9 +8255,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -6702,6 +8273,82 @@
    "G6": {
     "ok": true,
     "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1203,
+    "loss": 0.1203,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.425
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": true
+  },
+  "no_loop": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": false,
+    "value": 50,
+    "frame": 4
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1204,
+    "loss": 0.1204,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.555
+   },
+   "G6": {
+    "ok": false,
+    "loop": 0.15207,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -6722,9 +8369,16 @@
     "base": 1,
     "frame": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0249
+    "value": 0.0243,
+    "loss": 0.0243,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -6737,7 +8391,7 @@
    },
    "pass": false
   },
-  "no_loop": {
+  "detach_small": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -6748,25 +8402,37 @@
     "base": 1
    },
    "G2b": {
-    "ok": true,
-    "value": 1,
+    "ok": false,
+    "value": 2,
     "base": 1,
-    "frame": 0
+    "frame": 2
+   },
+   "G2c": {
+    "ok": false,
+    "value": 60,
+    "frame": 5
    },
    "G3": {
     "ok": true,
-    "value": 0.1233
+    "value": 0.1204,
+    "loss": 0.1204,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.555
+    "value": 0.554
    },
    "G6": {
-    "ok": false,
-    "loop": 0.15207,
+    "ok": true,
+    "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 1,
+    "worst": 2
+   }
   },
   "detach_tip": {
    "G1": {
@@ -6784,9 +8450,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": false,
+    "value": 25,
+    "frame": 5
+   },
    "G3": {
     "ok": true,
-    "value": 0.1233
+    "value": 0.1205,
+    "loss": 0.1205,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6803,11 +8476,57 @@
     "base": 1,
     "worst": 5
    }
-  },
-  "detach_small": {
+  }
+ },
+ "T19": {
+  "ref": {
    "G1": {
     "ok": true,
     "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 10,
+    "base": 9,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1046,
+    "loss": 0.1046,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.359
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "whole": {
+   "G1": {
+    "ok": false,
+    "value": 0.22178
    },
    "G2": {
     "ok": true,
@@ -6816,51 +8535,20 @@
    },
    "G2b": {
     "ok": false,
-    "value": 2,
-    "base": 1,
-    "frame": 2
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1233
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.554
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 1,
-    "worst": 2
-   }
-  }
- },
- "T19": {
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.23349
-   },
-   "G2": {
-    "ok": false,
-    "value": 15,
-    "base": 13
-   },
-   "G2b": {
-    "ok": false,
     "value": 14,
     "base": 9,
     "frame": 14
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0782
+    "value": 0.0319,
+    "loss": 0.0,
+    "gain": 0.0319
    },
    "G4": {
     "ok": true,
@@ -6868,77 +8556,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 0.457
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "ref": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 24,
-    "base": 13
-   },
-   "G2b": {
-    "ok": false,
-    "value": 10,
-    "base": 9,
-    "frame": 1
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.3379
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.359
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 16,
-    "base": 13
-   },
-   "G2b": {
-    "ok": false,
-    "value": 10,
-    "base": 9,
-    "frame": 1
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.663
-   },
-   "G5": {
-    "ok": false,
-    "value": 0.606
+    "value": 0.457,
+    "frac": 0.457,
+    "disp": 16.45
    },
    "G6": {
     "ok": true,
@@ -6954,8 +8574,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 24,
-    "base": 13
+    "value": 3,
+    "base": 1
    },
    "G2b": {
     "ok": false,
@@ -6963,9 +8583,16 @@
     "base": 9,
     "frame": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3375
+    "value": 0.1043,
+    "loss": 0.1043,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -6973,7 +8600,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -6987,41 +8616,6 @@
     "worst": 9
    }
   },
-  "center_pivot": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 18,
-    "base": 13
-   },
-   "G2b": {
-    "ok": true,
-    "value": 9,
-    "base": 9,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.1265
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.287
-   },
-   "G5": {
-    "ok": false,
-    "value": 0.549
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
   "frozen": {
    "G1": {
     "ok": true,
@@ -7029,8 +8623,8 @@
    },
    "G2": {
     "ok": true,
-    "value": 13,
-    "base": 13
+    "value": 1,
+    "base": 1
    },
    "G2b": {
     "ok": true,
@@ -7038,9 +8632,16 @@
     "base": 9,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -7048,7 +8649,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7057,33 +8660,42 @@
    },
    "pass": false
   },
-  "wrong_part": {
+  "hole": {
    "G1": {
-    "ok": false,
-    "value": 0.00322
+    "ok": true,
+    "value": 0.0
    },
    "G2": {
     "ok": true,
-    "value": 13,
-    "base": 13
+    "value": 1,
+    "base": 1
    },
    "G2b": {
-    "ok": true,
-    "value": 9,
+    "ok": false,
+    "value": 10,
     "base": 9,
+    "frame": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
     "frame": 0
    },
    "G3": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.8099,
+    "loss": 0.8099,
+    "gain": 0.0
    },
    "G4": {
-    "ok": false,
-    "value": 0.0
+    "ok": true,
+    "value": 0.663
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.606,
+    "frac": 0.606,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7099,8 +8711,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 22,
-    "base": 13
+    "value": 4,
+    "base": 1
    },
    "G2b": {
     "ok": false,
@@ -7108,9 +8720,16 @@
     "base": 9,
     "frame": 3
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0126
+    "value": 0.0051,
+    "loss": 0.0051,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7118,7 +8737,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -7127,45 +8748,49 @@
    },
    "pass": false
   },
-  "detach_tip": {
+  "center_pivot": {
    "G1": {
     "ok": true,
     "value": 0.0
    },
    "G2": {
     "ok": false,
-    "value": 23,
-    "base": 13
+    "value": 2,
+    "base": 1
    },
    "G2b": {
-    "ok": false,
-    "value": 12,
+    "ok": true,
+    "value": 9,
     "base": 9,
-    "frame": 11
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3341
+    "value": 0.0353,
+    "loss": 0.0353,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.363
+    "value": 0.287
    },
    "G5": {
-    "ok": true,
-    "value": 0.0
+    "ok": false,
+    "value": 0.549,
+    "frac": 0.549,
+    "disp": 19.16
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
     "first_vs_orig": 0.0
    },
-   "pass": false,
-   "oracle": {
-    "split": true,
-    "base": 9,
-    "worst": 10
-   }
+   "pass": false
   },
   "detach_small": {
    "G1": {
@@ -7174,8 +8799,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 24,
-    "base": 13
+    "value": 3,
+    "base": 1
    },
    "G2b": {
     "ok": false,
@@ -7183,9 +8808,16 @@
     "base": 9,
     "frame": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3376
+    "value": 0.1043,
+    "loss": 0.1043,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7193,7 +8825,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7207,6 +8841,50 @@
     "worst": 9
    }
   },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.00295
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 9,
+    "base": 9,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "gap_seam": {
    "G1": {
     "ok": true,
@@ -7214,8 +8892,8 @@
    },
    "G2": {
     "ok": false,
-    "value": 21,
-    "base": 13
+    "value": 3,
+    "base": 1
    },
    "G2b": {
     "ok": false,
@@ -7223,9 +8901,16 @@
     "base": 9,
     "frame": 10
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3355
+    "value": 0.105,
+    "loss": 0.105,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7233,7 +8918,58 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.085
+    "value": 0.085,
+    "frac": 0.085,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false,
+   "oracle": {
+    "split": true,
+    "base": 9,
+    "worst": 10
+   }
+  },
+  "detach_tip": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 3,
+    "base": 1
+   },
+   "G2b": {
+    "ok": false,
+    "value": 12,
+    "base": 9,
+    "frame": 11
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.1051,
+    "loss": 0.1051,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.363
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7252,7 +8988,7 @@
   "whole": {
    "G1": {
     "ok": false,
-    "value": 0.2321
+    "value": 0.23142
    },
    "G2": {
     "ok": false,
@@ -7265,17 +9001,26 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1747
+    "value": 0.1747,
+    "loss": 0.0,
+    "gain": 0.1747
    },
    "G4": {
     "ok": true,
     "value": 0.415
    },
    "G5": {
-    "ok": false,
-    "value": 0.279
+    "ok": true,
+    "value": 0.279,
+    "frac": 0.279,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7300,9 +9045,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0344
+    "value": 0.0108,
+    "loss": 0.0108,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7310,7 +9062,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7318,41 +9072,6 @@
     "first_vs_orig": 0.0
    },
    "pass": true
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 1.0
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "missed_thumb": {
    "G1": {
@@ -7370,9 +9089,16 @@
     "base": 1,
     "frame": 18
    },
+   "G2c": {
+    "ok": false,
+    "value": 81,
+    "frame": 17
+   },
    "G3": {
     "ok": true,
-    "value": 0.0438
+    "value": 0.0226,
+    "loss": 0.0226,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7380,7 +9106,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7394,7 +9122,7 @@
     "worst": 2
    }
   },
-  "center_pivot": {
+  "hole": {
    "G1": {
     "ok": true,
     "value": 0.0
@@ -7410,17 +9138,26 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.03
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.6836,
+    "loss": 0.6836,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.488
+    "value": 1.0
    },
    "G5": {
     "ok": false,
-    "value": 0.527
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7445,9 +9182,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -7455,11 +9199,101 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
     "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "center_pivot": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0044,
+    "loss": 0.0044,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.488
+   },
+   "G5": {
+    "ok": false,
+    "value": 0.527,
+    "frac": 0.527,
+    "disp": 13.57
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "no_loop": {
+   "G1": {
+    "ok": true,
+    "value": 0.0
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0094,
+    "loss": 0.0094,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.589
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.007,
+    "frac": 0.007,
+    "disp": null
+   },
+   "G6": {
+    "ok": false,
+    "loop": 0.00382,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -7480,56 +9314,30 @@
     "base": 1,
     "frame": 0
    },
-   "G3": {
+   "G2c": {
     "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "no_loop": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
+    "value": 0,
     "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0331
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
-    "ok": true,
-    "value": 0.589
+    "ok": false,
+    "value": 0.0
    },
    "G5": {
     "ok": true,
-    "value": 0.007
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
-    "ok": false,
-    "loop": 0.00382,
+    "ok": true,
+    "loop": 0.0,
     "first_vs_orig": 0.0
    },
    "pass": false
@@ -7550,9 +9358,16 @@
     "base": 1,
     "frame": 16
    },
+   "G2c": {
+    "ok": false,
+    "value": 44,
+    "frame": 16
+   },
    "G3": {
     "ok": true,
-    "value": 0.0347
+    "value": 0.0121,
+    "loss": 0.0121,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7560,7 +9375,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7590,9 +9407,16 @@
     "base": 1,
     "frame": 5
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0331
+    "value": 0.0108,
+    "loss": 0.0108,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7600,7 +9424,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.02
+    "value": 0.02,
+    "frac": 0.02,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7630,9 +9456,16 @@
     "base": 1,
     "frame": 11
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0304
+    "value": 0.0118,
+    "loss": 0.0118,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7640,7 +9473,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.119
+    "value": 0.119,
+    "frac": 0.119,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7656,6 +9491,50 @@
   }
  },
  "T21": {
+  "whole": {
+   "G1": {
+    "ok": false,
+    "value": 0.18857
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0371,
+    "loss": 0.0,
+    "gain": 0.0371
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.284
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.028,
+    "frac": 0.028,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
   "ref": {
    "G1": {
     "ok": true,
@@ -7672,9 +9551,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1218
+    "value": 0.0512,
+    "loss": 0.0512,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7682,42 +9568,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "whole": {
-   "G1": {
-    "ok": false,
-    "value": 0.18902
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0427
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.284
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.028
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7742,9 +9595,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": false,
+    "value": 58,
+    "frame": 6
+   },
    "G3": {
     "ok": true,
-    "value": 0.1263
+    "value": 0.0563,
+    "loss": 0.0563,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7752,7 +9612,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7765,41 +9627,6 @@
     "base": 1,
     "worst": 1
    }
-  },
-  "hole": {
-   "G1": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G2": {
-    "ok": false,
-    "value": 2,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G4": {
-    "ok": true,
-    "value": 0.998
-   },
-   "G5": {
-    "ok": false,
-    "value": 1.0
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
   },
   "frozen": {
    "G1": {
@@ -7817,9 +9644,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": false,
@@ -7827,7 +9661,53 @@
    },
    "G5": {
     "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
+  },
+  "hole": {
+   "G1": {
+    "ok": true,
     "value": 0.0
+   },
+   "G2": {
+    "ok": false,
+    "value": 2,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": false,
+    "value": 0.8631,
+    "loss": 0.8631,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": true,
+    "value": 0.998
+   },
+   "G5": {
+    "ok": false,
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7852,9 +9732,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1218
+    "value": 0.0512,
+    "loss": 0.0512,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7862,7 +9749,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.044
+    "value": 0.044,
+    "frac": 0.044,
+    "disp": null
    },
    "G6": {
     "ok": false,
@@ -7887,9 +9776,16 @@
     "base": 1,
     "frame": 0
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0798
+    "value": 0.0309,
+    "loss": 0.0309,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7897,42 +9793,9 @@
    },
    "G5": {
     "ok": false,
-    "value": 0.36
-   },
-   "G6": {
-    "ok": true,
-    "loop": 0.0,
-    "first_vs_orig": 0.0
-   },
-   "pass": false
-  },
-  "wrong_part": {
-   "G1": {
-    "ok": false,
-    "value": 0.02189
-   },
-   "G2": {
-    "ok": true,
-    "value": 1,
-    "base": 1
-   },
-   "G2b": {
-    "ok": true,
-    "value": 1,
-    "base": 1,
-    "frame": 0
-   },
-   "G3": {
-    "ok": true,
-    "value": 0.0
-   },
-   "G4": {
-    "ok": false,
-    "value": 0.0
-   },
-   "G5": {
-    "ok": true,
-    "value": 0.0
+    "value": 0.36,
+    "frac": 0.36,
+    "disp": 14.36
    },
    "G6": {
     "ok": true,
@@ -7957,9 +9820,16 @@
     "base": 1,
     "frame": 2
    },
+   "G2c": {
+    "ok": false,
+    "value": 35,
+    "frame": 2
+   },
    "G3": {
     "ok": true,
-    "value": 0.1214
+    "value": 0.051,
+    "loss": 0.051,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -7967,7 +9837,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -7980,6 +9852,50 @@
     "base": 1,
     "worst": 2
    }
+  },
+  "wrong_part": {
+   "G1": {
+    "ok": false,
+    "value": 0.02189
+   },
+   "G2": {
+    "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
+   "G3": {
+    "ok": true,
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
+   },
+   "G4": {
+    "ok": false,
+    "value": 0.0
+   },
+   "G5": {
+    "ok": true,
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
+   },
+   "G6": {
+    "ok": true,
+    "loop": 0.0,
+    "first_vs_orig": 0.0
+   },
+   "pass": false
   },
   "gap_seam": {
    "G1": {
@@ -7997,9 +9913,16 @@
     "base": 1,
     "frame": 12
    },
+   "G2c": {
+    "ok": false,
+    "value": 109,
+    "frame": 17
+   },
    "G3": {
     "ok": true,
-    "value": 0.1007
+    "value": 0.0488,
+    "loss": 0.0488,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -8007,7 +9930,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.095
+    "value": 0.095,
+    "frac": 0.095,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -8037,9 +9962,16 @@
     "base": 1,
     "frame": 15
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1163
+    "value": 0.0495,
+    "loss": 0.0495,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -8047,7 +9979,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.06
+    "value": 0.06,
+    "frac": 0.06,
+    "disp": null
    },
    "G6": {
     "ok": true,
