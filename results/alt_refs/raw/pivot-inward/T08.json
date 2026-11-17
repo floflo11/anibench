@@ -1,0 +1,41 @@
+{
+ "task": "T08",
+ "variant": "pivot-inward",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 0.0
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.1561
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.433
+  },
+  "G5": {
+   "ok": false,
+   "value": 0.375
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": false
+ },
+ "failed": [
+  "G5"
+ ],
+ "evidence": {
+  "G5": "evidence/pivot-inward__T08__G5.png"
+ }
+}

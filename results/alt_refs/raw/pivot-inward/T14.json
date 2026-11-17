@@ -1,0 +1,32 @@
+{
+ "task": "T14",
+ "variant": "pivot-inward",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 0.0
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.3015,
+   "skull_keep": 0.967
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.832
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": true
+ },
+ "failed": []
+}

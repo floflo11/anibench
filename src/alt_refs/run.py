@@ -3,6 +3,7 @@
     python3 src/alt_refs/run.py render [--tasks T01,T02] [--variants easing-sine_typ,...] [--workers 2] [--force]
     python3 src/alt_refs/run.py report
     python3 src/alt_refs/run.py gifs
+    python3 src/alt_refs/run.py evidence   # re-render failing runs and rewrite their evidence images
 
 render: resumable. One JSON per (variant, task) in results/alt_refs/raw/<variant>/<task>.json; existing results
   are skipped unless --force, so a long run can be split into chunks and restarted after an interruption.
@@ -120,12 +121,23 @@ def evidence(frames, tid, variant, failed):
         w, h = tiles[0].size
         s = min(3.0, 900 / (3 * w), 420 / h)
         tiles = [t.resize((max(1, int(w * s)), max(1, int(h * s))), Image.NEAREST) for t in tiles]
+        # zoom row: original | frame around the offending pixels, 4x
+        zx0, zy0, zx1, zy1 = _box(px if px.any() else region, 14, orig.shape)
+        zw, zh = zx1 - zx0, zy1 - zy0
+        zs = min(6.0, 440 / zw, 300 / zh)
+        zoom = [Image.fromarray(a[zy0:zy1, zx0:zx1]).resize((max(1, int(zw * zs)), max(1, int(zh * zs))), Image.NEAREST)
+                for a in (orig, f)]
         W, H = tiles[0].size
-        sheet = Image.new("RGB", (3 * W + 20, H + 22), "white")
+        ZW, ZH = zoom[0].size
+        sheet = Image.new("RGB", (max(3 * W + 20, 2 * ZW + 10), H + ZH + 50), "white")
         for j, t in enumerate(tiles):
             sheet.paste(t, (j * (W + 10), 22))
-        ImageDraw.Draw(sheet).text((4, 4), f"{variant} {tid} {k} ({CHECK_NAMES[k]}) frame {i}: original | frame | "
-                                           f"red = offending px, blue = allowed border", fill=(0, 0, 0))
+        for j, t in enumerate(zoom):
+            sheet.paste(t, (j * (ZW + 10), H + 46))
+        dr = ImageDraw.Draw(sheet)
+        dr.text((4, 4), f"{variant} {tid} {k} ({CHECK_NAMES[k]}) frame {i}: original | frame | "
+                        f"red = offending px, blue = allowed border", fill=(0, 0, 0))
+        dr.text((4, H + 28), f"zoom x{zs:.1f} at ({zx0},{zy0})-({zx1},{zy1}): original | frame", fill=(0, 0, 0))
         p = EVID / f"{variant}__{tid}__{k}.png"
         sheet.save(p)
         paths[k] = p.relative_to(RES).as_posix()
@@ -343,9 +355,31 @@ def gifs(per_style=None):
         R.close()
 
 
+def redo_evidence():
+    """Re-render every failing run and rewrite its evidence images (pages are rebuilt deterministically)."""
+    from render import Renderer, prepare
+    R = Renderer()
+    try:
+        for r in load_raw():
+            if not r.get("failed"):
+                continue
+            tid, v = r["task"], r["variant"]
+            spec = json.loads((ROOT / "tasks" / tid / "spec.json").read_text())
+            d = PAGES / v / tid
+            alt_refs.build(tid, v, d)
+            prepare(d, ROOT / "tasks" / tid)
+            fr, err, _ = R.render(d, spec["width"], spec["height"])
+            if fr is not None:
+                r["evidence"] = evidence(fr, tid, v, r["failed"])
+                (RAW / v / f"{tid}.json").write_text(json.dumps(r, indent=1))
+                print(v, tid, r["failed"])
+    finally:
+        R.close()
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["render", "report", "gifs"])
+    ap.add_argument("cmd", choices=["render", "report", "gifs", "evidence"])
     ap.add_argument("--tasks")
     ap.add_argument("--variants")
     ap.add_argument("--workers", type=int, default=2)
@@ -356,5 +390,7 @@ if __name__ == "__main__":
                    a.workers, a.force)
     elif a.cmd == "report":
         report()
+    elif a.cmd == "evidence":
+        redo_evidence()
     else:
         gifs()

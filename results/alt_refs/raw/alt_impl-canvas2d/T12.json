@@ -1,0 +1,31 @@
+{
+ "task": "T12",
+ "variant": "alt_impl-canvas2d",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 0.0
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.092
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.625
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": true
+ },
+ "failed": []
+}

@@ -1,0 +1,37 @@
+{
+ "task": "T14",
+ "variant": "easing-cubic_large",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 0.0
+  },
+  "G3": {
+   "ok": false,
+   "value": 0.5437,
+   "skull_keep": 0.967
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.942
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": false
+ },
+ "failed": [
+  "G3"
+ ],
+ "evidence": {
+  "G3": "evidence/easing-cubic_large__T14__G3.png"
+ }
+}
