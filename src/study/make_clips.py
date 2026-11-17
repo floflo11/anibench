@@ -4,9 +4,9 @@ For every sampled run it writes, under <out>/rater/clips/ (ids are random, nothi
   <id>.mp4 (or .webp/.gif without ffmpeg)  the clip raters watch. Four synchronized panels:
                                            original still | animation, zoom of the original | zoom of the
                                            animation (the zoom box is the one zoom_gifs.py uses).
-  <id>_orig.png                            the original image at full resolution
-  <id>_sheet.png, <id>_zoom.png            3x3 contact sheets of frames (t = 0 ... 1.92 s), full and zoomed,
-                                           for judges that take images rather than video
+and, under <out>/judge_media/ (for judges that take images rather than video; raters do not need them):
+  <id>_orig.png, <id>_origzoom.png         the original image at full resolution, and its zoom
+  <id>_sheet.png, <id>_zoom.png            3x3 contact sheets of frames (t = 0 ... 1.92 s), full and zoomed
 and two JSON files:
   rater/manifest.json  rater-facing: clip id, task, instruction, sizes, paths (relative to rater/).
                        No model, setting or grades. Ship the whole rater/ folder (manifest + clips/).
@@ -22,6 +22,7 @@ python3 src/study/make_clips.py --out build/study/x kimi/T01/1 qwen/T03/1       
 import argparse
 import hashlib
 import json
+import os
 import random
 import secrets
 import shutil
@@ -153,7 +154,8 @@ def attention_items():
                         status=("PASS" if g["pass"] else "FAIL") if g else "UNGRADED", checks=checks,
                         passed=bool(g["pass"]) if g else None, html=str(d / "index.html"), frames=None,
                         dir=str(d), width=spec["width"], height=spec["height"], instruction=spec["instruction"],
-                        attention=True, expected=dict(pass_=a["expect_pass"], defects=a["defects"])))
+                        attention=True, variant=a["variant"],
+                        expected=dict(pass_=a["expect_pass"], defects=a["defects"])))
     return out
 
 
@@ -315,7 +317,13 @@ class RenderFrames:
         if self.R is None:
             self.R = Renderer()
         html = Path(item["html"])
-        if html.name == "index.html":
+        if item.get("variant"):
+            # attention check: rebuild the reference/broken variant (its PNG layers are gitignored) under build/
+            from reference import build_variant
+            page = ROOT / "build/attention" / item["task"] / item["variant"]
+            if not (page / "base.png").exists():
+                build_variant(task_spec(item["task"]), item["variant"], page)
+        elif html.name == "index.html":
             page = html.parent
         else:  # runs/<model>/<task>/<try>/index_<stage>.html -> page_<stage>/ (gitignored), as grade_runs.py
             page = html.parent / f"page_{item['stage']}"
@@ -339,30 +347,34 @@ def clip_id(salt, run):
     return "c" + hashlib.sha256(f"{salt}|{run}".encode()).hexdigest()[:8]
 
 
-def build_clip(item, cid, clips_dir, frames, fmt="auto", panel_w=600):
+def build_clip(item, cid, clips_dir, frames, fmt="auto", panel_w=600, media_dir=None):
+    """Write the rater clip to clips_dir and the judge images to media_dir (default: clips_dir).
+    Returns the manifest entry; paths are relative to clips_dir's parent (the rater/ folder)."""
+    media_dir = media_dir or clips_dir
+    media_dir.mkdir(parents=True, exist_ok=True)
     original = np.asarray(Image.open(ROOT / "tasks" / item["task"] / "image.png").convert("RGB"))
     allowed = np.asarray(Image.open(ROOT / "tasks" / item["task"] / "allowed.png")) > 127
     box = zoom_box(allowed)
     comp = compose(frames, original, box, panel_w)
     video = write_clip(comp, clips_dir / cid, fmt)
-    Image.fromarray(original).save(clips_dir / f"{cid}_orig.png")
     n = len(frames) - 1
     idx = [i for i in SHEET_IDX if i < n]
     labs = [f"t = {2 * i / n:.2f} s" for i in idx]
     sw = 400
     sh = round(item["height"] * sw / item["width"])
     zh = round(sw * (box[3] - box[1]) / (box[2] - box[0]))
-    contact_sheet([Image.fromarray(frames[i]).resize((sw, sh), Image.LANCZOS) for i in idx], labs) \
-        .save(clips_dir / f"{cid}_sheet.png")
+    p = {k: media_dir / f"{cid}_{k}.png" for k in ("orig", "origzoom", "sheet", "zoom")}
+    Image.fromarray(original).save(p["orig"])
+    Image.fromarray(original).crop(box).resize((sw, zh), Image.LANCZOS).save(p["origzoom"])
+    contact_sheet([Image.fromarray(frames[i]).resize((sw, sh), Image.LANCZOS) for i in idx], labs).save(p["sheet"])
     contact_sheet([Image.fromarray(frames[i]).crop(box).resize((sw, zh), Image.LANCZOS) for i in idx], labs) \
-        .save(clips_dir / f"{cid}_zoom.png")
-    Image.fromarray(original).crop(box).resize((sw, zh), Image.LANCZOS).save(clips_dir / f"{cid}_origzoom.png")
-    rel = lambda p: f"clips/{Path(p).name}"  # noqa: E731
+        .save(p["zoom"])
+    base = clips_dir.parent
+    rel = lambda q: os.path.relpath(q, base).replace(os.sep, "/")  # noqa: E731
     return dict(clip_id=cid, task=item["task"], instruction=item["instruction"],
                 width=item["width"], height=item["height"], box=list(map(int, box)),
-                video=rel(video), still=rel(clips_dir / f"{cid}_orig.png"),
-                still_zoom=rel(clips_dir / f"{cid}_origzoom.png"),
-                sheet_full=rel(clips_dir / f"{cid}_sheet.png"), sheet_zoom=rel(clips_dir / f"{cid}_zoom.png"),
+                video=rel(video), still=rel(p["orig"]), still_zoom=rel(p["origzoom"]),
+                sheet_full=rel(p["sheet"]), sheet_zoom=rel(p["zoom"]),
                 fps=FPS, n_frames=n, loops=LOOPS if video.suffix == ".mp4" else 1,
                 sheet_times=[round(2 * i / n, 3) for i in idx])
 
@@ -387,9 +399,11 @@ def build_study(runs, out, n=None, seed=0, salt=None, attention=True, frames_fn=
             try:
                 fr = frames_fn(it)
             except Exception as e:  # noqa: BLE001
+                if it["attention"]:
+                    raise RuntimeError(f"attention check {it['run']} could not be rendered: {e}") from e
                 log(f"skip {it['run']}: {e}")
                 continue
-            entries.append(build_clip(it, cid, clips_dir, fr, fmt, panel_w))
+            entries.append(build_clip(it, cid, clips_dir, fr, fmt, panel_w, out / "judge_media"))
             exp = it.get("expected")
             key[cid] = dict(run=it["run"], model=it["model"], setting=it["setting"], task=it["task"],
                             try_=it["try_"], stage=it["stage"], status=it["status"], checks=it["checks"],

@@ -164,11 +164,14 @@ def test_build_study_is_anonymized(tmp_path):
     for m in MODELS + ["alpha", "beta", "gamma", "frozen", "wrong_part", "attention", "validation", "variant"]:
         assert m not in text, m
     ids_re = "|".join(ids)
-    assert all(re.fullmatch(rf"({ids_re})(_[a-z]+)?\.(mp4|webp|gif|png)", n) for n in names), names
+    assert all(re.fullmatch(rf"({ids_re})\.(mp4|webp|gif)", n) for n in names), names
+    media = [p.name for p in (out / "judge_media").iterdir()]
+    assert all(re.fullmatch(rf"({ids_re})_[a-z]+\.png", n) for n in media), media
     for c in clips:
         assert set(c) >= {"clip_id", "task", "instruction", "video", "still"}
         assert "model" not in c and "setting" not in c and "attention" not in c
-        for k in ("video", "still", "sheet_full", "sheet_zoom"):
+        assert c["video"].startswith("clips/") and c["still"].startswith("../judge_media/")
+        for k in ("video", "still", "still_zoom", "sheet_full", "sheet_zoom"):
             assert (out / "rater" / c[k]).exists(), c[k]
         info = keyf["clips"][c["clip_id"]]
         assert info["task"] == c["task"]

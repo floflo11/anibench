@@ -7,7 +7,7 @@ other system prompt. If the reply is not valid JSON or fails the schema, retry o
 the line "Your previous reply was not valid. Reply with the JSON object only."; if it fails again, record the
 clip as missing for that judge (it counts against the judge's coverage, which `analyze.py` reports).
 
-## Inputs (per clip, from `rater/manifest.json`)
+## Inputs (per clip, from `rater/manifest.json`; paths are relative to `rater/`, the images live in `judge_media/`)
 
 Attach the media in this order and keep the captions:
 
