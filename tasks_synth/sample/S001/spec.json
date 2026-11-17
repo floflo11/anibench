@@ -17,6 +17,8 @@
  "graders": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -33,11 +35,14 @@
  "graders_all": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
   "G6"
  ],
+ "hidden_px": 14,
  "factors": {
   "target_area_px": 1729,
   "target_full_area_px": 1743,
@@ -78,5 +83,6 @@
    }
   ],
   "attempts": 1
- }
+ },
+ "dropped": []
 }

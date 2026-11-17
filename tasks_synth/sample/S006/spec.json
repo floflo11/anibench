@@ -27,11 +27,14 @@
  "blob_allow": 3,
  "graders_all": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
   "G6"
  ],
+ "hidden_px": 179,
  "skull": true,
  "factors": {
   "target_area_px": 10537,
@@ -69,5 +72,9 @@
    }
   ],
   "attempts": 1
- }
+ },
+ "dropped": [
+  "G2b",
+  "G2c"
+ ]
 }

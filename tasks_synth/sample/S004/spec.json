@@ -2,17 +2,17 @@
  "id": "S004",
  "tier": 1,
  "image": "synth_S004",
- "width": 1200,
- "height": 600,
- "instruction": "Make the bear on the right raise its lowered arm out to the side from the shoulder and lower it again.",
+ "width": 1024,
+ "height": 683,
+ "instruction": "Make the bear raise its lowered arm out to the side from the shoulder and lower it again.",
  "parts": [
-  "c1_upper_arm_L",
-  "c1_forearm_L",
-  "c1_finger1_L",
-  "c1_finger2_L",
-  "c1_finger3_L",
-  "c1_thumb_L",
-  "c1_hand_L"
+  "c0_upper_arm_R",
+  "c0_forearm_R",
+  "c0_finger1_R",
+  "c0_finger2_R",
+  "c0_finger3_R",
+  "c0_thumb_R",
+  "c0_hand_R"
  ],
  "kind": "rotate",
  "amp": 30.0,
@@ -26,8 +26,8 @@
  ],
  "pivots": [
   [
-   858,
-   367
+   550,
+   495
   ]
  ],
  "area_tol": 0.5,
@@ -35,52 +35,59 @@
  "graders_all": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
   "G6"
  ],
+ "hidden_px": 2192,
  "factors": {
-  "target_area_px": 7331,
-  "target_full_area_px": 7381,
-  "occlusion_pct": 0.68,
+  "target_area_px": 2577,
+  "target_full_area_px": 4769,
+  "occlusion_pct": 45.96,
   "chain_length": 1,
   "min_dist_px": 0.0,
   "style": "animal",
-  "seed": 4001,
+  "seed": 4000,
   "motion": "raise_arm",
-  "n_chars": 2,
+  "n_chars": 1,
   "species": "bear",
   "knobs": {
-   "occl": "none",
-   "prox": "far"
+   "occl": "some",
+   "prox": "near"
   },
-  "char_scale_u": 4.619,
+  "char_scale_u": 3.698,
   "n_moving_parts": 7
  },
  "synth": {
   "generator": "synth-v1",
-  "scene_seed": 4001,
+  "scene_seed": 4000,
   "motion": "raise_arm",
   "movers": [
    {
     "parts": [
-     "c1_upper_arm_L",
-     "c1_forearm_L",
-     "c1_finger1_L",
-     "c1_finger2_L",
-     "c1_finger3_L",
-     "c1_thumb_L",
-     "c1_hand_L"
+     "c0_upper_arm_R",
+     "c0_forearm_R",
+     "c0_finger1_R",
+     "c0_finger2_R",
+     "c0_finger3_R",
+     "c0_thumb_R",
+     "c0_hand_R"
     ],
     "pivot": [
-     857.51,
-     367.16
+     550.02,
+     494.59
     ],
-    "amp": 30.0,
+    "amp": -30.0,
     "phase": "one"
    }
   ],
-  "attempts": 2
- }
+  "attempts": 1
+ },
+ "dropped": [
+  "G2b",
+  "G2c"
+ ]
 }

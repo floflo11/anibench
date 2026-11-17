@@ -13,9 +13,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0035
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -23,7 +36,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -44,7 +59,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.304
+    "value": 0.1457,
+    "loss": 0.1457,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -52,7 +69,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -71,9 +90,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.325
+    "value": 0.2565,
+    "loss": 0.2565,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -81,7 +107,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -102,15 +130,19 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.0946
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.683
+    "value": 0.702
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -129,9 +161,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0278
+    "value": 0.0013,
+    "loss": 0.0013,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -139,7 +184,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -155,7 +202,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3884,
+    "value": 0.3714,
+    "loss": 0.0,
+    "gain": 0.3714,
     "skull_keep": 0.998
    },
    "G4": {
@@ -164,7 +213,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -183,9 +234,16 @@
     "value": 2,
     "base": 2
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2824
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -193,7 +251,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -212,9 +272,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3375
+    "value": 0.0346,
+    "loss": 0.0346,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -222,7 +290,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -241,9 +311,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1229
+    "value": 0.1015,
+    "loss": 0.1015,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -251,7 +329,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.036
+    "value": 0.036,
+    "frac": 0.036,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -270,9 +350,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3245
+    "value": 0.1125,
+    "loss": 0.1125,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -280,7 +367,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -299,9 +388,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0202
+    "value": 0.0092,
+    "loss": 0.0092,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -309,7 +411,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -328,9 +432,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0608
+    "value": 0.0521,
+    "loss": 0.0,
+    "gain": 0.0521
    },
    "G4": {
     "ok": true,
@@ -338,7 +455,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.103
+    "value": 0.103,
+    "frac": 0.103,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -357,9 +476,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1051
+    "value": 0.0743,
+    "loss": 0.0743,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -367,7 +494,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -381,18 +510,28 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1946,
-    "skull_keep": 0.998
+    "value": 0.2612,
+    "loss": 0.0,
+    "gain": 0.2612,
+    "skull_keep": 0.995
    },
    "G4": {
     "ok": true,
-    "value": 0.666
+    "value": 0.776
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.347,
+    "frac": 0.347,
+    "disp": 0.72
    },
    "G6": {
     "ok": true,
@@ -408,20 +547,35 @@
    },
    "G2": {
     "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
     "value": 2,
-    "base": 2
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1363
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.894
+    "value": 0.916
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 1.0,
+    "frac": 1.0,
+    "disp": 0.95
    },
    "G6": {
     "ok": true,
@@ -437,20 +591,29 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 2,
+    "base": 2
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.2227
+    "value": 0.0648,
+    "loss": 0.0648,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.538
+    "value": 0.992
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -469,9 +632,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0031
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -479,7 +655,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -498,17 +676,26 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4365
+    "value": 0.18,
+    "loss": 0.18,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.668
+    "value": 0.796
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -527,9 +714,16 @@
     "value": 2,
     "base": 2
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1508
+    "value": 0.0834,
+    "loss": 0.0834,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -537,7 +731,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -556,9 +752,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.144
+    "value": 0.1354,
+    "loss": 0.0,
+    "gain": 0.1354
    },
    "G4": {
     "ok": true,
@@ -566,7 +775,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -585,9 +796,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0651
+    "value": 0.0469,
+    "loss": 0.0469,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -595,7 +814,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -609,9 +830,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2983,
+    "value": 0.2293,
+    "loss": 0.0,
+    "gain": 0.2293,
     "skull_keep": 0.995
    },
    "G4": {
@@ -620,7 +849,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.073
+    "value": 0.073,
+    "frac": 0.073,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -639,9 +870,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3834
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -649,7 +893,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -668,9 +914,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1679
+    "value": 0.0761,
+    "loss": 0.0761,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -678,7 +932,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -697,9 +953,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2614
+    "value": 0.1211,
+    "loss": 0.1211,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -707,7 +971,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -726,9 +992,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4062
+    "value": 0.3638,
+    "loss": 0.3638,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -736,7 +1009,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -755,9 +1030,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3399
+    "value": 0.0623,
+    "loss": 0.0623,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -765,7 +1053,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -784,9 +1074,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0207
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -794,7 +1092,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -813,9 +1113,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0109
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -823,7 +1136,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -837,9 +1152,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 3,
+    "base": 3,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2006,
+    "value": 0.1994,
+    "loss": 0.0,
+    "gain": 0.1994,
     "skull_keep": 0.999
    },
    "G4": {
@@ -848,7 +1171,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.028
+    "value": 0.028,
+    "frac": 0.028,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -864,20 +1189,35 @@
    },
    "G2": {
     "ok": true,
+    "value": 3,
+    "base": 3
+   },
+   "G2b": {
+    "ok": true,
     "value": 2,
-    "base": 2
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.4008
+    "value": 0.0205,
+    "loss": 0.0205,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.943
+    "value": 0.936
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -896,9 +1236,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1283
+    "value": 0.1114,
+    "loss": 0.1114,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -906,7 +1259,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -925,9 +1280,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3272
+    "value": 0.1198,
+    "loss": 0.1198,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -935,7 +1297,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -954,17 +1318,26 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4764
+    "value": 0.2325,
+    "loss": 0.2325,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.665
+    "value": 0.783
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -980,20 +1353,35 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0079
+    "value": 0.1337,
+    "loss": 0.1337,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.625
+    "value": 0.668
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1014,15 +1402,19 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.2114
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.768
+    "value": 0.629
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1043,7 +1435,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.0694
+    "value": 0.0627,
+    "loss": 0.0627,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1051,7 +1445,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1065,9 +1461,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
     "value": 0.403,
+    "loss": 0.0,
+    "gain": 0.403,
     "skull_keep": 0.996
    },
    "G4": {
@@ -1076,7 +1480,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.006
+    "value": 0.006,
+    "frac": 0.006,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1095,9 +1501,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2439
+    "value": 0.0407,
+    "loss": 0.0,
+    "gain": 0.0407
    },
    "G4": {
     "ok": true,
@@ -1105,7 +1524,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1124,9 +1545,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1431
+    "value": 0.1173,
+    "loss": 0.1173,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1134,7 +1568,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1153,9 +1589,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0024
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1163,7 +1612,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1184,7 +1635,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3005
+    "value": 0.06,
+    "loss": 0.06,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1192,7 +1645,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1211,17 +1666,26 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3236
+    "value": 0.1224,
+    "loss": 0.1224,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.498
+    "value": 0.769
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1240,9 +1704,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1424
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1250,7 +1727,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1269,9 +1748,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0488
+    "value": 0.0353,
+    "loss": 0.0353,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1279,7 +1765,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1293,9 +1781,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2294,
+    "value": 0.2068,
+    "loss": 0.0,
+    "gain": 0.2068,
     "skull_keep": 0.999
    },
    "G4": {
@@ -1304,7 +1800,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1323,9 +1821,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2522
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1333,7 +1844,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1352,9 +1865,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1181
+    "value": 0.0568,
+    "loss": 0.0568,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1362,7 +1883,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1381,9 +1904,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3675
+    "value": 0.0475,
+    "loss": 0.0475,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1391,7 +1927,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1407,12 +1945,19 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3803
+    "value": 0.3526,
+    "loss": 0.3526,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1420,7 +1965,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1439,9 +1986,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2615
+    "value": 0.1034,
+    "loss": 0.1034,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1449,7 +2003,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.016
+    "value": 0.016,
+    "frac": 0.016,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1468,9 +2024,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3643
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1478,7 +2047,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1499,7 +2070,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.0362
+    "value": 0.0257,
+    "loss": 0.0257,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1507,7 +2080,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1521,18 +2096,28 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2093,
-    "skull_keep": 0.999
+    "value": 0.2131,
+    "loss": 0.0,
+    "gain": 0.2131,
+    "skull_keep": 0.996
    },
    "G4": {
     "ok": true,
-    "value": 0.728
+    "value": 0.635
    },
    "G5": {
     "ok": true,
-    "value": 0.055
+    "value": 0.271,
+    "frac": 0.271,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1551,9 +2136,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1677
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1561,7 +2159,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1580,9 +2180,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0402
+    "value": 0.0308,
+    "loss": 0.0308,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1590,7 +2203,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1609,9 +2224,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1022
+    "value": 0.0864,
+    "loss": 0.0864,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1619,7 +2247,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.082
+    "value": 0.082,
+    "frac": 0.082,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1635,20 +2265,29 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.4434
+    "value": 0.2775,
+    "loss": 0.2775,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.711
+    "value": 0.791
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1667,9 +2306,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3587
+    "value": 0.0984,
+    "loss": 0.0984,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1677,7 +2329,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1693,12 +2347,14 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1583
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1706,7 +2362,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1727,7 +2385,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.0583
+    "value": 0.0542,
+    "loss": 0.0542,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1735,7 +2395,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1749,9 +2411,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
     "value": 0.238,
+    "loss": 0.0,
+    "gain": 0.238,
     "skull_keep": 0.997
    },
    "G4": {
@@ -1760,7 +2430,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1779,9 +2451,17 @@
     "value": 3,
     "base": 3
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2782
+    "value": 0.2465,
+    "loss": 0.2465,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1789,7 +2469,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1808,9 +2490,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1174
+    "value": 0.0964,
+    "loss": 0.0964,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1818,7 +2513,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1834,12 +2531,20 @@
    },
    "G2": {
     "ok": true,
+    "value": 0,
+    "base": 0
+   },
+   "G2b": {
+    "ok": true,
     "value": 1,
-    "base": 1
+    "base": 1,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1571
+    "value": 0.0836,
+    "loss": 0.0836,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1847,7 +2552,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1866,9 +2573,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.101
+    "value": 0.0525,
+    "loss": 0.0525,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1876,7 +2590,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1895,9 +2611,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2086
+    "value": 0.0693,
+    "loss": 0.0693,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1905,7 +2628,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1924,9 +2649,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4216
+    "value": 0.4083,
+    "loss": 0.0,
+    "gain": 0.4083
    },
    "G4": {
     "ok": true,
@@ -1934,7 +2672,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1953,9 +2693,17 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 3,
+    "base": 3,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.07
+    "value": 0.0538,
+    "loss": 0.0538,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -1963,7 +2711,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -1979,7 +2729,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3362,
+    "value": 0.3236,
+    "loss": 0.0,
+    "gain": 0.3236,
     "skull_keep": 0.999
    },
    "G4": {
@@ -1988,7 +2740,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.111
+    "value": 0.111,
+    "frac": 0.111,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2007,9 +2761,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2186
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2017,7 +2784,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2033,20 +2802,35 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3527
+    "value": 0.0704,
+    "loss": 0.0704,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.558
+    "value": 0.98
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2065,9 +2849,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0824
+    "value": 0.0719,
+    "loss": 0.0719,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2075,7 +2872,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2094,9 +2893,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4563
+    "value": 0.21,
+    "loss": 0.21,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2104,7 +2910,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2123,17 +2931,32 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2191
+    "value": 0.0976,
+    "loss": 0.0976,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.639
+    "value": 0.766
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2152,9 +2975,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2846
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2162,7 +2993,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2181,9 +3014,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0011
+    "value": 0.0011,
+    "loss": 0.0011,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2191,7 +3037,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2205,9 +3053,22 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2333,
+    "value": 0.1303,
+    "loss": 0.0,
+    "gain": 0.1303,
     "skull_keep": 0.998
    },
    "G4": {
@@ -2216,7 +3077,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.092
+    "value": 0.092,
+    "frac": 0.092,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2232,12 +3095,25 @@
    },
    "G2": {
     "ok": true,
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
     "value": 2,
-    "base": 2
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3715
+    "value": 0.3217,
+    "loss": 0.3217,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2245,7 +3121,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2264,9 +3142,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3855
+    "value": 0.0124,
+    "loss": 0.0124,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2274,7 +3160,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2293,9 +3181,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0994
+    "value": 0.0721,
+    "loss": 0.0721,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2303,7 +3199,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2324,7 +3222,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3872
+    "value": 0.2576,
+    "loss": 0.2576,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2332,7 +3232,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2348,20 +3250,35 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 1,
+    "base": 1
+   },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.0632
+    "value": 0.1063,
+    "loss": 0.1063,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.513
+    "value": 0.781
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2380,9 +3297,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0848
+    "value": 0.0778,
+    "loss": 0.0,
+    "gain": 0.0778
    },
    "G4": {
     "ok": true,
@@ -2390,7 +3320,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2409,9 +3341,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0538
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2419,7 +3358,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2433,9 +3374,22 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2273,
+    "value": 0.1078,
+    "loss": 0.0,
+    "gain": 0.1078,
     "skull_keep": 0.996
    },
    "G4": {
@@ -2444,7 +3398,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.112
+    "value": 0.112,
+    "frac": 0.112,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2463,9 +3419,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1343
+    "value": 0.065,
+    "loss": 0.065,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2473,7 +3442,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2492,9 +3463,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0719
+    "value": 0.0587,
+    "loss": 0.0587,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2502,7 +3486,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2521,9 +3507,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1256
+    "value": 0.0718,
+    "loss": 0.0718,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2531,7 +3525,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.066
+    "value": 0.066,
+    "frac": 0.066,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2547,12 +3543,19 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 1,
+    "base": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3886
+    "value": 0.31,
+    "loss": 0.31,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2560,7 +3563,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2579,9 +3584,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2127
+    "value": 0.1257,
+    "loss": 0.1257,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2589,7 +3601,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.003
+    "value": 0.003,
+    "frac": 0.003,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2608,9 +3622,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1763
+    "value": 0.1379,
+    "loss": 0.0,
+    "gain": 0.1379
    },
    "G4": {
     "ok": true,
@@ -2618,7 +3639,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2637,9 +3660,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0283
+    "value": 0.0058,
+    "loss": 0.0058,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2647,7 +3683,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2661,9 +3699,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2457,
+    "value": 0.2153,
+    "loss": 0.0,
+    "gain": 0.2153,
     "skull_keep": 0.997
    },
    "G4": {
@@ -2672,7 +3718,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.032
+    "value": 0.032,
+    "frac": 0.032,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2691,9 +3739,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3644
+    "value": 0.2881,
+    "loss": 0.2881,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2701,7 +3762,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2720,9 +3783,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.158
+    "value": 0.0986,
+    "loss": 0.0986,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2730,7 +3806,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2749,9 +3827,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0025
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2759,7 +3850,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2778,9 +3871,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3507
+    "value": 0.3246,
+    "loss": 0.3246,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2788,7 +3888,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2809,15 +3911,19 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.4876
+    "value": 0.0728,
+    "loss": 0.0728,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.624
+    "value": 0.565
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2838,15 +3944,19 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3892
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.445
+    "value": 0.718
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2865,9 +3975,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.033
+    "value": 0.0294,
+    "loss": 0.0294,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2875,7 +3993,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2889,9 +4009,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3441,
+    "value": 0.3419,
+    "loss": 0.0,
+    "gain": 0.3419,
     "skull_keep": 1.0
    },
    "G4": {
@@ -2900,7 +4028,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.068
+    "value": 0.068,
+    "frac": 0.068,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2916,12 +4046,19 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1876
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2929,7 +4066,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2948,9 +4087,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3344
+    "value": 0.1175,
+    "loss": 0.1175,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2958,7 +4110,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -2977,9 +4131,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2892
+    "value": 0.106,
+    "loss": 0.106,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -2987,7 +4149,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3006,9 +4170,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2868
+    "value": 0.1925,
+    "loss": 0.1925,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3016,7 +4187,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3035,9 +4208,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1989
+    "value": 0.09,
+    "loss": 0.09,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3045,7 +4231,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3064,9 +4252,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1796
+    "value": 0.1677,
+    "loss": 0.0,
+    "gain": 0.1677
    },
    "G4": {
     "ok": true,
@@ -3074,7 +4275,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.032
+    "value": 0.032,
+    "frac": 0.032,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3093,9 +4296,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0168
+    "value": 0.0149,
+    "loss": 0.0149,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3103,7 +4319,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3119,16 +4337,20 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.2407,
-    "skull_keep": 1.0
+    "value": 0.3356,
+    "loss": 0.0,
+    "gain": 0.3356,
+    "skull_keep": 0.994
    },
    "G4": {
     "ok": true,
-    "value": 0.665
+    "value": 0.723
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.261,
+    "frac": 0.261,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3147,9 +4369,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2883
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3157,7 +4392,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3176,9 +4413,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3685
+    "value": 0.1124,
+    "loss": 0.1124,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3186,7 +4431,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3205,9 +4452,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1793
+    "value": 0.0896,
+    "loss": 0.0896,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3215,7 +4475,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3231,12 +4493,14 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.4128
+    "value": 0.2215,
+    "loss": 0.2215,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3244,7 +4508,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3263,9 +4529,22 @@
     "value": 3,
     "base": 3
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2119
+    "value": 0.0928,
+    "loss": 0.0928,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3273,7 +4552,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3292,9 +4573,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1785
+    "value": 0.1433,
+    "loss": 0.0,
+    "gain": 0.1433
    },
    "G4": {
     "ok": true,
@@ -3302,7 +4596,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3321,9 +4617,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0572
+    "value": 0.0456,
+    "loss": 0.0456,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3331,7 +4635,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3345,9 +4651,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 3,
+    "base": 3,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3825,
+    "value": 0.3217,
+    "loss": 0.0,
+    "gain": 0.3217,
     "skull_keep": 0.997
    },
    "G4": {
@@ -3356,7 +4670,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3375,9 +4691,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2628
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3385,7 +4714,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3404,9 +4735,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3259
+    "value": 0.1045,
+    "loss": 0.1045,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3414,7 +4758,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3433,9 +4779,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0074
+    "value": 0.0011,
+    "loss": 0.0011,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3443,7 +4802,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3459,12 +4820,19 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.4487
+    "value": 0.335,
+    "loss": 0.335,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3472,7 +4840,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3491,9 +4861,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0367
+    "value": 0.0203,
+    "loss": 0.0203,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3501,7 +4884,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3517,12 +4902,19 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1706
+    "value": 0.1597,
+    "loss": 0.0,
+    "gain": 0.1597
    },
    "G4": {
     "ok": true,
@@ -3530,7 +4922,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3549,9 +4943,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0985
+    "value": 0.0902,
+    "loss": 0.0902,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3559,7 +4961,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3573,18 +4977,33 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1444,
-    "skull_keep": 1.0
+    "value": 0.2865,
+    "loss": 0.0,
+    "gain": 0.2865,
+    "skull_keep": 0.995
    },
    "G4": {
     "ok": true,
-    "value": 0.754
+    "value": 0.797
    },
    "G5": {
     "ok": true,
-    "value": 0.096
+    "value": 0.353,
+    "frac": 0.353,
+    "disp": 0.62
    },
    "G6": {
     "ok": true,
@@ -3603,9 +5022,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1147
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3613,7 +5039,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3632,9 +5060,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3252
+    "value": 0.1063,
+    "loss": 0.1063,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3642,7 +5083,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3661,9 +5104,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1718
+    "value": 0.0841,
+    "loss": 0.0841,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3671,7 +5122,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3692,7 +5145,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3596
+    "value": 0.065,
+    "loss": 0.065,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3700,7 +5155,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3719,9 +5176,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3013
+    "value": 0.0818,
+    "loss": 0.0818,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3729,7 +5199,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3748,9 +5220,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1533
+    "value": 0.1425,
+    "loss": 0.0,
+    "gain": 0.1425
    },
    "G4": {
     "ok": true,
@@ -3758,7 +5237,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3777,9 +5258,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0006
+    "value": 0.0005,
+    "loss": 0.0005,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3787,7 +5281,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3801,9 +5297,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2427,
+    "value": 0.2393,
+    "loss": 0.0,
+    "gain": 0.2393,
     "skull_keep": 0.998
    },
    "G4": {
@@ -3812,7 +5316,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.013
+    "value": 0.013,
+    "frac": 0.013,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3831,9 +5337,22 @@
     "value": 3,
     "base": 3
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3717
+    "value": 0.3344,
+    "loss": 0.3344,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3841,7 +5360,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3857,12 +5378,20 @@
    },
    "G2": {
     "ok": true,
+    "value": 0,
+    "base": 0
+   },
+   "G2b": {
+    "ok": true,
     "value": 1,
-    "base": 1
+    "base": 1,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.3124
+    "value": 0.0594,
+    "loss": 0.0594,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3870,7 +5399,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3889,9 +5420,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0033
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3899,7 +5443,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3915,20 +5461,29 @@
    },
    "G2": {
     "ok": true,
-    "value": 1,
-    "base": 1
+    "value": 0,
+    "base": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.4144
+    "value": 0.22,
+    "loss": 0.22,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.69
+    "value": 0.808
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3947,9 +5502,16 @@
     "value": 2,
     "base": 2
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1574
+    "value": 0.0948,
+    "loss": 0.0948,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3957,7 +5519,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -3976,9 +5540,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2745
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -3986,7 +5563,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4005,9 +5584,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0456
+    "value": 0.0017,
+    "loss": 0.0017,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4015,7 +5601,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4029,9 +5617,22 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1696,
+    "value": 0.1475,
+    "loss": 0.0,
+    "gain": 0.1475,
     "skull_keep": 0.997
    },
    "G4": {
@@ -4040,7 +5641,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.128
+    "value": 0.128,
+    "frac": 0.128,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4059,9 +5662,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1598
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4069,7 +5685,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4088,9 +5706,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2228
+    "value": 0.1186,
+    "loss": 0.1186,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4098,7 +5724,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4117,9 +5745,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1104
+    "value": 0.0747,
+    "loss": 0.0747,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4127,7 +5763,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.047
+    "value": 0.047,
+    "frac": 0.047,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4146,9 +5784,16 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1279
+    "value": 0.0775,
+    "loss": 0.0775,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4156,7 +5801,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4175,9 +5822,16 @@
     "value": 2,
     "base": 2
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3626
+    "value": 0.0913,
+    "loss": 0.0913,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4185,7 +5839,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4204,9 +5860,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0129
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4214,7 +5878,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4233,9 +5899,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.023
+    "value": 0.0201,
+    "loss": 0.0201,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4243,7 +5917,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4257,9 +5933,17 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
     "value": 0.2184,
+    "loss": 0.0,
+    "gain": 0.2184,
     "skull_keep": 0.999
    },
    "G4": {
@@ -4268,7 +5952,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4287,9 +5973,22 @@
     "value": 3,
     "base": 3
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3745
+    "value": 0.3196,
+    "loss": 0.3196,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4297,7 +5996,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4313,20 +6014,29 @@
    },
    "G2": {
     "ok": true,
-    "value": 2,
-    "base": 2
+    "value": 1,
+    "base": 1
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
    },
    "G3": {
     "ok": true,
-    "value": 0.1456
+    "value": 0.0755,
+    "loss": 0.0755,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.982
+    "value": 0.517
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4345,9 +6055,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2455
+    "value": 0.0749,
+    "loss": 0.0749,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4355,7 +6073,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4376,7 +6096,9 @@
    },
    "G3": {
     "ok": true,
-    "value": 0.3829
+    "value": 0.2838,
+    "loss": 0.2838,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4384,7 +6106,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4403,9 +6127,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2495
+    "value": 0.0724,
+    "loss": 0.0724,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4413,7 +6150,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4432,9 +6171,22 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.0644
+    "value": 0.0556,
+    "loss": 0.0,
+    "gain": 0.0556
    },
    "G4": {
     "ok": true,
@@ -4442,7 +6194,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.019
+    "value": 0.019,
+    "frac": 0.019,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4461,9 +6215,17 @@
     "value": 1,
     "base": 1
    },
+   "G2b": {
+    "ok": true,
+    "value": 1,
+    "base": 1,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.1075
+    "value": 0.0911,
+    "loss": 0.0911,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4471,7 +6233,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4485,18 +6249,28 @@
     "ok": true,
     "value": 0.0
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.2256,
-    "skull_keep": 1.0
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0,
+    "skull_keep": 0.997
    },
    "G4": {
     "ok": true,
-    "value": 0.652
+    "value": 0.774
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.383,
+    "frac": 0.383,
+    "disp": 0.67
    },
    "G6": {
     "ok": true,
@@ -4515,9 +6289,22 @@
     "value": 2,
     "base": 2
    },
+   "G2b": {
+    "ok": true,
+    "value": 2,
+    "base": 2,
+    "frame": 0
+   },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.3873
+    "value": 0.0,
+    "loss": 0.0,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
@@ -4525,7 +6312,9 @@
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,
@@ -4544,17 +6333,26 @@
     "value": 1,
     "base": 1
    },
+   "G2c": {
+    "ok": true,
+    "value": 0,
+    "frame": 0
+   },
    "G3": {
     "ok": true,
-    "value": 0.4213
+    "value": 0.1475,
+    "loss": 0.1475,
+    "gain": 0.0
    },
    "G4": {
     "ok": true,
-    "value": 0.976
+    "value": 0.97
    },
    "G5": {
     "ok": true,
-    "value": 0.0
+    "value": 0.0,
+    "frac": 0.0,
+    "disp": null
    },
    "G6": {
     "ok": true,

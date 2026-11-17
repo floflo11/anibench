@@ -7,7 +7,8 @@ flat image and white-fill the hole), occluded and occluding parts are restored e
 exists for every generated task. The page uses the same three.js template as src/reference.py.
 
 Usage: python src/synth/check_reference.py [tasks_dir] [max_tasks] [workers] [start]
-(results of successive chunks are merged into results/synth_reference.json)
+(results of successive chunks are merged into results/synth_reference.json), then
+python src/synth/check_reference.py readmit [tasks_dir]   # drop G2b/G2c where the Chrome reference fails them
 Writes out/synth_ref/<id>/ (pages; gitignored) and results/synth_reference.json.
 """
 import json
@@ -157,7 +158,38 @@ def main(tasks_dir=ROOT / "tasks_synth", max_tasks=None, workers=2, start=0):
     return summary
 
 
+ADMITTED = ("G2b", "G2c")  # checks admitted per task (make_tasks.py); the rest are core and must pass
+
+
+def readmit(tasks_dir=ROOT / "tasks_synth"):
+    """Drop an admitted check (G2b, G2c) from a task whose reference fails it in Chrome although it passed in the
+    numpy simulation used for screening (nearest-neighbour rotation differs by a pixel here and there). Returns
+    {task: [dropped checks]} and the tasks that fail a core check (to report, never silently fixed)."""
+    tasks_dir = Path(tasks_dir)
+    res = json.loads((ROOT / "results/synth_reference.json").read_text())["results"]
+    idx = json.loads((tasks_dir / "index.json").read_text())
+    dropped, core_fail = {}, {}
+    for spec in idx:
+        g = res.get(spec["id"])
+        if not g or "error" in g:
+            continue
+        bad = [k for k, v in g.items() if k != "pass" and not v["ok"]]
+        if [k for k in bad if k not in ADMITTED]:
+            core_fail[spec["id"]] = bad
+        drop = [k for k in bad if k in ADMITTED]
+        if drop:
+            spec["graders"] = [k for k in spec["graders"] if k not in drop]
+            spec["dropped"] = sorted(set(spec.get("dropped", [])) | set(drop))
+            (tasks_dir / spec["id"] / "spec.json").write_text(json.dumps(spec, indent=1))
+            dropped[spec["id"]] = drop
+    (tasks_dir / "index.json").write_text(json.dumps(idx, indent=1))
+    return dropped, core_fail
+
+
 if __name__ == "__main__":
+    if sys.argv[1:2] == ["readmit"]:
+        print(readmit(*(sys.argv[2:3] and [Path(sys.argv[2])])))
+        sys.exit()
     a = sys.argv[1:]
     main(Path(a[0]) if a else ROOT / "tasks_synth", int(a[1]) if len(a) > 1 else None, int(a[2]) if len(a) > 2 else 2,
          int(a[3]) if len(a) > 3 else 0)
