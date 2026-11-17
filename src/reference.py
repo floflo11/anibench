@@ -250,7 +250,7 @@ def oracle_split(spec, variant, n_frames=25):
     """Ground truth for the detachment copies, independent of the graders: draw only the part
     (no scenery) the way the page does, frame by frame, and count its 8-connected pieces with the
     same size floors as G2b. Returns dict(split=bool, base=pieces in the original, worst=max pieces)."""
-    from graders import G2B_MIN, G2B_MIN0, pieces
+    from graders import G2B_MIN, pieces
     img, _, layers, keep = plan_variant(spec, variant)
     fg = foreground(img)
     target = np.any([load_part(p) for p in spec["parts"]], axis=0)
@@ -258,7 +258,7 @@ def oracle_split(spec, variant, n_frames=25):
     if spec["kind"] in ("translate_up", "rotate_hat"):
         skull = np.any([load_part(p.replace("_hat", "_skull")) for p in spec["parts"]], axis=0)
         keep &= ~skull
-    n0 = pieces(fg & target & (~skull if skull is not None else True), G2B_MIN0)
+    n0 = pieces(fg & target & (~skull if skull is not None else True), G2B_MIN)
     worst = 0
     for i in range(n_frames):
         t = i * 2 / (n_frames - 1)

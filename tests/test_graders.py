@@ -132,6 +132,20 @@ def test_island_inside_unchanged_scenery_is_ignored(tmp_path, one_piece_hand):
     assert res["G2b"]["ok"], res
 
 
+def test_island_inside_light_scenery_is_ignored(tmp_path, one_piece_hand):
+    """Same, over near-white lace: the lace is too light to be foreground, but it is still
+    scenery (not blank background), so it encloses the island."""
+    sc = one_piece_hand
+    lace = rect(44, 60, 40, 56)
+    img = paint(sc.image, lace, (235, 232, 228))
+    sc.image, sc.erased = img, paint(img, sc.hand, (255, 255, 255))
+    d = write_task(tmp_path, img, sc.hand, sc.allowed)
+    fr = sc.frames(offsets(sway(), 2))
+    fr[3][48:54, 45:50] = HAND
+    res = grade(fr, d)
+    assert res["G2b"]["ok"], res
+
+
 def test_island_partly_on_background_still_counts(tmp_path, one_piece_hand):
     sc = one_piece_hand
     d = write_task(tmp_path, sc.image, sc.hand, sc.allowed)

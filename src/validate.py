@@ -16,11 +16,14 @@ EXPECT = {"whole": ["G1"], "missed_thumb": ["G2", "G2b"], "hole": ["G3"], "froze
           "center_pivot": ["G5"], "no_loop": ["G6"], "wrong_part": ["G1", "G4"],
           "detach_small": ["G2", "G2b"], "detach_tip": ["G2", "G2b"], "gap_seam": ["G2", "G2b"]}
 GIF_VARIANTS = ("ref", "missed_thumb", "center_pivot", "hole")
+# copies whose part may or may not really come apart; reference.oracle_split says which
+SPLIT_VARIANTS = ("missed_thumb", "detach_small", "detach_tip", "gap_seam")
 
 
 def worker(jobs, q):
     from render import Renderer, prepare, save_gif
     from graders import candidate_checks, grade
+    from reference import oracle_split
     R = Renderer()
     for tid, v in jobs:
         d = ROOT / "validation" / tid / v
@@ -31,6 +34,8 @@ def worker(jobs, q):
             q.put((tid, v, {"error": err, "logs": logs[-5:]}))
             continue
         g = grade(fr, ROOT / "tasks" / tid, checks=candidate_checks(spec))
+        if v in SPLIT_VARIANTS:
+            g["oracle"] = oracle_split(spec, v)
         if v in GIF_VARIANTS:
             save_gif(fr, d / "anim.gif", 0.4)
         q.put((tid, v, g))
@@ -51,7 +56,7 @@ def main(n=2, only=None):
     for _ in jobs:
         tid, v, g = q.get()
         res.setdefault(tid, {})[v] = g
-        print(tid, v, "ERR" if "error" in g else ("PASS" if g["pass"] else "fail " + ",".join(k for k, x in g.items() if k != "pass" and not x["ok"])), flush=True)
+        print(tid, v, "ERR" if "error" in g else ("PASS" if g["pass"] else "fail " + ",".join(k for k, x in g.items() if k not in ("pass", "oracle") and not x["ok"])), flush=True)
     for p in ps: p.join()
     out.write_text(json.dumps(dict(sorted(res.items())), indent=1))
     return res

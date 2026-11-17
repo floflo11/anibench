@@ -23,9 +23,9 @@ G5_R = 10
 G6_LOOP = 0.001
 G6_ORIG = 0.005
 SKULL_KEEP = 0.85
-G2B_MIN = 20       # px: a piece of the part at least this big counts as a piece in a frame
-G2B_MIN0 = 10      # px: pieces of the original part counted for the baseline (hysteresis, see g2b)
+G2B_MIN = 20       # px: a piece of the part at least this big counts as a piece
 G2B_EMBED = 0.9    # a footprint-free piece whose border is >= this fraction unchanged scenery is ignored
+G2B_BG = 8         # original pixels within this distance of white are blank background, not scenery
 EIGHT = np.ones((3, 3), bool)
 
 
@@ -61,7 +61,7 @@ def pieces(mask, min_px):
 def part_pieces(mask, static, target, min_px):
     """Count 8-connected pieces of mask with >= min_px pixels, skipping embedded islands: pieces
     with no pixel in the part's original footprint whose 1-px border is >= G2B_EMBED static
-    (unchanged, non-target) foreground. See g2b."""
+    scenery (unchanged, outside the footprint, not blank background in the original). See g2b."""
     lab, n = ndimage.label(mask, structure=EIGHT)
     if n == 0:
         return 0
@@ -88,7 +88,7 @@ def part_pixels(fg, diff, region, target, skull=None):
     return m
 
 
-def g2b(fgs, raw, fg0, region, target, skull=None):
+def g2b(fgs, raw, fg0, region, target, skull=None, scenery0=None):
     """G2b Connectivity: the moving part must not come apart.
 
     Isolating the part in a later frame. The part moves, so its pixels cannot be found by a
@@ -117,24 +117,29 @@ def g2b(fgs, raw, fg0, region, target, skull=None):
     changed form islands surrounded on all sides by unchanged scenery. Such an island is
     attached to the part through pixels that merely look the same, so a piece that has no pixel
     in the original footprint and whose 1-px border is >= G2B_EMBED unchanged non-target
-    foreground is not counted. A piece left behind is in the footprint and always counts; a
-    piece dragged loose over background has white on its border and counts.
+    scenery is not counted. Scenery means: outside the footprint, unchanged, and not blank
+    background in the original (more than G2B_BG from white). It need not be foreground: near-white
+    lace (T04's sleeve) is too light for FG_T but still encloses an island. A piece left behind is
+    in the footprint and always counts; a piece dragged loose over the background has blank white
+    on its border and counts.
     Known blind spots: a piece that drifts entirely onto a neighbour of the same colour is
     ignored, and a model that repaints the reveal with a non-white colour that touches only the
     parent can add a piece (false alarm).
 
-    Counting. Baseline = 8-connected pieces of the original part (fg0 & footprint) with at least
-    G2B_MIN0 px; frame t = pieces of part_pixels with at least G2B_MIN px. A frame fails if it
-    has more pieces than the baseline. The two floors give hysteresis: a 10-19 px piece of the
-    original that grows by a pixel or two when resampled does not turn into a "new" piece, while
-    any new piece of 20 px or more is caught. Fewer pieces is not a failure: pieces merging (two
-    earrings touching) is not a split, and parts that vanish are G3's and G4's job.
+    Counting. Baseline = 8-connected pieces of the original part (fg0 & footprint, skull removed)
+    with at least G2B_MIN px; frame t = the same count over part_pixels. A frame fails if it has
+    more pieces than the baseline. Fewer pieces is not a failure: pieces merging (two earrings
+    touching) is not a split, and parts that vanish are G3's and G4's job. (A lower floor for the
+    baseline was tried as hysteresis against resampling; it gave free slack wherever the original
+    has 10-19 px crumbs, hiding T11's detach_tip and every split on T19, so it was dropped.)
     """
     base_mask = fg0 & region & target
     if skull is not None:
         base_mask &= ~skull
-    base = pieces(base_mask, G2B_MIN0)
-    counts = [part_pieces(part_pixels(f, c, region, target, skull), f & ~target & ~c, target, G2B_MIN)
+    base = pieces(base_mask, G2B_MIN)
+    if scenery0 is None:
+        scenery0 = fg0
+    counts = [part_pieces(part_pixels(f, c, region, target, skull), scenery0 & ~target & ~c, target, G2B_MIN)
               for f, c in zip(fgs, raw)]
     worst = int(np.argmax(counts))
     return dict(ok=bool(counts[worst] <= base), value=int(counts[worst]), base=int(base), frame=worst)
@@ -188,7 +193,8 @@ def grade(frames, task_dir, checks=None):
         worst = max(blobs(f & region) for f in fgs)
         res["G2"] = dict(ok=bool(worst <= base + spec.get("blob_allow", 0)), value=int(worst), base=int(base))
     if "G2b" in checks:
-        res["G2b"] = g2b(fgs, [raw_changed(f, orig) for f in frames], fg0, region, target, skull)
+        scenery0 = (255 - orig.astype(int)).max(-1) > G2B_BG
+        res["G2b"] = g2b(fgs, [raw_changed(f, orig) for f in frames], fg0, region, target, skull, scenery0)
     if "G3" in checks:
         # net foreground lost or gained in the moving region, relative to the moving part's own area
         tarea = max(1, (fg0 & target).sum())
