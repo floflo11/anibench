@@ -1,0 +1,36 @@
+{
+ "task": "T21",
+ "variant": "squash_stretch-strong",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 5e-05
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.0909
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.491
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.098
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": true
+ },
+ "failed": []
+}

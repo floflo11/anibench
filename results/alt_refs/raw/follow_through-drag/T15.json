@@ -1,0 +1,42 @@
+{
+ "task": "T15",
+ "variant": "follow_through-drag",
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 0.0
+  },
+  "G2": {
+   "ok": false,
+   "value": 2,
+   "base": 1
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.1366
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.75
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": false
+ },
+ "failed": [
+  "G2"
+ ],
+ "evidence": {
+  "G2": "evidence/follow_through-drag__T15__G2.png"
+ }
+}

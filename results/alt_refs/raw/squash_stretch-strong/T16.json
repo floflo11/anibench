@@ -1,0 +1,42 @@
+{
+ "task": "T16",
+ "variant": "squash_stretch-strong",
+ "graders": [
+  "G1",
+  "G2",
+  "G3",
+  "G4",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": false,
+   "value": 0.01853
+  },
+  "G2": {
+   "ok": true,
+   "value": 1,
+   "base": 1
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.1699
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.761
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": false
+ },
+ "failed": [
+  "G1"
+ ],
+ "evidence": {
+  "G1": "evidence/squash_stretch-strong__T16__G1.png"
+ }
+}

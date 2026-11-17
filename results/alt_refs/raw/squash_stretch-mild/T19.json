@@ -1,0 +1,36 @@
+{
+ "task": "T19",
+ "variant": "squash_stretch-mild",
+ "graders": [
+  "G1",
+  "G3",
+  "G4",
+  "G5",
+  "G6"
+ ],
+ "result": {
+  "G1": {
+   "ok": true,
+   "value": 4e-05
+  },
+  "G3": {
+   "ok": true,
+   "value": 0.2307
+  },
+  "G4": {
+   "ok": true,
+   "value": 0.324
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.028
+  },
+  "G6": {
+   "ok": true,
+   "loop": 0.0,
+   "first_vs_orig": 0.0
+  },
+  "pass": true
+ },
+ "failed": []
+}
