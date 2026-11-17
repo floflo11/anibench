@@ -3,6 +3,7 @@
  "variant": "squash_stretch-mild",
  "graders": [
   "G1",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -11,11 +12,18 @@
  "result": {
   "G1": {
    "ok": true,
-   "value": 4e-05
+   "value": 0.0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": true,
-   "value": 0.2307
+   "value": 0.0852,
+   "loss": 0.0457,
+   "gain": 0.0852
   },
   "G4": {
    "ok": true,
@@ -23,7 +31,9 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.028
+   "value": 0.028,
+   "frac": 0.028,
+   "disp": null
   },
   "G6": {
    "ok": true,

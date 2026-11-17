@@ -3,6 +3,8 @@
  "variant": "squash_stretch-mild",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -11,11 +13,24 @@
  "result": {
   "G1": {
    "ok": true,
-   "value": 1e-05
+   "value": 0.0
+  },
+  "G2b": {
+   "ok": false,
+   "value": 3,
+   "base": 2,
+   "frame": 2
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": true,
-   "value": 0.1522
+   "value": 0.0,
+   "loss": 0.0,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
@@ -23,14 +38,21 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.144
+   "value": 0.144,
+   "frac": 0.144,
+   "disp": null
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": true
+  "pass": false
  },
- "failed": []
+ "failed": [
+  "G2b"
+ ],
+ "evidence": {
+  "G2b": "evidence/squash_stretch-mild__T08__G2b.png"
+ }
 }

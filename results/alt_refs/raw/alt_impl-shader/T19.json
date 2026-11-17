@@ -3,6 +3,7 @@
  "variant": "alt_impl-shader",
  "graders": [
   "G1",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -13,9 +14,16 @@
    "ok": true,
    "value": 0.0
   },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.2388
+   "value": 0.0692,
+   "loss": 0.0692,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
@@ -23,7 +31,9 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.0
+   "value": 0.0,
+   "frac": 0.0,
+   "disp": null
   },
   "G6": {
    "ok": true,

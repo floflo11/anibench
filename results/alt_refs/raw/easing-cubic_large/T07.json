@@ -4,6 +4,8 @@
  "graders": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -16,32 +18,42 @@
   },
   "G2": {
    "ok": true,
-   "value": 5,
-   "base": 5
+   "value": 3,
+   "base": 3
+  },
+  "G2b": {
+   "ok": true,
+   "value": 2,
+   "base": 2,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
-   "ok": false,
-   "value": 0.7072
+   "ok": true,
+   "value": 0.0379,
+   "loss": 0.0379,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
-   "value": 0.974
+   "value": 0.935
   },
   "G5": {
    "ok": true,
-   "value": 0.0
+   "value": 0.806,
+   "frac": 0.806,
+   "disp": 0.77
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": false
+  "pass": true
  },
- "failed": [
-  "G3"
- ],
- "evidence": {
-  "G3": "evidence/easing-cubic_large__T07__G3.png"
- }
+ "failed": []
 }

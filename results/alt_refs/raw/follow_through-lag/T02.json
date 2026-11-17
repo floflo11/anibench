@@ -4,8 +4,11 @@
  "graders": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -15,23 +18,47 @@
   },
   "G2": {
    "ok": true,
+   "value": 1,
+   "base": 1
+  },
+  "G2b": {
+   "ok": false,
    "value": 2,
-   "base": 2
+   "base": 1,
+   "frame": 14
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": true,
-   "value": 0.1668
+   "value": 0.0352,
+   "loss": 0.0,
+   "gain": 0.0352
   },
   "G4": {
    "ok": true,
-   "value": 0.56
+   "value": 0.52
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.173,
+   "frac": 0.173,
+   "disp": null
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": true
+  "pass": false
  },
- "failed": []
+ "failed": [
+  "G2b"
+ ],
+ "evidence": {
+  "G2b": "evidence/follow_through-lag__T02__G2b.png"
+ }
 }

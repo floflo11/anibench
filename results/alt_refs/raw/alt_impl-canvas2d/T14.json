@@ -3,8 +3,11 @@
  "variant": "alt_impl-canvas2d",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -12,14 +15,33 @@
    "ok": true,
    "value": 0.0
   },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
    "value": 0.1613,
+   "loss": 0.028,
+   "gain": 0.1613,
    "skull_keep": 0.999
   },
   "G4": {
    "ok": true,
    "value": 0.709
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.374,
+   "frac": 0.374,
+   "disp": 1.07
   },
   "G6": {
    "ok": true,

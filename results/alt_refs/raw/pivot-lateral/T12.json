@@ -3,8 +3,12 @@
  "variant": "pivot-lateral",
  "graders": [
   "G1",
+  "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -12,13 +16,37 @@
    "ok": true,
    "value": 0.0
   },
+  "G2": {
+   "ok": true,
+   "value": 6,
+   "base": 6
+  },
+  "G2b": {
+   "ok": true,
+   "value": 4,
+   "base": 4,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.1487
+   "value": 0.021,
+   "loss": 0.021,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
-   "value": 0.652
+   "value": 0.644
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.462,
+   "frac": 0.462,
+   "disp": 2.79
   },
   "G6": {
    "ok": true,

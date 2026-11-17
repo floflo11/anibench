@@ -3,6 +3,9 @@
  "variant": "pivot-lateral",
  "graders": [
   "G1",
+  "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -13,29 +16,44 @@
    "ok": true,
    "value": 0.0
   },
+  "G2": {
+   "ok": true,
+   "value": 1,
+   "base": 1
+  },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.1789
+   "value": 0.0369,
+   "loss": 0.0369,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
    "value": 0.719
   },
   "G5": {
-   "ok": false,
-   "value": 0.297
+   "ok": true,
+   "value": 0.297,
+   "frac": 0.297,
+   "disp": null
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": false
+  "pass": true
  },
- "failed": [
-  "G5"
- ],
- "evidence": {
-  "G5": "evidence/pivot-lateral__T04__G5.png"
- }
+ "failed": []
 }

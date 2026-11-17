@@ -3,6 +3,8 @@
  "variant": "easing-bounce",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G5",
@@ -13,9 +15,22 @@
    "ok": true,
    "value": 0.0
   },
+  "G2b": {
+   "ok": true,
+   "value": 2,
+   "base": 2,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.1793
+   "value": 0.0139,
+   "loss": 0.0139,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
@@ -23,7 +38,9 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.072
+   "value": 0.072,
+   "frac": 0.072,
+   "disp": null
   },
   "G6": {
    "ok": true,

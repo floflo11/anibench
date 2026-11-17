@@ -3,6 +3,8 @@
  "variant": "alt_impl-canvas2d",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G6"
@@ -12,9 +14,22 @@
    "ok": true,
    "value": 0.0
   },
+  "G2b": {
+   "ok": false,
+   "value": 5,
+   "base": 2,
+   "frame": 4
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.1952,
+   "value": 0.2055,
+   "loss": 0.2055,
+   "gain": 0.0917,
    "skull_keep": 1.0
   },
   "G4": {
@@ -26,7 +41,12 @@
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": true
+  "pass": false
  },
- "failed": []
+ "failed": [
+  "G2b"
+ ],
+ "evidence": {
+  "G2b": "evidence/alt_impl-canvas2d__T13__G2b.png"
+ }
 }

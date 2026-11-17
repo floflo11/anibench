@@ -4,6 +4,7 @@
  "graders": [
   "G1",
   "G2",
+  "G2b",
   "G3",
   "G4",
   "G6"
@@ -18,9 +19,17 @@
    "value": 1,
    "base": 1
   },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.033
+   "value": 0.0304,
+   "loss": 0.0304,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,

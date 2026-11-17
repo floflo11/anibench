@@ -3,23 +3,45 @@
  "variant": "squash_stretch-strong",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
   "G1": {
-   "ok": false,
-   "value": 0.00278
+   "ok": true,
+   "value": 0.00048
+  },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": true,
    "value": 0.1714,
+   "loss": 0.0287,
+   "gain": 0.1714,
    "skull_keep": 0.999
   },
   "G4": {
    "ok": true,
    "value": 0.696
+  },
+  "G5": {
+   "ok": false,
+   "value": 0.461,
+   "frac": 0.461,
+   "disp": null
   },
   "G6": {
    "ok": true,
@@ -29,9 +51,9 @@
   "pass": false
  },
  "failed": [
-  "G1"
+  "G5"
  ],
  "evidence": {
-  "G1": "evidence/squash_stretch-strong__T14__G1.png"
+  "G5": "evidence/squash_stretch-strong__T14__G5.png"
  }
 }

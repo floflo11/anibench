@@ -3,8 +3,11 @@
  "variant": "easing-cubic_large",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -12,14 +15,33 @@
    "ok": true,
    "value": 0.0
   },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
    "value": 0.149,
+   "loss": 0.0825,
+   "gain": 0.149,
    "skull_keep": 1.0
   },
   "G4": {
    "ok": true,
    "value": 0.87
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.487,
+   "frac": 0.487,
+   "disp": 0.8
   },
   "G6": {
    "ok": true,

@@ -3,8 +3,12 @@
  "variant": "easing-sine_typ",
  "graders": [
   "G1",
+  "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -12,13 +16,37 @@
    "ok": true,
    "value": 0.0
   },
+  "G2": {
+   "ok": true,
+   "value": 6,
+   "base": 6
+  },
+  "G2b": {
+   "ok": true,
+   "value": 4,
+   "base": 4,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.1554
+   "value": 0.0207,
+   "loss": 0.0207,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
-   "value": 0.651
+   "value": 0.641
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.335,
+   "frac": 0.335,
+   "disp": 0.82
   },
   "G6": {
    "ok": true,

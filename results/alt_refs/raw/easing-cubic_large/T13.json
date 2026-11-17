@@ -3,6 +3,8 @@
  "variant": "easing-cubic_large",
  "graders": [
   "G1",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
   "G6"
@@ -12,9 +14,22 @@
    "ok": true,
    "value": 0.0
   },
+  "G2b": {
+   "ok": false,
+   "value": 4,
+   "base": 2,
+   "frame": 8
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": false,
-   "value": 0.5868,
+   "value": 0.63,
+   "loss": 0.63,
+   "gain": 0.0711,
    "skull_keep": 1.0
   },
   "G4": {
@@ -29,9 +44,11 @@
   "pass": false
  },
  "failed": [
+  "G2b",
   "G3"
  ],
  "evidence": {
+  "G2b": "evidence/easing-cubic_large__T13__G2b.png",
   "G3": "evidence/easing-cubic_large__T13__G3.png"
  }
 }

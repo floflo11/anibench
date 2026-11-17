@@ -93,5 +93,215 @@
   "class": "a",
   "cause": "pivot",
   "reason": "Pivot moved 10 px across the elbow (forearm length 132 px, rule 7 limit). At 20 deg the annotated elbow point shifts ~3.5 px and stays inside the sleeve frill. The white gap behind the elbow is the uncovered area (rule 2) and also appears with the exact pivot."
+ },
+ "alt_impl-canvas2d/T02/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "follow_through-drag/T02/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "follow_through-lag/T02/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T02/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T02/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "alt_impl-canvas2d/T12/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "follow_through-drag/T12/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "follow_through-lag/T12/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T12/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T12/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "The extra G2b piece is a 77 px patch of the thumb's original footprint (503-514, 190-201) now filled with the brown of the pigtail behind it: the style continues the hair into the revealed area, a plausible fill (rule 2), and G2b counts any non-white repaint of the reveal that touches only the parent as a piece (its documented false alarm). The hand itself stays whole.",
+  "grader": "v3"
+ },
+ "alt_impl-canvas2d/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "alt_impl-shader/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "easing-bounce/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "easing-cubic_large/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "easing-sine_small/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "easing-sine_typ/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "follow_through-drag/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "follow_through-lag/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T13/G2b": {
+  "class": "a",
+  "cause": "reveal repaint",
+  "reason": "Hat lift: the style paints the uncovered head with hair colour over a larger band than skull.png (the reference's keep mask), so the band (about 800 px, hat footprint, changed) counts as a separate piece of the hat. The hat itself lifts in one piece. Same documented G2b false alarm as above.",
+  "grader": "v3"
+ },
+ "alt_impl-canvas2d/T08/G2b": {
+  "class": "a",
+  "cause": "white fill",
+  "reason": "Pigtails: where the deformed or resampled pigtail no longer covers its footprint, the white fill shows through gaps between strands (rule 2, the uncovered area), splitting the visible hair into strands that G2b counts as pieces. Borderline: at 1x the white streaks are visible inside the hair.",
+  "grader": "v3"
+ },
+ "follow_through-drag/T08/G2b": {
+  "class": "a",
+  "cause": "white fill",
+  "reason": "Pigtails: where the deformed or resampled pigtail no longer covers its footprint, the white fill shows through gaps between strands (rule 2, the uncovered area), splitting the visible hair into strands that G2b counts as pieces. Borderline: at 1x the white streaks are visible inside the hair.",
+  "grader": "v3"
+ },
+ "follow_through-lag/T08/G2b": {
+  "class": "a",
+  "cause": "white fill",
+  "reason": "Pigtails: where the deformed or resampled pigtail no longer covers its footprint, the white fill shows through gaps between strands (rule 2, the uncovered area), splitting the visible hair into strands that G2b counts as pieces. Borderline: at 1x the white streaks are visible inside the hair.",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T08/G2b": {
+  "class": "a",
+  "cause": "white fill",
+  "reason": "Pigtails: where the deformed or resampled pigtail no longer covers its footprint, the white fill shows through gaps between strands (rule 2, the uncovered area), splitting the visible hair into strands that G2b counts as pieces. Borderline: at 1x the white streaks are visible inside the hair.",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T08/G2b": {
+  "class": "a",
+  "cause": "white fill",
+  "reason": "Pigtails: where the deformed or resampled pigtail no longer covers its footprint, the white fill shows through gaps between strands (rule 2, the uncovered area), splitting the visible hair into strands that G2b counts as pieces. Borderline: at 1x the white streaks are visible inside the hair.",
+  "grader": "v3"
+ },
+ "follow_through-drag/T15/G2b": {
+  "class": "a",
+  "cause": "pale texture",
+  "reason": "Jump with drag: the shirt's pale stripes sit near the foreground threshold, so the stretched shirt's foreground breaks into stripes (the v2 G2 pale-stripe case, now seen by G2b, which has no contrast filter).",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T06/G2b": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "15% squash of the whole arm about the shoulder: a small sleeve fragment at the stretched shoulder edge separates for one frame. Borderline; nothing visibly tears at 1x.",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T12/G2c": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "15% stretch of A2's forearm: the rigid fit cannot follow the stretched forearm, so footprint pixels near the elbow that legitimately stay are read as left behind (205 px). G2c's documented limit for strongly non-rigid motion.",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T02/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T02/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T12/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T12/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-mild/T14/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T14/G5": {
+  "class": "a",
+  "cause": "stretch",
+  "reason": "Squash/stretch about the correct joint: the joint disc changes 36-46% (stretch plus texture), above G5_MAX 0.30, and the rigid fit is not trusted in those frames (or moves the pivot 5-7 px while following the stretch), so the displacement test cannot rescue it. v2 failed the same frames. A white wedge opens at T02's elbow (rule 2).",
+  "grader": "v3"
+ },
+ "squash_stretch-strong/T07/G5": {
+  "class": "a",
+  "cause": "thin joint",
+  "reason": "Earring stretched 15% about the top of its chain: the 2-3 px chain at the joint changes 75% and the 449 px earring's fit is not trusted under stretch. The bead stays on its chain (the chain is now in the mask).",
+  "grader": "v3"
  }
 }

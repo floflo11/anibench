@@ -4,8 +4,11 @@
  "graders": [
   "G1",
   "G2",
+  "G2b",
+  "G2c",
   "G3",
   "G4",
+  "G5",
   "G6"
  ],
  "result": {
@@ -15,16 +18,35 @@
   },
   "G2": {
    "ok": true,
-   "value": 2,
-   "base": 2
+   "value": 1,
+   "base": 1
+  },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": true,
-   "value": 0.2461
+   "value": 0.0099,
+   "loss": 0.0099,
+   "gain": 0.0
   },
   "G4": {
    "ok": true,
-   "value": 0.651
+   "value": 0.615
+  },
+  "G5": {
+   "ok": true,
+   "value": 0.34,
+   "frac": 0.34,
+   "disp": 0.61
   },
   "G6": {
    "ok": true,

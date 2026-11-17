@@ -1,3 +1,24 @@
+## Grader v3 (this report)
+
+The runs above are graded by grader v3 with each task's v3 admitted checks; failures new in v3 are classified in
+`classification.json` (entries marked `"grader": "v3"`). What changed against the v2 analysis below:
+
+- **G1, G2, G3 and G2c: no false fails.** The 7.5% growth of G1's region clears the three squash/stretch runs; the
+  contrast filter clears G2's halo and pale-stripe runs; the T10 sleeve sliver is gone from the mask; G3 now measures
+  the part itself, so the T07 earring no longer fails on occluding the cheek; G2c (new) fails no valid run.
+- **G5:** the displacement test clears the T08 pigtails and T04's lace elbow. Seven runs still fail, all strong or
+  mild squash/stretch about the correct joint (T02, T12, T14, T07), where the rigid fit cannot vouch for the joint.
+  G5 is now kept on T02, T12 and T14 (dropped in v2), so these runs are newly applicable, not newly broken.
+- **G2b is now the main source of false fails (27 runs).** The v2 report did not list G2b (its check list predated
+  G2b), so these were never counted. 20 of them are one known false alarm: the style repaints the revealed area
+  with a neighbouring colour (hair behind T02/T12's thumb, hair under T13's lifted hat beyond skull.png), and G2b
+  counts that repaint as a piece of the part. 5 are T08 pigtails whose white fill shows between strands, 1 is
+  T15's pale stripes, 1 a squash fragment. A rule for grader v4: do not count a piece that lies entirely in the
+  part's original footprint, has no untouched pixel and is a flat fill (the repaint); detached pieces left behind
+  are untouched, so they would still count.
+
+## v2 analysis (historical, from the run graded with grader v2's checks G1-G6)
+
 ## Findings
 
 - **Most valid alternate animations pass.** 223 of 242 runs pass every admitted check. Of the 19 failures,
