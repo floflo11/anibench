@@ -11,28 +11,34 @@
 \usepackage{xcolor}
 \usepackage[colorlinks=true,linkcolor=blue!60!black,citecolor=blue!60!black,urlcolor=blue!60!black]{hyperref}
 \usepackage{enumitem}
+\usepackage{tabularx}
+\usepackage{array}
 \setlist{nosep,leftmargin=*}
 \sisetup{detect-all}
 
 \newcommand{\anibench}{\textsc{anibench}}
 \newcommand{\ci}[2]{\,[#1,\,#2]}
 \newcommand{\chk}[1]{\textsf{#1}}
+\newcommand{\y}{\checkmark}
+\newcommand{\n}{--}
+\newcolumntype{C}{>{\centering\arraybackslash}X}
+\newcolumntype{L}{>{\raggedright\arraybackslash}X}
 
 \title{\anibench: Measuring Side Effects When Agents Animate One Part of an Image\\[4pt]
-\large Technical Report v0.1: Benchmark Construction and Grader Validation}
-\author{Draft for the author team \quad (prepared 17 November 2026)}
-\date{Repository state: commit \texttt{a898e10} (grader v2). Internal; not for distribution.}
+\large Working Report: Benchmark, Grader Validation, and Positioning}
+\author{Draft for the author team}
+\date{Living document, last updated 17 November 2026 (grader v2; literature snapshot of the same date).\\ Revision history in Appendix~\ref{app:rev}. Internal; not for distribution.}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Large language model (LLM) agents are increasingly asked to modify artifacts on a user's behalf, and a correct modification must satisfy two requirements: the requested change must occur, and nothing else may change. Benchmarks for visual code generation measure the first requirement but rarely the second, because their scores come from model judges or whole-frame similarity, neither of which isolates unintended side effects. We present \anibench{}, a benchmark in which an agent animates one named part of a still image by writing a three.js program, and every submission is scored by deterministic pixel checks that separately verify the requested motion (Motion, Pivot, Loop) and the absence of side effects (Isolation, Integrity, Connectivity, Area). This report documents the current state of the benchmark rather than final results. We describe 21 automatically scored illustrated tasks and a procedural split of 160 tasks with recorded difficulty factors. We then evaluate the grader itself. Against seeded corruptions, the checks detect every corruption in which the animated part physically separates (56/56; 95\% CI \ci{93.6}{100}\%) and at least 92\% of each corruption family that does not involve detachment, while the reference animation passes every admitted check. Against 242 independently authored valid animations, the checks reject 12 (5.0\%; 95\% CI \ci{2.9}{8.5}\%). We also identify a grader-induced selection effect that removes occluded configurations from the procedural split, and three annotation defects in the pilot data. Preliminary model results, obtained with heterogeneous protocols, suggest that the strongest systems pass roughly half of the tasks and that their failures concentrate in pivot and integrity checks rather than in motion; these numbers are not yet comparable across models and are reported only to motivate the controlled evaluation that follows.
+Large language model (LLM) agents are increasingly asked to modify artifacts on a user's behalf, and a correct modification must satisfy two requirements: the requested change must occur, and nothing else may change. Recent benchmarks verify requested animations deterministically and score side effects deterministically in discrete state, but none measures the side effects of a motion applied to a raster image, where the model must infer the part, its joint and the region it may sweep. We present \anibench{}, a benchmark in which an agent animates one named part of a still image by writing a three.js program, and every submission is scored by deterministic pixel checks that separately verify the requested motion (Motion, Pivot, Loop) and the absence of side effects (Isolation, Integrity, Connectivity, Area). This report documents the current state of the benchmark rather than final results. We describe 21 automatically scored illustrated tasks and a procedural split of 160 tasks with recorded difficulty factors. We then evaluate the grader itself. Against seeded corruptions, the checks detect every corruption in which the animated part physically separates (56/56; 95\% CI \ci{93.6}{100}\%) and at least 92\% of each corruption family that does not involve detachment, while the reference animation passes every admitted check. Against 242 independently authored valid animations, the checks reject 12 (5.0\%; 95\% CI \ci{2.9}{8.5}\%). We also identify a grader-induced selection effect that removes occluded configurations from the procedural split, and three annotation defects in the pilot data. Preliminary model results, obtained with heterogeneous protocols, suggest that the strongest systems pass roughly half of the tasks and that their failures concentrate in pivot and integrity checks rather than in motion; these numbers are not yet comparable across models and are reported only to motivate the controlled evaluation that follows. A second literature review identifies the closest prior work and motivates a recommended direction: making the phenomena that model judges cannot detect the headline of the paper.
 \end{abstract}
 
 \section{Introduction}
 
-Agents now edit artifacts that people use directly, including source code, documents, spreadsheets and interfaces. In each setting, the value of an edit depends on whether the requested change is made and on whether anything else is altered. Software engineering separates these two questions explicitly: tests that must change from failing to passing confirm a fix, while tests that must keep passing confirm that existing behavior is preserved~\citep{jimenez2024swebench,chowdhury2024swebenchverified}. Model editing evaluates \emph{locality} alongside efficacy, and has shown that side effects concentrate on near neighbors of the edit rather than on distant inputs~\citep{meng2022rome,mitchell2022mend,yao2023editingllms}. Benchmarks for visual and interactive code generation have not made this separation. They score outputs by similarity to a reference or with a multimodal judge~\citep{si2025design2code,zhang2025artifactsbench,periasami2026vision2code}, and in animation, preservation is either guaranteed by the representation or measured with whole-frame similarity to the still image~\citep{liang2026vanim,levy2026livesvg,deganutti2026graphicdesignbench}. Whole-frame similarity entangles the two questions: the intended motion lowers the score, so a frozen output is rewarded and a correct animation is penalized.
+Agents now edit artifacts that people use directly, including source code, documents, spreadsheets and interfaces. In each setting, the value of an edit depends on whether the requested change is made and on whether anything else is altered. Software engineering separates these two questions explicitly: tests that must change from failing to passing confirm a fix, while tests that must keep passing confirm that existing behavior is preserved~\citep{jimenez2024swebench,chowdhury2024swebenchverified}. Model editing evaluates \emph{locality} alongside efficacy, and has shown that side effects concentrate on near neighbors of the edit rather than on distant inputs~\citep{meng2022rome,mitchell2022mend,yao2023editingllms}. Visual code generation is adopting the same separation. Code-generated animation is now verified with deterministic programs rather than judges~\citep{ma2026motiongraphicsbench,ma2025mover}, and preservation of unrequested content is scored deterministically for SVG, web pages and code~\citep{gupta2026vectorbench,li2026mtweb2code,zhu2026overediting}. These benchmarks operate on structured inputs, however, in which the element to change is given. When the input is a raster image, the model must first infer which pixels constitute the part, where its joint lies, and what region it may sweep, and a side effect may be a few stray pixels or the part coming apart. Whole-frame similarity, still common in animation evaluation~\citep{liang2026vanim,levy2026livesvg,deganutti2026graphicdesignbench}, cannot detect such effects: the intended motion lowers the score, so a frozen output is rewarded and a correct animation is penalized.
 
 We study the separation in a setting where every side effect is visible. Given an illustration and an instruction such as \emph{wave his raised hand from the wrist}, the agent must write a program that rotates the hand about the wrist, leaves every pixel outside the region the hand can sweep unchanged, and keeps the hand in one piece. The task combines spatial grounding (identifying which pixels constitute the hand), structural reasoning (locating the joint), and constrained program synthesis. It also corresponds to an established production technique: cut-out animation from still artwork, as in rigging and puppet tools~\citep{smith2023animateddrawings}.
 
@@ -46,15 +52,44 @@ This report documents the work completed to date. Our main findings are as follo
 \item \textbf{We identify} a grader-induced selection effect: screening procedural tasks with the area check removed 47 of 207 candidate configurations, disproportionately occluded ones (Section~\ref{sec:bias}).
 \end{itemize}
 
-\section{Related Work}
+\section{Related Work and Positioning}
+\label{sec:related}
 
-\paragraph{Visual and interactive code generation.} Design2Code, Plot2Code and ChartMimic score generated code by visual similarity to a reference~\citep{si2025design2code,wu2024plot2code,yang2024chartmimic}; SVG benchmarks follow the same pattern~\citep{zou2024vgbench,chen2025svgenius,chen2025sgpgenbench,rodriguez2025starvector}. ArtifactsBench renders interactive artifacts over time and scores them with a checklist-guided multimodal judge~\citep{zhang2025artifactsbench}. WorldCoder-Bench is the closest in rigor: it verifies hidden, mutation-hardened behavioral contracts on the runtime state of three.js programs~\citep{lu2026worldcoderbench}. It checks what a program does, not which pixels change. Animation2Code reconstructs animation code from video~\citep{ji2026animation2code}.
+We reviewed the literature in two passes. The first collected 58 references on visual code generation, editing and judge reliability; the second, conducted on 17 November 2026, added 58 references with emphasis on work from 2025 and 2026. Every cited paper was opened and its bibliographic data copied from the opened page. Posts on X and Reddit could not be accessed programmatically, so practitioner sentiment rests on secondary sources. The central finding of the second pass is that both fields from which \anibench{} draws its claims filled substantially during 2026.
 
-\paragraph{Animation of existing artwork.} VAnim and LiveSVG animate parts of an existing vector image; preservation follows from editing only selected nodes, or is measured with unmasked SSIM or LPIPS against the static rendering~\citep{liang2026vanim,levy2026livesvg}. AniClipart and LogoMotion animate clipart and layouts and evaluate with similarity metrics and user studies~\citep{wu2024aniclipart,liu2024logomotion}. Articulate-Anything has vision-language models write articulation code for 3D objects and scores joint correctness~\citep{le2025articulateanything}. None of these checks pixel isolation outside a swept region, part connectivity, or pivot location.
+\paragraph{Code-generated animation.} MotionGraphicsBench gives a model a static SVG that already contains every element, together with a motion prompt, and asks it to animate the SVG; its 100 instances derive from real Lottie designs~\citep{ma2026motiongraphicsbench}. Each instance is graded by a deterministic verification program that accepts different valid implementations; on a balanced set of 180 animations the programs agree with human judgments 93.3\% of the time, against 83.3\% for a VLM judge, and 32 LLMs in 47 configurations achieve pass@1 between 6.0\% and 67.7\%. Its predecessor, MoVer, verifies spatio-temporal properties of SVG animations in first-order logic~\citep{ma2025mover}. Neither scores side effects as a separate, always-on quantity; in MotionGraphicsBench, preservation enters only as per-requirement checks on some prompts. Other benchmarks generate visual programs from scratch and score them against a reference or with judges~\citep{si2025design2code,wu2024plot2code,yang2024chartmimic,zhang2025artifactsbench,zhang2026animwebbench,diao2026vibevideobench}, and WorldCoder-Bench verifies mutation-hardened behavioral contracts on the runtime state of three.js programs rather than their pixels~\citep{lu2026worldcoderbench}.
 
-\paragraph{Preservation in editing.} Image-editing benchmarks compute preservation outside an edit mask, for example PIE-Bench's masked PSNR, LPIPS and SSIM and I2EBench's Region Accuracy~\citep{ju2024directinversion,ma2024i2ebench}; these metrics apply to a single frame and have no notion of a region swept over time. Model editing measures locality on sampled neighborhood prompts~\citep{meng2022rome,meng2023memit,cohen2024rippleedits}. Code editing uses regression tests and, in CanItEdit, the share of changed lines not covered by tests~\citep{cassano2024canitedit}. Our checks play the role of regression tests for images: they probe the pixels where side effects appear, including the parts adjacent to the edited one.
+\paragraph{Animation of existing images.} VAnim and LiveSVG animate parts of an existing vector image, with preservation following from editing only selected nodes or measured by unmasked similarity~\citep{liang2026vanim,levy2026livesvg}; AniClipart and LogoMotion evaluate with similarity metrics and user studies~\citep{wu2024aniclipart,liu2024logomotion}. Image-to-video methods that animate a selected region measure static-region preservation with user studies, whole-frame consistency or tracker distances~\citep{ma2024followyourclick,singer2025timetomove}. SNF-Bench separates static-region fidelity from motion in fixed-camera video, validates each metric with injected corruptions, and shows that whole-frame motion metrics increase by only 1.07$\times$ under maximal injected drift while static-region metrics increase by 1.32 to 1.86$\times$~\citep{minar2026snfbench}; this is the argument we make against whole-frame similarity, reached independently with the same validation logic.
 
-\paragraph{Judges and benchmark validity.} LLM and MLLM judges exhibit position, verbosity and self-preference biases and drift on absolute scores~\citep{zheng2023judging,chen2024mllmjudge,ye2025justice}. Benchmark audits find graders that accept wrong outputs~\citep{zhu2025abc,reuel2024betterbench}. Deterministic checks avoid judge bias but inherit the opposite risk, rigidity, which Section~\ref{sec:falsefail} quantifies.
+\paragraph{Deterministic side-effect scoring.} At least nine agent benchmarks released in 2026 score unrequested actions with deterministic oracles. SABench, accepted to the NeurIPS 2026 Evaluations and Datasets Track, finds that 15.2\% of 2{,}211 runs incur collateral damage and that 12.8\% of goal-satisfying runs still perform unauthorized writes~\citep{huang2026sabench}; Agent-Diff fails any run whose final state differs from the goal outside the requested change~\citep{pysklo2026agentdiff}. For artifacts, Vector-Bench requires SVG repairs to land while protected objects remain unchanged (best full success 15.0\% across 34 systems)~\citep{gupta2026vectorbench}, MT-Web2Code scores target fidelity and preservation of unaffected web content separately~\citep{li2026mtweb2code}, and an over-editing benchmark measures excess edits in code against a known minimal patch~\citep{zhu2026overediting}. Earlier precedents include masked preservation metrics in image editing~\citep{ju2024directinversion,ma2024i2ebench}, locality in model editing~\citep{meng2022rome,meng2023memit,cohen2024rippleedits}, and regression tests in code~\citep{jimenez2024swebench,cassano2024canitedit}. All measure side effects in a single state or as discrete events; none measures them over the frames of a motion.
+
+\paragraph{Judges and grader validity.} LLM and MLLM judges exhibit position, verbosity and self-preference biases~\citep{zheng2023judging,chen2024mllmjudge,ye2025justice}, and a code-only judge has been shown to credit features absent from the running program~\citep{bakshi2026worldbench}. VerifierBench finds that LLM-written verifiers reject invalid solutions more reliably than they accept valid alternatives, and recommends testing verifiers against other admissible solutions~\citep{yin2026verifierbench}; Section~\ref{sec:falsefail} is an instance of that recommendation. A construct-validity review asks benchmarks to state the claim their scores support~\citep{bean2025constructvalidity}. Two-sided grader validation is thus becoming an expectation rather than a differentiator.
+
+\paragraph{Part grounding.} Multimodal models ground whole objects well but degrade when the query names a part~\citep{mehrab2026ophrg}, and pointing benchmarks measure localization directly~\citep{cheng2025pointarena}. These results support the hypothesis, examined in Section~\ref{sec:direction}, that \anibench{} failures originate in localizing the part.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{lllCCCC}
+\toprule
+Benchmark & Input & Output & Change verified & Side effects scored separately & Integrity / pivot & Grader validated against \\
+\midrule
+MotionGraphicsBench & SVG & GSAP & \y & partial & \n & humans (93.3\%) \\
+MoVer & SVG & SVG anim. & \y & \n & \n & synthetic prompts \\
+Vector-Bench & SVG & SVG & \y & \y\ (static) & \n & \n \\
+MT-Web2Code & web page & HTML/CSS & \y & \y\ (static) & \n & \n \\
+SABench & tool state & actions & \y & \y\ (discrete) & \n & oracle design \\
+SNF-Bench & video & video & \y & \y\ (frames) & \n & injected corruptions \\
+\midrule
+\anibench{} & raster & three.js & \y & \y\ (every pixel, every frame) & \y & corruptions, valid alternatives, humans (planned) \\
+\bottomrule
+\end{tabularx}
+\caption{Closest neighbors, by the properties that define \anibench{}. ``Partial'' indicates that preservation is checked only as a requirement of some prompts.}
+\label{tab:neighbors}
+\end{table}
+
+\paragraph{What remains distinctive.} We found no benchmark in which a model animates a raster image by writing code, and no image-to-video evaluation with a pixel-exact static-region test. The distinctive combination (Table~\ref{tab:neighbors}) is a raster input, in which the part, its joint and its swept region must be inferred; preservation scored on every pixel of every frame against a region larger than the part; part integrity, connectivity and pivot checks; and a single grader validated against seeded corruptions of known size and against independent valid solutions. Three statements from our earlier drafts are contradicted by this work and are no longer made: that no benchmark separates change from preservation~\citep{gupta2026vectorbench,li2026mtweb2code,huang2026sabench,minar2026snfbench}; that animation benchmarks rely on judges or similarity~\citep{ma2026motiongraphicsbench,ma2025mover}; and that side effects of agents are unmeasured~\citep{pysklo2026agentdiff,huang2026sabench}.
 
 \section{The Benchmark}
 \label{sec:bench}
@@ -193,6 +228,39 @@ Gemini 4 Carbon & single shot & 8 & 8 & 0.0 & 0.0 \\
 
 Table~\ref{tab:models} reports the only model results currently available. They were collected under a deadline with different protocols, task subsets and token budgets, and we report them to motivate the controlled evaluation, not as findings about model capability. Three observations nevertheless inform its design. First, for three of seven systems, the dominant outcome is the absence of a gradable page (Gemini 8 of 8, DeepSeek 12 of 13, Grok 12 of 14 runs), so their scores measure output budget rather than animation; the controlled evaluation fixes the budget and reports the rate of gradable outputs separately. Second, among the two systems with complete outputs and the highest pass rates, \chk{G4} (motion) is the least frequently failed check (1 of 21 and 0 of 15 runs), whereas \chk{G5} fails in 5 of 13 and 3 of 13 applicable runs and \chk{G2} in 3 of 12 and 4 of 9. With samples of this size, the pattern is suggestive only, but it is consistent with the hypothesis that current systems usually produce the requested motion and less often keep it correctly localized. Third, re-grading the 65 locally rendered outputs with \chk{G2b} (an exploratory analysis, not yet the official scoring) changes 8 runs from pass to fail. We inspected all 8: five are genuine detachments, including floating fingertips produced by two different systems on the same arm-swing task (T06); two are torn fragments of clothing dragged by the moving part; and one is a borderline case in which slivers of the forearm remain along the cut line while the hand is intact. The headline failure that motivated the benchmark therefore occurs in real model outputs, and the previous grader accepted it.
 
+\IfFileExists{sections/cutout.tex}{\input{sections/cutout}}{}
+
+\section{Recommended Direction}
+\label{sec:direction}
+
+The literature in Section~\ref{sec:related} implies that the paper cannot rest on being judge-free or on separating change from side effects. We evaluated six directions for the nine weeks before the ICML deadline (Table~\ref{tab:dir}); the assessments are judgments from the evidence, not measurements, and the recommendation below awaits the authors' decision.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{3pt}
+\begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{4.2cm}lllL}
+\toprule
+Direction & Novelty & Fit to Jan 22 & Risk & Assessment \\
+\midrule
+(a) Focused benchmark, polished & medium & good & medium & Unique intersection, but reviewers will compare with MotionGraphicsBench first. \\
+(b) Side-effect-free edits across modalities & low per modality & poor & high & Each modality now has a 2026 benchmark; defer to a later venue. \\
+(c) RL environment with training gains & medium-high & poor to fair & high & No visual work rewards preservation, but rewards are sparse for weak models; reduce to a reward-validity claim. \\
+(d) Image-to-video comparison & medium-high & fair & medium & Requires a calibrated noise floor, since video models re-encode every pixel. \\
+(e) Agent-safety framing & low & good & high & Crowded; our failures reflect localization capability, not policy. \\
+(f) What judges cannot see & high & good & low to medium & Uses sized corruptions as ground truth; differentiates from MotionGraphicsBench with a result. \\
+\bottomrule
+\end{tabularx}
+\caption{Candidate directions.}
+\label{tab:dir}
+\end{table}
+
+Direction (f) consists of analyses built from assets already in place. \emph{Judge blindness:} because each seeded corruption has a known size (a 20\,px fragment, a 2\,px seam, a moved background), we can present corrupted and valid animations to frontier VLM judges and plot detection rate against side-effect size; no competing benchmark has labeled corruptions at controlled sizes. \emph{Arena divergence:} the rank correlation between \anibench{} and public preference arenas tests whether those arenas measure locality at all. \emph{Failure attribution:} the procedural difficulty factors, combined with a probe asking each model to outline the part and mark its pivot, separate failures of localization from failures of structure and execution. A further analysis is available only to us: because procedural characters are built from layers, each can be exported both as a raster image and as an SVG with labeled parts, so that the same task in both formats measures the cost of inferring the part from pixels, with the vector condition corresponding to the setting of MotionGraphicsBench.
+
+\paragraph{Recommendation.} In order: (1) retain the focused benchmark and lead with direction (f), adding the raster-versus-vector comparison and piloting judge blindness on 50 clips by 5 December; (2) add the image-to-video comparison as a gated secondary experiment, after fixing a noise-floor protocol by 10 December, and drop it if incomplete by 24 December; (3) reduce reinforcement learning to evidence that the reward resists exploitation and that grader-filtered best-of-$n$ sampling improves pass rates; (4) defer the cross-modal family to a subsequent paper, retaining only the single-frame edit control; and (5) adopt the side-effect vocabulary without a safety framing. Regardless of direction, the paper must compare directly with MotionGraphicsBench and must report human agreement for the grader. If the pilot shows that judges detect small side effects reliably, judge blindness should leave the headline and direction (d) should move up.
+
+\paragraph{Timing.} Code-generated animation became a common demonstration and product category in late 2026, with five benchmarks released between September and November, and side effects of agents became a distinct evaluation axis. Both signals indicate a crowding field, which argues for submitting in January rather than waiting (sources in \texttt{docs/research/trends.md}).
+
 \section{Limitations and Threats to Validity}
 
 \begin{itemize}
@@ -207,7 +275,7 @@ Table~\ref{tab:models} reports the only model results currently available. They 
 
 \section{Next Steps}
 
-The next grader version adds the motion-based fragment check, measures area on the part's own pixels, adopts the threshold changes of Section~\ref{sec:falsefail}, corrects the three annotation defects, and re-runs both validation studies side by side. We will then extend the illustrated split to roughly 100 to 150 tasks from newly generated illustrations and photographs of the authors' pets (the latter as a realistic tier), add a single-frame local-edit control, and evaluate frontier and open-weight models under three fixed-budget settings (single shot, single shot with one rendered preview, and agentic) with three samples per task. A human study and a comparison with image-to-video models, scored with the same checks, will test whether pixel checks agree with human judgment and whether the localization failures we observe are specific to code-based animation.
+The next grader version adds a motion-based fragment check, measures area on the part's own pixels, adopts the threshold changes of Section~\ref{sec:falsefail}, corrects the three annotation defects, and re-runs both validation studies side by side. We will then extend the illustrated split to roughly 100 to 150 tasks from newly generated illustrations and from photographs of animals taken by the authors (a realistic tier), add the single-frame edit control and the raster-versus-vector condition, and evaluate frontier and open-weight models under three fixed-budget settings (single shot, single shot with one rendered preview, and agentic) with three samples per task. A human study will measure the grader's agreement with human judgment, and the judge-blindness and arena-divergence analyses of Section~\ref{sec:direction} will use the same runs.
 
 \bibliographystyle{plainnat}
 \bibliography{refs}
@@ -238,5 +306,12 @@ frames & 25 over 2\,s & $t_i = 2i/24$ \\
 \caption{Constants of grader v2.}
 \label{tab:thresholds}
 \end{table}
+
+\section{Revision History}
+\label{app:rev}
+\begin{itemize}
+\item 17 Nov 2026: initial report on benchmark construction and grader validation (grader v2).
+\item 17 Nov 2026: integrated the second literature review; rewrote the related work as Related Work and Positioning; retracted three claims; added Recommended Direction; aligned abstract, introduction and next steps.
+\end{itemize}
 
 \end{document}

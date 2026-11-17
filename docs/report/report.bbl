@@ -1,9 +1,38 @@
-\begin{thebibliography}{34}
+\begin{thebibliography}{42}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Bakshi(2026)]{bakshi2026worldbench}
+Krish Bakshi.
+\newblock {WorldBench}: Evaluating {LLMs} on {Three.js} voxel world generation,
+  2026.
+\newblock URL \url{https://arxiv.org/abs/2610.10622}.
+
+\bibitem[Bean et~al.(2025)Bean, Kearns, Romanou, Hafner, Mayne, Batzner,
+  Foroutan~Eghlidi, Schmitz, Korgul, Batra, Deb, Beharry, Emde, Foster, Gausen,
+  Grandury, Han, Hofmann, Ibrahim, Kim, Kirk, Lin, Liu, Luettgau, Magomere,
+  Rystr{\o}m, Sotnikova, Yang, Zhao, Bibi, Bosselut, Clark, Cohan, Foerster,
+  Gal, Hale, Raji, Summerfield, Torr, Ududec, Rocher, and
+  Mahdi]{bean2025constructvalidity}
+Andrew~M. Bean, Ryan~Othniel Kearns, Angelika Romanou, Franziska~Sofia Hafner,
+  Harry Mayne, Jan Batzner, Negar Foroutan~Eghlidi, Chris Schmitz, Karolina
+  Korgul, Hunar Batra, Oishi Deb, Emma Beharry, Cornelius Emde, Thomas Foster,
+  Anna Gausen, Mar{\'i}a Grandury, Sophia Han, Valentin Hofmann, Lujain
+  Ibrahim, Hazel Kim, Hannah~Rose Kirk, Fangru Lin, Gabrielle Liu, Lennart
+  Luettgau, Jabez Magomere, Jonathan Rystr{\o}m, Anna Sotnikova, Yushi Yang,
+  Yilun Zhao, Adel Bibi, Antoine Bosselut, Ronald Clark, Arman Cohan, Jakob
+  Foerster, Yarin Gal, Scott~A. Hale, Deborah Raji, Christopher Summerfield,
+  Philip~H.S. Torr, Cozmin Ududec, Luc Rocher, and Adam Mahdi.
+\newblock Measuring what matters: Construct validity in large language model
+  benchmarks.
+\newblock In \emph{Advances in Neural Information Processing Systems 38
+  (NeurIPS 2025), Datasets and Benchmarks Track}, 2025.
+\newblock \doi{10.52202/085713-0590}.
+\newblock URL
+  \url{https://papers.neurips.cc/paper_files/paper/2025/hash/1967e0fc3aa6cbbace562f5cb8e3954e-Abstract-Datasets_and_Benchmarks_Track.html}.
 
 \bibitem[Cassano et~al.(2024)Cassano, Li, Sethi, Shinn, Brennan-Jones, Lozkhov,
   Anderson, and Guha]{cassano2024canitedit}
@@ -25,23 +54,14 @@ Dongping Chen, Ruoxi Chen, Shilin Zhang, Yaochen Wang, Yinuo Liu, Huichi Zhou,
 \newblock In \emph{International Conference on Machine Learning (ICML)}, 2024.
 \newblock URL \url{https://icml.cc/virtual/2024/poster/33545}.
 
-\bibitem[Chen et~al.(2025{\natexlab{a}})Chen, Dong, Xu, Wu, Tang, Zhang, Yan,
-  Wu, Zhang, Hou, Shen, Lu, and Zhuang]{chen2025svgenius}
-Siqi Chen, Xinyu Dong, Haolei Xu, Xingyu Wu, Fei Tang, Hang Zhang, Yuchen Yan,
-  Linjuan Wu, Wenqi Zhang, Guiyang Hou, Yongliang Shen, Weiming Lu, and Yueting
-  Zhuang.
-\newblock {SVGenius}: Benchmarking {LLMs} in {SVG} understanding, editing and
-  generation, 2025{\natexlab{a}}.
-\newblock URL \url{https://arxiv.org/abs/2506.03139}.
-
-\bibitem[Chen et~al.(2025{\natexlab{b}})Chen, Zhang, Huang, Qiu, Zhang, Wen,
-  and Liu]{chen2025sgpgenbench}
-Yamei Chen, Haoquan Zhang, Yangyi Huang, Zeju Qiu, Kaipeng Zhang, Yandong Wen,
-  and Weiyang Liu.
-\newblock Symbolic graphics programming with large language models,
-  2025{\natexlab{b}}.
-\newblock URL \url{https://arxiv.org/abs/2509.05208}.
-\newblock Introduces SGP-GenBench.
+\bibitem[Cheng et~al.(2025)Cheng, Duan, Wang, Fang, Li, Huang, Wang, Eftekhar,
+  Lee, Yuan, Hendrix, Smith, Xia, Fox, and Krishna]{cheng2025pointarena}
+Long Cheng, Jiafei Duan, Yi~Ru Wang, Haoquan Fang, Boyang Li, Yushan Huang,
+  Elvis Wang, Ainaz Eftekhar, Jason Lee, Wentao Yuan, Rose Hendrix, Noah~A.
+  Smith, Fei Xia, Dieter Fox, and Ranjay Krishna.
+\newblock {PointArena}: Probing multimodal grounding through language-guided
+  pointing, 2025.
+\newblock URL \url{https://arxiv.org/abs/2505.09990}.
 
 \bibitem[Chowdhury et~al.(2024)Chowdhury, Aung, Shern, Jaffe, Sherburn,
   Starace, Mays, Dias, Aljubeh, Glaese, Jimenez, Yang, Ho, Patwardhan, Liu, and
@@ -73,11 +93,28 @@ Adrienne Deganutti, Elad Hirsch, Haonan Zhu, Jaejung Seol, and Purvanshi Mehta.
 \newblock URL \url{https://arxiv.org/html/2604.04192v1}.
 \newblock Authors listed alphabetically in the paper.
 
-\bibitem[Ji et~al.(2026)Ji, Mudunuri, Chan, and Suhr]{ji2026animation2code}
-Anya Ji, Abhijith~Varma Mudunuri, David~M. Chan, and Alane Suhr.
-\newblock {Animation2Code}: Evaluating temporal visual reasoning in
-  video-to-code generation, 2026.
-\newblock URL \url{https://arxiv.org/abs/2606.28593}.
+\bibitem[Diao et~al.(2026)Diao, Xu, Yang, Ma, Chen,
+  et~al.]{diao2026vibevideobench}
+Muxi Diao, Wenbin Xu, Lele Yang, Xuyang Ma, Yuzhe Chen, et~al.
+\newblock {VibeVideoBench}: Evaluating multimodal agents on code-driven video
+  generation, 2026.
+\newblock URL \url{https://arxiv.org/abs/2610.35864}.
+
+\bibitem[Gupta and Hebbar(2026)]{gupta2026vectorbench}
+Yug~Aditi Gupta and Prannay Hebbar.
+\newblock {Vector-Bench}: Can models surgically edit {SVG} code?, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.19056}.
+
+\bibitem[Huang et~al.(2026)Huang, Chen, Liang, Ma, Yang, Ke, Tan, and
+  Sun]{huang2026sabench}
+Jiaju Huang, Shaobin Chen, Xinglong Liang, Xinyu Ma, Hao Yang, Wei Ke, Tao Tan,
+  and Yue Sun.
+\newblock Task success is not enough: Side-effect-aware evaluation of
+  tool-using language model agents.
+\newblock In \emph{Advances in Neural Information Processing Systems (NeurIPS),
+  Evaluations and Datasets Track}, 2026.
+\newblock URL \url{https://arxiv.org/abs/2610.34167}.
+\newblock arXiv:2610.34167; venue per arXiv comments field.
 
 \bibitem[Jimenez et~al.(2024)Jimenez, Yang, Wettig, Yao, Pei, Press, and
   Narasimhan]{jimenez2024swebench}
@@ -109,23 +146,19 @@ Ren{\'e} Just, Darioush Jalali, Laura Inozemtseva, Michael~D. Ernst, Reid
 \newblock URL
   \url{https://homes.cs.washington.edu/~mernst/pubs/mutation-effectiveness-fse2014-abstract.html}.
 
-\bibitem[Le et~al.(2025)Le, Xie, Liang, Wang, Yang, Ma, Vedder, Krishna,
-  Jayaraman, and Eaton]{le2025articulateanything}
-Long Le, Jason Xie, William Liang, Hung-Ju Wang, Yue Yang, Yecheng~Jason Ma,
-  Kyle Vedder, Arjun Krishna, Dinesh Jayaraman, and Eric Eaton.
-\newblock {Articulate-Anything}: Automatic modeling of articulated objects via
-  a vision-language foundation model.
-\newblock In \emph{International Conference on Learning Representations
-  (ICLR)}, pages 17578--17602, 2025.
-\newblock URL
-  \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/2c8047bf3ed8ef6905351608d641f02f-Abstract-Conference.html}.
-
 \bibitem[Levy et~al.(2026)Levy, Margolin, Cavia, Samuel, Pritch, Pelec, Peleg,
   Rav~Acha, Shamir, and Lischinski]{levy2026livesvg}
 Matan Levy, Ran Margolin, Bar Cavia, Dvir Samuel, Yael Pritch, Shallel Pelec,
   Shmuel Peleg, Alex Rav~Acha, Ariel Shamir, and Dani Lischinski.
 \newblock {LiveSVG}: Zero-shot {SVG} animation via video generation, 2026.
 \newblock URL \url{https://arxiv.org/html/2605.30174}.
+
+\bibitem[Li et~al.(2026)Li, Hu, Liu, Feng, Liu, and Wan]{li2026mtweb2code}
+Qiming Li, Shujie Hu, Haohan Liu, Xiaocheng Feng, Songxiang Liu, and Guanglu
+  Wan.
+\newblock {MT-Web2Code}: Benchmarking coding agents on multi-turn regional
+  reconstruction and localized modification, 2026.
+\newblock URL \url{https://arxiv.org/abs/2608.03474}.
 
 \bibitem[Liang et~al.(2026)Liang, Wang, Wang, Hu, Zhou, Liu, Zhang, Xu, and
   Yu]{liang2026vanim}
@@ -159,16 +192,47 @@ Shuo Lu, Yinuo Xu, Kecheng Yu, Siru Jiang, Yongcan Yu, Yubin Wang, Haitao Yang,
 \newblock A NeurIPS 2026 poster page exists
   (neurips.cc/virtual/2026/poster/139687); venue not independently opened.
 
-\bibitem[Ma et~al.(2024)Ma, Ji, Ye, Lin, Wang, Zheng, Zhou, Sun, and
-  Ji]{ma2024i2ebench}
+\bibitem[Ma and Agrawala(2025)]{ma2025mover}
+Jiaju Ma and Maneesh Agrawala.
+\newblock {MoVer}: Motion verification for motion graphics animations.
+\newblock \emph{ACM Transactions on Graphics (SIGGRAPH 2025)}, 2025.
+\newblock \doi{10.1145/3731209}.
+\newblock URL \url{https://arxiv.org/abs/2502.13372}.
+
+\bibitem[Ma et~al.(2026)Ma, Jindal, Wang, and
+  Bhakthavatsalam]{ma2026motiongraphicsbench}
+Jiaju Ma, Ashvini~Kumar Jindal, Chuhua Wang, and Sumithra Bhakthavatsalam.
+\newblock {MotionGraphicsBench}: Evaluating motion graphics generation with
+  programmatic verification, 2026.
+\newblock URL \url{https://arxiv.org/abs/2611.10592}.
+\newblock Submitted 7 Nov 2026.
+
+\bibitem[Ma et~al.(2024{\natexlab{a}})Ma, Ji, Ye, Lin, Wang, Zheng, Zhou, Sun,
+  and Ji]{ma2024i2ebench}
 Yiwei Ma, Jiayi Ji, Ke~Ye, Weihuang Lin, Zhibin Wang, Yonghan Zheng, Qiang
   Zhou, Xiaoshuai Sun, and Rongrong Ji.
 \newblock {I2EBench}: A comprehensive benchmark for instruction-based image
   editing.
 \newblock In \emph{Advances in Neural Information Processing Systems 37
-  (NeurIPS 2024)}, 2024.
+  (NeurIPS 2024)}, 2024{\natexlab{a}}.
 \newblock URL
   \url{https://proceedings.neurips.cc/paper_files/paper/2024/hash/48fecef47b19fe501d27d338b6d52582-Abstract.html}.
+
+\bibitem[Ma et~al.(2024{\natexlab{b}})Ma, He, Wang, Wang, Qi, Cai, Li, Li,
+  Shum, Liu, and Chen]{ma2024followyourclick}
+Yue Ma, Yingqing He, Hongfa Wang, Andong Wang, Chenyang Qi, Chengfei Cai, Xiu
+  Li, Zhifeng Li, Heung-Yeung Shum, Wei Liu, and Qifeng Chen.
+\newblock Follow-your-click: Open-domain regional image animation via short
+  prompts, 2024{\natexlab{b}}.
+\newblock URL \url{https://arxiv.org/abs/2403.08268}.
+
+\bibitem[Mehrab et~al.(2026)Mehrab, Alomari, Sarker, Tang, Hakim, Karpatne, and
+  Thomas]{mehrab2026ophrg}
+Kazi~Sajeed Mehrab, Hani Alomari, Najibul~Haque Sarker, Chia-Wei Tang, Zaber
+  Ibn~Abdul Hakim, Anuj Karpatne, and Chris Thomas.
+\newblock Reasoning-guided part-level visual grounding via reinforcement
+  learning, 2026.
+\newblock URL \url{https://arxiv.org/abs/2607.15374}.
 
 \bibitem[Meng et~al.(2022)Meng, Bau, Andonian, and Belinkov]{meng2022rome}
 Kevin Meng, David Bau, Alex Andonian, and Yonatan Belinkov.
@@ -188,6 +252,12 @@ Kevin Meng, Arnab Sen~Sharma, Alex Andonian, Yonatan Belinkov, and David Bau.
 \newblock URL \url{https://iclr.cc/virtual/2023/poster/11880}.
 \newblock MEMIT.
 
+\bibitem[Minar et~al.(2026)Minar, Oh, Jeong, and Park]{minar2026snfbench}
+Matiur~Rahman Minar, Seunghun Oh, Ganghyeon Jeong, and Unsang Park.
+\newblock {SNF-Bench}: Separating static drift from natural flow in
+  long-horizon fixed-camera video generation, 2026.
+\newblock URL \url{https://arxiv.org/abs/2608.28694}.
+
 \bibitem[Mitchell et~al.(2022)Mitchell, Lin, Bosselut, Finn, and
   Manning]{mitchell2022mend}
 Eric Mitchell, Charles Lin, Antoine Bosselut, Chelsea Finn, and Christopher~D.
@@ -198,34 +268,11 @@ Eric Mitchell, Charles Lin, Antoine Bosselut, Chelsea Finn, and Christopher~D.
 \newblock URL \url{https://www.iclr.cc/virtual/2022/poster/6846}.
 \newblock MEND.
 
-\bibitem[Periasami et~al.(2026)Periasami, Wang, and
-  Dhingra]{periasami2026vision2code}
-Ajay~Vikram Periasami, Junlin Wang, and Bhuwan Dhingra.
-\newblock {Vision2Code}: A multi-domain benchmark for evaluating image-to-code
-  generation, 2026.
-\newblock URL \url{https://arxiv.org/html/2605.11307v1}.
-
-\bibitem[Reuel et~al.(2024)Reuel, Hardy, Smith, Lamparth, Hardy, and
-  Kochenderfer]{reuel2024betterbench}
-Anka Reuel, Amelia Hardy, Chandler Smith, Max Lamparth, Malcolm Hardy, and
-  Mykel~J. Kochenderfer.
-\newblock {BetterBench}: Assessing {AI} benchmarks, uncovering issues, and
-  establishing best practices.
-\newblock In \emph{Advances in Neural Information Processing Systems 37
-  (NeurIPS 2024), Datasets and Benchmarks Track}, pages 21763--21813, 2024.
-\newblock URL
-  \url{https://proceedings.neurips.cc/paper_files/paper/2024/hash/26889e8359e7ef8a7f5d77457364ca55-Abstract.html}.
-
-\bibitem[Rodriguez et~al.(2025)Rodriguez, Puri, Agarwal, Laradji, Rodriguez,
-  Rajeswar, Vazquez, Pal, and Pedersoli]{rodriguez2025starvector}
-Juan~A. Rodriguez, Abhay Puri, Shubham Agarwal, Issam~H. Laradji, Pau
-  Rodriguez, Sai Rajeswar, David Vazquez, Christopher Pal, and Marco Pedersoli.
-\newblock {StarVector}: Generating scalable vector graphics code from images
-  and text.
-\newblock In \emph{Proceedings of the IEEE/CVF Conference on Computer Vision
-  and Pattern Recognition (CVPR)}, pages 16175--16186, 2025.
-\newblock URL
-  \url{https://openaccess.thecvf.com/content/CVPR2025/html/Rodriguez_StarVector_Generating_Scalable_Vector_Graphics_Code_from_Images_and_Text_CVPR_2025_paper.html}.
+\bibitem[Pysklo et~al.(2026)Pysklo, Zhuravel, and Watson]{pysklo2026agentdiff}
+Hubert~M. Pysklo, Artem Zhuravel, and Patrick~D. Watson.
+\newblock {Agent-Diff}: Benchmarking {LLM} agents on enterprise {API} tasks via
+  code execution with state-diff-based evaluation, 2026.
+\newblock URL \url{https://arxiv.org/abs/2602.11224}.
 
 \bibitem[Si et~al.(2025)Si, Zhang, Li, Yang, Liu, and Yang]{si2025design2code}
 Chenglei Si, Yanzhe Zhang, Ryan Li, Zhengyuan Yang, Ruibo Liu, and Diyi Yang.
@@ -236,6 +283,13 @@ Chenglei Si, Yanzhe Zhang, Ryan Li, Zhengyuan Yang, Ruibo Liu, and Diyi Yang.
   Language Technologies (Volume 1: Long Papers)}, pages 3956--3974, 2025.
 \newblock \doi{10.18653/v1/2025.naacl-long.199}.
 \newblock URL \url{https://aclanthology.org/2025.naacl-long.199}.
+
+\bibitem[Singer et~al.(2025)Singer, Rotstein, Mann, Kimmel, and
+  Litany]{singer2025timetomove}
+Assaf Singer, Noam Rotstein, Amir Mann, Ron Kimmel, and Or~Litany.
+\newblock Time-to-move: Training-free motion controlled video generation via
+  dual-clock denoising, 2025.
+\newblock URL \url{https://arxiv.org/abs/2511.08633}.
 
 \bibitem[Smith et~al.(2023)Smith, Zheng, Li, Jain, and
   Hodgins]{smith2023animateddrawings}
@@ -291,6 +345,14 @@ Jiayi Ye, Yanbo Wang, Yue Huang, Dongping Chen, Qihui Zhang, Nuno Moniz, Tian
 \newblock URL
   \url{https://proceedings.iclr.cc/paper_files/paper/2025/hash/fdca08d371e4b6c031397909e20043bd-Abstract-Conference.html}.
 
+\bibitem[Yin et~al.(2026)Yin, Chen, Wang, Sun, Jin, Song, and
+  Zhang]{yin2026verifierbench}
+Jianing Yin, Ziyi Chen, Hao Wang, Yiyou Sun, Zijian Jin, Dawn Song, and Daoan
+  Zhang.
+\newblock {VerifierBench}: Benchmarking the generation of executable verifiers
+  for {LLM} agents, 2026.
+\newblock URL \url{https://arxiv.org/abs/2610.28679}.
+
 \bibitem[Zhang et~al.(2025)Zhang, Li, Xu, Liu, Liu, Zhou, Deng, Wu, Huang, Li,
   Yi, Xiong, Hu, Zhang, Jiang, Xu, Zhang, Zhou, Zhou, and
   Lian]{zhang2025artifactsbench}
@@ -301,6 +363,12 @@ Chenchen Zhang, Yuhang Li, Can Xu, Jiaheng Liu, Ao~Liu, Changzhi Zhou, Ken
 \newblock {ArtifactsBench}: Bridging the visual-interactive gap in {LLM} code
   generation evaluation, 2025.
 \newblock URL \url{https://arxiv.org/abs/2507.04952}.
+
+\bibitem[Zhang et~al.(2026)Zhang, Xiao, Li, and Lyu]{zhang2026animwebbench}
+Zhongyi Zhang, Jingyu Xiao, Shuqing Li, and Michael~R. Lyu.
+\newblock {AnimWeb-Bench}: Benchmarking animated webpage code generation from
+  videos, 2026.
+\newblock URL \url{https://arxiv.org/abs/2611.09769}.
 
 \bibitem[Zheng et~al.(2023)Zheng, Chiang, Sheng, Zhuang, Wu, Zhuang, Lin, Li,
   Li, Xing, Zhang, Gonzalez, and Stoica]{zheng2023judging}
@@ -313,27 +381,10 @@ Lianmin Zheng, Wei-Lin Chiang, Ying Sheng, Siyuan Zhuang, Zhanghao Wu, Yonghao
 \newblock URL
   \url{https://proceedings.neurips.cc/paper_files/paper/2023/hash/91f18a1287b398d378ef22505bf41832-Abstract.html}.
 
-\bibitem[Zhu et~al.(2025)Zhu, Jin, Pruksachatkun, Zhang, Liu, Cui, Kapoor,
-  Longpre, Meng, Weiss, Barez, Gupta, Dhamala, Merizian, Giulianelli, Coppock,
-  Ududec, Sekhon, Steinhardt, Kellermann, Schwettmann, Zaharia, Stoica, Liang,
-  and Kang]{zhu2025abc}
-Yuxuan Zhu, Tengjun Jin, Yada Pruksachatkun, Andy Zhang, Shu Liu, Sasha Cui,
-  Sayash Kapoor, Shayne Longpre, Kevin Meng, Rebecca Weiss, Fazl Barez, Rahul
-  Gupta, Jwala Dhamala, Jacob Merizian, Mario Giulianelli, Harry Coppock,
-  Cozmin Ududec, Jasjeet Sekhon, Jacob Steinhardt, Antony Kellermann, Sarah
-  Schwettmann, Matei Zaharia, Ion Stoica, Percy Liang, and Daniel Kang.
-\newblock Establishing best practices for building rigorous agentic benchmarks,
-  2025.
-\newblock URL \url{https://arxiv.org/abs/2507.02825}.
-\newblock Agentic Benchmark Checklist (ABC).
-
-\bibitem[Zou et~al.(2024)Zou, Cai, Zhang, and Lee]{zou2024vgbench}
-Bocheng Zou, Mu~Cai, Jianrui Zhang, and Yong~Jae Lee.
-\newblock {VGBench}: Evaluating large language models on vector graphics
-  understanding and generation.
-\newblock In \emph{Proceedings of the 2024 Conference on Empirical Methods in
-  Natural Language Processing}, pages 3647--3659, 2024.
-\newblock \doi{10.18653/v1/2024.emnlp-main.213}.
-\newblock URL \url{https://aclanthology.org/2024.emnlp-main.213}.
+\bibitem[Zhu et~al.(2026)Zhu, Lim, and Kan]{zhu2026overediting}
+Tongyao Zhu, Wei~Hern Lim, and Min-Yen Kan.
+\newblock When models edit too much: On the fidelity of minimal code edits,
+  2026.
+\newblock URL \url{https://arxiv.org/abs/2609.04061}.
 
 \end{thebibliography}
