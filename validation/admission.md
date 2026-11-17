@@ -22,10 +22,10 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 | T16 | G1, G2, G2b, G3, G4, G6 | - | caught | missed (no split) | caught | caught | n/a | caught | caught | missed (no split) | caught | n/a |
 | T17 | G1, G2, G2b, G3, G4, G6 | - | caught | caught | caught | caught | n/a | caught | caught | caught | caught | n/a |
 | T18 | G1, G2, G2b, G3, G4, G6 | - | caught | caught | caught | caught | n/a | caught | caught | caught | caught | n/a |
-| T19 | G1, G2b, G3, G4, G5, G6 | G2 | caught | missed (no split) | caught | caught | caught | caught | caught | missed | caught | caught |
+| T19 | G1, G3, G4, G5, G6 | G2, G2b | caught | n/a | caught | caught | caught | caught | caught | n/a | n/a | n/a |
 | T20 | G1, G2, G2b, G3, G4, G5, G6 | - | caught | caught | caught | caught | caught | caught | caught | caught | caught | caught |
 | T21 | G1, G2b, G3, G4, G5, G6 | G2 | caught | missed (no split) | caught | caught | caught | caught | caught | caught | caught | caught |
 
-**Broken copies caught (where an intended check applies):** Whole image 21/21; Missed thumb 11/21; Hole left 21/21; Frozen 21/21; Center pivot 12/13; No loop 20/21; Wrong part 21/21; Detach small 14/21; Detach tip 21/21; Gap seam 15/16
+**Broken copies caught (where an intended check applies):** Whole image 21/21; Missed thumb 11/20; Hole left 21/21; Frozen 21/21; Center pivot 12/13; No loop 20/21; Wrong part 21/21; Detach small 14/20; Detach tip 20/20; Gap seam 14/15
 
-**Detachment copies caught, counting only copies where the part really comes apart:** Missed thumb 11/11; Detach small 14/15; Detach tip 20/20; Gap seam 12/12
+**Detachment copies caught, counting only copies where the part really comes apart:** Missed thumb 11/11; Detach small 14/14; Detach tip 20/20; Gap seam 11/11
