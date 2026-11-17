@@ -18,6 +18,8 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 from jobs import MODELS  # noqa: E402
 
+BEFORE = "a898e10"  # commit of the last official grading (grader v1 grades in runs/; v2 never re-graded them)
+
 REPAIR_MSG = ("Your HTML file did not run correctly in the grading harness. Error: {err}\n"
               "Last browser console lines:\n{logs}\n\n"
               "Fix it and return the complete corrected HTML file in a single ```html code block. "
@@ -114,6 +116,18 @@ def main(n=2, regrade=False):
         for p in ps:
             p.join()
     if regrade:
+        # "before" = the grade committed at BEFORE (the last official grading), so an interrupted re-grade can be
+        # resumed without losing what the runs scored before
+        import subprocess
+        for f in flips:
+            path = f"{f['run']}/grade_{f['stage']}.json"
+            try:
+                prev = json.loads(subprocess.check_output(["git", "-C", str(ROOT), "show", f"{BEFORE}:{path}"],
+                                                          stderr=subprocess.DEVNULL))
+                f["before"] = dict(status=prev.get("status"), failed=sorted(
+                    k for k, v in (prev.get("grades") or {}).items() if k != "pass" and not v["ok"]))
+            except subprocess.CalledProcessError:
+                pass
         flips.sort(key=lambda f: (f["run"], f["stage"]))
         changed = [f for f in flips if f["before"]["status"] != f["after"]["status"]]
         (ROOT / "results/regrade.json").write_text(json.dumps(dict(regraded=len(flips), status_flips=changed,
