@@ -6,7 +6,7 @@ harbor/<task-name>/
   tests/test.sh, tests/grade_app.py, tests/{graders.py, render.py, spec.json, masks}
   solution/solve.sh (+ reference layers) -> writes the reference animation to /app
 
-The verifier renders /app/index.html with headless Chromium (software WebGL), runs the six checks,
+The verifier renders /app/index.html with headless Chromium (software WebGL), runs the admitted checks (G1-G6, G2b, G2c),
 writes /logs/verifier/reward.txt (1 = all applicable checks pass) and reward.json (per-check detail).
 
 Usage:
@@ -250,7 +250,7 @@ workdir = "/app"
         (d / "task.toml").write_text(toml)
         for f in ("graders.py", "render.py"):
             shutil.copy(ROOT / "src" / f, d / "tests" / f)
-        for f in ("spec.json", "image.png", "allowed.png", "target.png", "skull.png"):
+        for f in ("spec.json", "image.png", "allowed.png", "target.png", "parts.png", "skull.png"):
             if (tdir / f).exists():
                 shutil.copy(tdir / f, d / "tests" / f)
         (d / "tests/test.sh").write_text(TEST_SH)
@@ -270,7 +270,7 @@ workdir = "/app"
     title = "anibench — Harbor tasks" + ("" if setting is None else f" (setting: {setting}, see docs/protocol.md)")
     (out / "README.md").write_text(
         f"# {title}\n\n" + f"{len(names)} scored tasks. Upload with the Valkyrie CLI from this folder.\n\n"
-        "Each task: the agent writes `/app/index.html`; `tests/test.sh` renders it in headless Chromium and runs the six checks; "
+        "Each task: the agent writes `/app/index.html`; `tests/test.sh` renders it in headless Chromium and runs the admitted checks (G1-G6, G2b, G2c); "
         "reward 1 = all applicable checks pass. `solution/solve.sh` installs the reference animation (oracle).\n")
     print(len(names), "tasks exported to", out)
     return out
