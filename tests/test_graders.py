@@ -194,11 +194,11 @@ def test_g2b_folds_into_pass_and_has_own_key(tmp_path, one_piece_hand):
     assert res["G4"]["ok"] and not res["G2b"]["ok"] and res["pass"] is False
 
 
-def test_candidate_checks_adds_g2b():
-    assert candidate_checks({"graders": ["G1", "G2", "G3"]}) == ["G1", "G2", "G2b", "G3"]
-    assert candidate_checks({"graders": ["G1", "G3", "G4", "G6"]}) == ["G1", "G2b", "G3", "G4", "G6"]
-    assert candidate_checks({"graders": ["G1"], "graders_all": ["G1", "G2", "G4"]}) == ["G1", "G2", "G2b", "G4"]
-    assert candidate_checks({"graders": ["G1", "G2b"], "graders_all": ["G1", "G2b"]}) == ["G1", "G2b"]
+def test_candidate_checks_adds_g2b_and_g2c():
+    assert candidate_checks({"graders": ["G1", "G2", "G3"]}) == ["G1", "G2", "G2b", "G2c", "G3"]
+    assert candidate_checks({"graders": ["G1", "G3", "G4", "G6"]}) == ["G1", "G2b", "G2c", "G3", "G4", "G6"]
+    assert candidate_checks({"graders": ["G1"], "graders_all": ["G1", "G2", "G4"]}) == ["G1", "G2", "G2b", "G2c", "G4"]
+    assert candidate_checks({"graders": ["G1", "G2b"], "graders_all": ["G1", "G2b", "G2c"]}) == ["G1", "G2b", "G2c"]
     assert candidate_checks({"graders": []}) == []
 
 

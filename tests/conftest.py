@@ -110,3 +110,69 @@ def thumb_on_arm():
     palm = rect(26, 40, 28, 36)
     thumb = rect(30, 41, 24, 28)  # 44 px, touches both the palm and the forearm
     return Scene([palm, thumb])
+
+
+# ---------------------------------------------------------------- textured rotating parts (grader v3)
+
+class RotScene:
+    """A 128x128 canvas: a static textured 'forearm' and a textured 'hand' attached at a wrist pivot.
+    Frames rotate the hand sprite about a pivot (nearest neighbour, inverse mapping) over a base where its
+    footprint has been erased to white, like the reference animator. Textures are seeded noise."""
+    N = 128
+
+    def __init__(self, hand=None, arm=None, seed=0, hand_rgb=(150, 80, 50), arm_rgb=(60, 70, 140), texture="noise"):
+        n = self.N
+        yy, xx = np.mgrid[:n, :n]
+        self.arm = arm if arm is not None else ((xx >= 56) & (xx < 72) & (yy >= 70) & (yy < 118))
+        self.hand = hand if hand is not None else ((((xx - 64) / 14.0) ** 2 + ((yy - 44) / 26.0) ** 2) <= 1) & (yy < 70)
+        rng = np.random.default_rng(seed)
+        if texture == "strands":  # hair-like: 2 px strands along the part's axis
+            tex = np.where((xx // 2) % 2 == 0, -55, 55)[..., None] + rng.integers(-10, 11, (n, n, 1))
+        else:
+            tex = rng.integers(-45, 46, (n, n, 1))
+        img = np.full((n, n, 3), 255, np.int16)
+        img[self.arm] = (np.array(arm_rgb) + tex)[self.arm]
+        img[self.hand] = (np.array(hand_rgb) + tex)[self.hand]
+        self.image = np.clip(img, 0, 255).astype(np.uint8)
+        self.pivot = (64, 69)
+        self.allowed = ((xx - 64) ** 2 + (yy - 69) ** 2 <= 62 ** 2) & (yy < 80)
+
+    def frame(self, deg, pivot=None, keep=None, hide=False, occluder=None, base=None, erase=True):
+        """Rotate the hand by deg about pivot. keep: hand pixels that stay put (left behind).
+        occluder: (mask, rgb image) drawn on top of everything (a static part in front).
+        erase=False leaves the original hand in place under the moving copy (ghosting)."""
+        n = self.N
+        px, py = pivot or self.pivot
+        moving = self.hand & ~keep if keep is not None else self.hand
+        out = (base if base is not None else self.image).copy()
+        if erase:
+            out[moving] = 255
+        if not hide:
+            yy, xx = np.mgrid[:n, :n].astype(float)
+            t = np.deg2rad(deg)
+            sx = np.cos(t) * (xx - px) + np.sin(t) * (yy - py) + px
+            sy = -np.sin(t) * (xx - px) + np.cos(t) * (yy - py) + py
+            ix, iy = np.rint(sx).astype(int), np.rint(sy).astype(int)
+            ok = (ix >= 0) & (ix < n) & (iy >= 0) & (iy < n)
+            src = np.zeros((n, n), bool)
+            src[ok] = moving[iy[ok], ix[ok]]
+            out[src] = self.image[iy[src], ix[src]]
+        if occluder is not None:
+            m, rgb = occluder
+            out[m] = rgb[m]
+        return out
+
+    def swing(self, amp=20, n=13, **kw):
+        degs = [amp * np.sin(2 * np.pi * i / (n - 1)) for i in range(n)]
+        return np.stack([self.frame(d, **kw) for d in degs])
+
+
+@pytest.fixture
+def rot_scene():
+    return RotScene()
+
+
+def write_rot_task(d, sc, graders, amp=20, **extra):
+    """Task files for a RotScene (pivot at the wrist)."""
+    return write_task(d, sc.image, sc.hand, sc.allowed, graders=graders, pivots=[list(sc.pivot)], amp=amp,
+                      width=sc.N, height=sc.N, **extra)
