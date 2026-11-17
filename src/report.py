@@ -21,9 +21,11 @@ import stats  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "results"
-GRADERS = ["G1", "G2", "G3", "G4", "G5", "G6"]
-GNAME = {"G1": "Isolation", "G2": "Integrity", "G3": "Area", "G4": "Motion", "G5": "Pivot", "G6": "Loop/fidelity"}
-STAGE = {"G1": "isolation", "G2": "cut-out", "G3": "cut-out", "G4": "motion", "G5": "pivot", "G6": "motion"}
+GRADERS = ["G1", "G2", "G2b", "G2c", "G3", "G4", "G5", "G6"]
+GNAME = {"G1": "Isolation", "G2": "Integrity", "G2b": "Connectivity", "G2c": "Residual", "G3": "Area", "G4": "Motion",
+         "G5": "Pivot", "G6": "Loop/fidelity"}
+STAGE = {"G1": "isolation", "G2": "cut-out", "G2b": "cut-out", "G2c": "cut-out", "G3": "cut-out", "G4": "motion",
+         "G5": "pivot", "G6": "motion"}
 LABEL = {"sonnet": "Claude Sonnet 5.5", "sol": "GPT-6.1 Sol", "qwen": "Qwen 3.8 27B",
          "nemotron": "Nemotron 3.5 Super VL", "gemma": "Gemma 4 31B",
          "sonnet-cc": "Claude Sonnet 5.5 (Claude Code, Valkyrie)", "sol-codex": "GPT-6.1 Sol (Codex, Valkyrie)",
