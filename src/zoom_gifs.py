@@ -9,6 +9,10 @@ from render import Renderer, prepare
 
 def zbox(task, aspect=16 / 9, pad=40):
     a = np.array(Image.open(ROOT / "tasks" / task / "allowed.png")) > 127
+    return zbox_mask(a, aspect, pad)
+
+def zbox_mask(a, aspect=16 / 9, pad=40):
+    """Box (x0, y0, x1, y1) of the given aspect around the True pixels of mask `a`, padded, inside the image."""
     W, H = a.shape[1], a.shape[0]
     ys, xs = np.nonzero(a)
     x0, y0, x1, y1 = xs.min() - pad, ys.min() - pad, xs.max() + pad, ys.max() + pad
