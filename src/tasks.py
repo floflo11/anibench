@@ -1,6 +1,6 @@
 """Task generation: annotations/*.json (parts) + annotations/tasks_*.json (task definitions) -> tasks/.
 
-Writes tasks/<ID>/{spec.json, prompt.md, image.png, target.png, allowed.png?, skull.png?} and
+Writes tasks/<ID>/{spec.json, prompt.md, image.png, target.png, parts.png?, allowed.png?, skull.png?} and
 tasks/index.json. Task definitions (id, tier, image, instruction, parts, kind, amp, optional pivot
 override) live in annotations/tasks_pilot.json; part masks and pivots come from the schema-v1
 annotation files via src/annotations.py.
@@ -160,6 +160,12 @@ def build(out=None, task_file=None, ann_dir=None):
                     area_tol=0.5,
                     blob_allow=3 if kind in ("translate_up", "rotate_hat") else 0)
         Image.fromarray((target * 255).astype("uint8")).save(d / "target.png")
+        if graders:
+            # parts.png: label k = the k-th part of spec["parts"] (they may move independently, e.g. two earrings)
+            lab = np.zeros(target.shape, np.uint8)
+            for k, m in enumerate(targets, start=1):
+                lab[m] = k
+            Image.fromarray(lab).save(d / "parts.png")
         if graders:
             allowed = allowed_region(spec, targets, part_pivots)
             Image.fromarray((allowed * 255).astype("uint8")).save(d / "allowed.png")

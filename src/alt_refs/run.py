@@ -31,8 +31,9 @@ RES = ROOT / "results" / "alt_refs"
 RAW = RES / "raw"
 EVID = RES / "evidence"
 PAGES = ROOT / "out" / "alt_refs"
-CHECKS = ["G1", "G2", "G3", "G4", "G5", "G6"]
-CHECK_NAMES = {"G1": "isolation", "G2": "integrity", "G3": "area", "G4": "motion", "G5": "pivot", "G6": "loop/fidelity"}
+CHECKS = ["G1", "G2", "G2b", "G2c", "G3", "G4", "G5", "G6"]
+CHECK_NAMES = {"G1": "isolation", "G2": "integrity", "G2b": "connectivity", "G2c": "residual", "G3": "area",
+               "G4": "motion", "G5": "pivot", "G6": "loop/fidelity"}
 GIF_TASKS = {"easing": ["T01", "T15", "T13"], "squash_stretch": ["T03", "T16", "T17"],
              "follow_through": ["T06", "T19", "T15"], "alt_impl": ["T12", "T14", "T18"], "pivot": ["T01", "T11"]}
 
@@ -56,9 +57,10 @@ def _box(mask, pad, shape):
     return (max(0, xs.min() - pad), max(0, ys.min() - pad), min(shape[1], xs.max() + pad + 1), min(shape[0], ys.max() + pad + 1))
 
 
-def worst_frames(frames, task_dir):
+def worst_frames(frames, task_dir, result=None):
     """Per check, the frame index where it is worst and a mask of the offending pixels (mirrors graders.py)."""
-    from graders import G5_R, blobs, changed, disc, foreground, load_mask
+    from graders import (G2C_STILL, G5_R, blobs, changed, disc, foreground, load_mask, part_groups, part_pixels,
+                         raw_changed, remnant, track_groups)
     from scipy import ndimage
     spec = json.loads((task_dir / "spec.json").read_text())
     orig = np.array(Image.open(task_dir / "image.png").convert("RGB"))
@@ -102,15 +104,30 @@ def worst_frames(frames, task_dir):
     out["G5"] = max(range(len(frames)), key=lambda i: (ch[i] & dm).sum())
     out["G5_px"] = ch[out["G5"]] & dm
     out["G5_disc"] = dm
+    skull = load_mask(task_dir, "skull.png")
+    if result and "G2b" in result:
+        i = result["G2b"].get("frame", 0)
+        out["G2b"] = i
+        out["G2b_px"] = part_pixels(fgs[i], raw_changed(frames[i], orig), allowed, target, skull)
+    if result and "G2c" in result:
+        i = result["G2c"].get("frame", 0)
+        out["G2c"] = i
+        px = np.zeros_like(target)
+        tracks = track_groups(frames, orig, fg0, allowed, part_groups(task_dir, target), skull, spec)
+        untouched = np.abs(frames[i].astype(np.int16) - orig.astype(np.int16)).max(-1) <= G2C_STILL
+        for P, tr, Ts in tracks:
+            if tr is not None:
+                px |= remnant(P, tr, Ts[i], untouched, mask=True)[1]
+        out["G2c_px"] = px
     loopd = changed(frames[0], frames[-1])
     out["G6"] = len(frames) - 1 if loopd.mean() > ch[0].mean() else 0
     out["G6_px"] = loopd if out["G6"] else ch[0]
     return out, orig, allowed, target
 
 
-def evidence(frames, tid, variant, failed):
+def evidence(frames, tid, variant, failed, result=None):
     task_dir = ROOT / "tasks" / tid
-    wf, orig, allowed, target = worst_frames(frames, task_dir)
+    wf, orig, allowed, target = worst_frames(frames, task_dir, result)
     EVID.mkdir(parents=True, exist_ok=True)
     paths = {}
     from scipy import ndimage
@@ -180,7 +197,7 @@ def _worker(jobs, q):
                 failed = [k for k in CHECKS if k in g and not g[k]["ok"]]
                 rec = dict(task=tid, variant=v, graders=spec["graders"], result=g, failed=failed)
                 if failed:
-                    rec["evidence"] = evidence(fr, tid, v, failed)
+                    rec["evidence"] = evidence(fr, tid, v, failed, g)
             out = RAW / v / f"{tid}.json"
             out.parent.mkdir(parents=True, exist_ok=True)
             out.write_text(json.dumps(rec, indent=1))
@@ -389,7 +406,7 @@ def redo_evidence(checks=None):
             prepare(d, ROOT / "tasks" / tid)
             fr, err, _ = R.render(d, spec["width"], spec["height"])
             if fr is not None:
-                r["evidence"] = evidence(fr, tid, v, r["failed"])
+                r["evidence"] = evidence(fr, tid, v, r["failed"], r.get("result"))
                 (RAW / v / f"{tid}.json").write_text(json.dumps(r, indent=1))
                 print(v, tid, r["failed"])
     finally:
