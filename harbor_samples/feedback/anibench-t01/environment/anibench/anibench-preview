@@ -1,0 +1,8 @@
+#!/bin/bash
+# anibench-preview: render /app/index.html like the grader and save 6 frames to /app/preview/
+[ -d /ms-playwright ] && export PLAYWRIGHT_BROWSERS_PATH=/ms-playwright
+for c in /usr/bin/python3 /usr/local/bin/python3 $(which -a python3 2>/dev/null); do
+  if [ -x "$c" ] && "$c" -c "import playwright, numpy, PIL" 2>/dev/null; then exec "$c" /opt/anibench/preview.py "$@"; fi
+done
+echo "anibench-preview: no python3 with playwright, numpy and pillow found" >&2
+exit 1
