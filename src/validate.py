@@ -76,7 +76,12 @@ def main(n=2, only=None, tasks_dir=ROOT / "tasks", out_dir=ROOT / "validation", 
     idx = json.loads((tasks_dir / "index.json").read_text())
     ids = [s["id"] for s in idx if s["graders"] and (tasks_dir / s["id"] / "spec.json").exists()]
     if sample:
-        ids = ids[:: max(1, len(ids) // sample)][:sample]
+        byspec = {s["id"]: s for s in idx}
+        groups = {}
+        for i in ids:  # stratify synthetic tasks by motion (a plain stride hits only 2 of the 8 motions)
+            groups.setdefault(byspec[i].get("synth", {}).get("motion"), []).append(i)
+        per = max(1, sample // len(groups))
+        ids = sorted(i for g in groups.values() for i in g[:: max(1, len(g) // per)][:per])
     if only is not None:
         ids = [i for i in ids if i in only]
     if shard:
