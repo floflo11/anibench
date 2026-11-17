@@ -5,7 +5,7 @@ Updated: 2026-11-16
 | Task | Branch | Agent | State | Gate result | Notes |
 |---|---|---|---|---|---|
 | 1.1 Grader v2 | grader-v2 | grader | running | pending | |
-| 1.2 Task pipeline | task-pipeline | pipeline | running | pending | |
+| 1.2 Task pipeline | task-pipeline | pipeline | merged (3ace338) | pass: T01-T24 regenerate byte-identical; 119 tests | New images need a foreground mask; source/license of the two pilot images unknown (Iris) |
 | 1.3 Synthetic characters | synthetic | synth | running | pending | |
 | 1.4 Protocol and stats | protocol | protocol | merged (4198842) | pass: 39 tests, no leaks | Valkyrie turn-cap flags TODO; Terminus 2 can't see images in single/feedback (Iris decides); re-export after grader-v2 |
 | 1.5 Research and framing | research | research | running | pending | |
