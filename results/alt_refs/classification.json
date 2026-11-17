@@ -1,8 +1,9 @@
 {
  "easing-cubic_large/T07/G3": {
-  "class": "b",
-  "cause": "mask",
-  "reason": "Earring swing at 35 deg (top of the plausible range). The bead swings clear of its gold chain, which is not in the earring mask and stays put, so the bead visibly floats off its hook (rule 3). G3 fires for a different reason: the bead occludes the cheek and veil, so the net foreground count drops (0.71 of a 345 px target). The verdict is right, but the reason is wrong (see G3 recommendation)."
+  "class": "a",
+  "cause": "occlusion",
+  "grader": "v3",
+  "reason": "Re-classified for grader v3: the earring mask now includes the gold chain, so at 35 deg the bead swings on its chain (valid). v2's G3 still fails it (net foreground 0.70 of the part: the bead occludes cheek and veil); v3's G3 passes it. Earlier classification (b, chain left out of the mask): Earring swing at 35 deg (top of the plausible range). The bead swings clear of its gold chain, which is not in the earring mask and stays put, so the bead visibly floats off its hook (rule 3). G3 fires for a different reason: the bead occludes the cheek and veil, so the net foreground count drops (0.71 of a 345 px target). The verdict is right, but the reason is wrong (see G3 recommendation)."
  },
  "easing-cubic_large/T08/G5": {
   "class": "a",

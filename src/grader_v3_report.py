@@ -212,9 +212,10 @@ def main(workers=2):
         for v, ks in EXPECT.items():
             md.append(f"| {NAMES[v]} | {'/'.join(ks)} | {frac(d2[v])} | {frac(d3[v])} | "
                       f"{frac(s2[v]) if v in s2 else '-'} | {frac(s3[v]) if v in s3 else '-'} |")
-        drops = {k: [sum(k not in a2[t] for t in a2), sum(k not in a3[t] for t in a3)] for k in CHECKS}
-        md += ["", "Checks dropped by admission (tasks whose reference fails them), v2 / v3: " + "; ".join(
-            f"{k} {a}/{b}" for k, (a, b) in drops.items()), ""]
+        drops = {k: [sum(k not in a2[t] for t in a2) if k != "G2c" else None, sum(k not in a3[t] for t in a3)]
+                 for k in CHECKS}
+        md += ["", f"Checks dropped by admission (of {len(a3)} tasks whose reference fails them), v2 / v3: " + "; ".join(
+            f"{k} {'-' if a is None else a}/{b}" for k, (a, b) in drops.items()) + " (v2 had no G2c).", ""]
         out[kind]["dropped"] = drops
     if (OUT / "alt_refs/raw").exists():
         at = alt_table(v2flat)
