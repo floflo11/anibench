@@ -177,7 +177,9 @@ def g2b(fgs, raw, fg0, region, target, skull=None, scenery0=None):
     return dict(ok=bool(counts[worst] <= base), value=int(counts[worst]), base=int(base), frame=worst)
 
 
-G2C_DMIN = 4.0     # px: footprint pixels the fitted motion moves at least this far must have moved
+G2C_DMIN = 10.0    # px: footprint pixels the fitted motion moves at least this far must have moved (4 px
+                   # flagged non-rigid valid bends near the joint, T06 follow-through/squash; every kept
+                   # missed-thumb and detach-small copy still fails at 10)
 G2C_STILL = 3      # max per-channel difference for a pixel to count as untouched (left exactly as it was)
 G2C_TOL = 2        # px of slack around the fitted part (fit and resampling error)
 G3_MIN_AREA = 400  # px: G3 normalises by max(part area, this): tiny parts are not over-sensitive, and T07's
@@ -463,7 +465,7 @@ def g2c(frames, orig, tracks):
     the rest swings past it can touch the moving part in every frame (the missed-thumb copies on T03, T05, T21,
     the earring on T07, the heads on T09-T11), so the part never splits. G2c fits the part's rigid motion in
     every frame (RigidTrack) and looks for a left-behind piece directly: original footprint pixels that the
-    fitted motion carries >= G2C_DMIN px away, that the moved part does not cover (G2C_TOL px slack), but that
+    fitted motion carries >= G2C_DMIN (10) px away, that the moved part does not cover (G2C_TOL px slack), but that
     are still untouched in the frame (every channel within G2C_STILL of the original). A piece of >= G2B_MIN px
     with a body fails the check.
       - Only frames whose fit is trusted (>= FIT_MIN of the part's sampled pixels matched) are looked at, so a
