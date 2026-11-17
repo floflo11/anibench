@@ -4,7 +4,7 @@ Updated: 2026-11-16 (evening)
 
 | Task | Branch | Agent | State | Gate result | Notes |
 |---|---|---|---|---|---|
-| 1.1 Grader v2 | grader-v2 | grader | resumed after server restart (G2b committed, validation re-run in progress) | pending | |
+| 1.1 Grader v2 | grader-v2 | grader | merged | partial pass: every real split caught (missed thumb 11/11, detach 45/45); raw missed thumb 11/20 because 9 copies never come apart (the tip slides past while touching); reference 100% | Re-grading model runs: 8 flips (5 real detachments incl. kimi/qwen T06, 2 dragged shirt strips, 1 borderline). Blind spot for tips that slide past while still touching: a rigid-motion residual check is queued for grader v3 |
 | 1.2 Task pipeline | task-pipeline | pipeline | merged (3ace338) | pass: T01-T24 regenerate byte-identical; 119 tests | New images need a foreground mask; source/license of the two pilot images unknown (Iris) |
 | 1.3 Synthetic characters | synthetic | synth | merged (1292de3) | pass: 160 tasks, reference 160/160 in Chrome, 129 tests | Follow-ups: G3 penalizes legit occlusion changes (47 seeds rejected, biased against occluded parts); mutation validation not yet run on synth tasks; distance factor weak (0 in 74%); G5 scored on 76/160; poses all front-facing |
 | 1.4 Protocol and stats | protocol | protocol | merged (4198842) | pass: 39 tests, no leaks | Valkyrie turn-cap flags TODO; Terminus 2 can't see images in single/feedback (Iris decides); re-export after grader-v2 |
@@ -20,6 +20,9 @@ Updated: 2026-11-16 (evening)
   - G5: raise the max to 0.30, plus a displacement-based joint test for textured joints such as T08
   - annotation fixes: T10's head mask includes part of the sleeve; T07's earring masks leave out the chain, and its pivot sits outside the mask
   - reference bug: T14 tips the hat both ways
+  - a rigid-motion residual check for still remnants that slide past while touching (T03, T05, T21 fingers; T07; T09-T11 heads)
+  - give synthetic tasks G2b and re-admit them
+  - officially re-grade runs/ and results/ with the new grader; fix build_writeup.py prose (it still says 7 broken copies)
   - re-run the mutation suite (including on synthetic tasks) and the alternate animations, and report false-fail and detection rates side by side
 - Import index.html/frames from Valkyrie run outputs so agent runs can be clipped for the study
 - Synth v2: more poses, characters overlapping each other, a better proximity factor
