@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>anibench rater</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- Self-contained: no network. Works from file:// (pick the study folder) or any static host
+     (rater.html?manifest=path/to/rater/manifest.json). See docs/human_study.md. -->
+<style>
+  * { box-sizing: border-box; }
+  html, body { margin: 0; font: 14px/1.4 system-ui, -apple-system, "Segoe UI", sans-serif; color: #1d1d1f; background: #f4f4f5; }
+  header { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: #fff; border-bottom: 1px solid #ddd; position: sticky; top: 0; z-index: 2; }
+  header h1 { font-size: 15px; margin: 0; font-weight: 650; }
+  #progress { flex: 1; display: flex; align-items: center; gap: 10px; }
+  #progressBar { flex: 1; height: 8px; background: #e4e4e7; border-radius: 4px; overflow: hidden; max-width: 420px; }
+  #progressFill { height: 100%; width: 0; background: #2563eb; transition: width .2s; }
+  #progressText { color: #555; white-space: nowrap; }
+  button { font: inherit; padding: 5px 10px; border: 1px solid #b4b4b8; border-radius: 5px; background: #fff; cursor: pointer; }
+  button:hover { background: #f0f0f2; }
+  button:disabled { opacity: .45; cursor: default; }
+  kbd { font: 11px ui-monospace, monospace; border: 1px solid #c4c4c8; border-bottom-width: 2px; border-radius: 3px; padding: 0 4px; background: #fafafa; color: #333; }
+  .warn { background: #fff4d6; border: 1px solid #e8c766; padding: 6px 10px; border-radius: 5px; margin: 8px 0; }
+  .err { color: #b42318; }
+  section { padding: 14px; }
+  #setup { max-width: 760px; margin: 0 auto; }
+  #setup .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 16px 20px; margin-bottom: 14px; }
+  #setup label { display: block; margin: 10px 0 4px; font-weight: 600; }
+  #setup input[type=text] { font: inherit; padding: 6px 8px; width: 260px; border: 1px solid #b4b4b8; border-radius: 5px; }
+  #rate { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: 14px; align-items: start; }
+  #rate[hidden], #setup[hidden], #done[hidden] { display: none; }
+  #left { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 12px; }
+  #instruction { font-size: 19px; font-weight: 600; margin: 2px 0 2px; }
+  #reminder { color: #555; margin-bottom: 10px; }
+  #media { background: #e8e8e8; text-align: center; min-height: 200px; }
+  #media video, #media img { max-width: 100%; max-height: calc(100vh - 250px); display: inline-block; }
+  #controls { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 8px; color: #444; }
+  #controls .info { margin-left: auto; font: 12px ui-monospace, monospace; color: #666; }
+  #form { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 12px 14px; position: sticky; top: 58px; }
+  #form h2 { font-size: 13px; margin: 12px 0 6px; color: #333; }
+  #form h2:first-child { margin-top: 0; }
+  .choice { display: flex; gap: 8px; }
+  .choice button { flex: 1; padding: 9px 6px; font-weight: 600; }
+  .choice button[aria-pressed=true] { background: #2563eb; border-color: #2563eb; color: #fff; }
+  #passNo[aria-pressed=true] { background: #c2410c; border-color: #c2410c; }
+  #defects label { display: flex; gap: 8px; align-items: flex-start; padding: 4px 6px; border-radius: 4px; cursor: pointer; }
+  #defects label:hover { background: #f4f4f5; }
+  #defects.disabled { opacity: .4; pointer-events: none; }
+  #defects kbd { margin-left: auto; }
+  #otherText { width: 100%; font: inherit; min-height: 44px; margin-top: 4px; padding: 4px 6px; border: 1px solid #b4b4b8; border-radius: 5px; }
+  #saveRow { display: flex; gap: 8px; margin-top: 14px; }
+  #saveBtn { flex: 1; background: #16a34a; border-color: #16a34a; color: #fff; font-weight: 650; padding: 9px; }
+  #msg { min-height: 20px; margin-top: 8px; }
+  #done { max-width: 640px; margin: 30px auto; background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 20px 24px; }
+  #help { position: fixed; inset: 0; background: rgba(0,0,0,.35); z-index: 5; display: flex; align-items: center; justify-content: center; }
+  #help[hidden] { display: none; }
+  #help .box { background: #fff; border-radius: 8px; max-width: 780px; max-height: 88vh; overflow: auto; padding: 18px 24px; }
+  table.keys td { padding: 2px 10px 2px 0; vertical-align: top; }
+  .hint { color: #666; font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>anibench rater</h1>
+  <div id="progress"><div id="progressBar"><div id="progressFill"></div></div><span id="progressText">no study loaded</span></div>
+  <button id="helpBtn" title="Instructions and shortcuts (?)">Help <kbd>?</kbd></button>
+  <button id="exportCsv" disabled>Export CSV</button>
+  <button id="exportJson" disabled>Export JSON</button>
+</header>
+<div id="storageWarn" class="warn" hidden style="margin: 8px 14px">Autosave is not available in this browser
+  (private window or storage blocked), so your answers live only in this tab. Export (CSV or JSON) before closing it.</div>
+
+<section id="setup">
+  <div class="card">
+    <h2 style="margin-top:0">Rate short animations</h2>
+    <p>Each clip shows a still image and an animation made from it. The animation was supposed to move <b>one named part</b>
+      (for example a hand) and nothing else. You decide whether it did that without breaking anything, and if not, what went wrong.
+      Read the <a href="#" id="helpLink">instructions</a> once before you start.</p>
+    <label for="raterId">1. Your rater ID</label>
+    <input type="text" id="raterId" autocomplete="off" spellcheck="false" placeholder="as given to you, e.g. R07">
+    <label for="pickDir">2. Open the study folder (the folder that contains <code>manifest.json</code> and <code>clips/</code>)</label>
+    <input type="file" id="pickDir" webkitdirectory directory multiple>
+    <div class="hint">If your browser cannot open folders, select all files instead (manifest.json and every file in clips/):
+      <input type="file" id="pickFiles" multiple></div>
+    <div id="loadWarn" class="warn" hidden></div>
+    <div id="loadMsg" class="err"></div>
+    <p><button id="startBtn">Start</button></p>
+    <p class="hint">Your answers are saved in this browser as you go. Coming back later with the same rater ID and folder continues where you stopped.</p>
+  </div>
+</section>
+
+<section id="rate" hidden>
+  <div id="left">
+    <div id="instruction"></div>
+    <div id="reminder">The rest of the image should stay exactly as it is, and the animation should loop smoothly.</div>
+    <div id="media"></div>
+    <div id="controls">
+      <button id="playBtn">Play/pause <kbd>Space</kbd></button>
+      <button id="slowBtn">Speed <kbd>Z</kbd></button>
+      <button id="prevFrameBtn"><kbd>,</kbd> frame</button>
+      <button id="nextFrameBtn">frame <kbd>.</kbd></button>
+      <button id="frame0Btn">First frame <kbd>0</kbd></button>
+      <span class="info" id="playInfo"></span>
+    </div>
+  </div>
+  <div id="form">
+    <h2>Did the animation do what was asked without breaking anything else?</h2>
+    <div class="choice">
+      <button id="passYes" aria-pressed="false">Yes <kbd>Y</kbd></button>
+      <button id="passNo" aria-pressed="false">No <kbd>N</kbd></button>
+    </div>
+    <h2>If no: what went wrong? (pick all that apply)</h2>
+    <div id="defects"></div>
+    <textarea id="otherText" placeholder="Describe the other problem" disabled></textarea>
+    <h2>How sure are you?</h2>
+    <div class="choice" id="confidence">
+      <button id="conf1" aria-pressed="false">Unsure <kbd>1</kbd></button>
+      <button id="conf2" aria-pressed="false">Fairly sure <kbd>2</kbd></button>
+      <button id="conf3" aria-pressed="false">Certain <kbd>3</kbd></button>
+    </div>
+    <div id="saveRow">
+      <button id="backBtn" title="Previous clip">◀ <kbd>[</kbd></button>
+      <button id="saveBtn">Save and next <kbd>Enter</kbd></button>
+      <button id="fwdBtn" title="Next clip (only after saving this one)"><kbd>]</kbd> ▶</button>
+    </div>
+    <div id="msg" class="err"></div>
+  </div>
+</section>
+
+<section id="done" hidden>
+  <h2 style="margin-top:0">All clips rated. Thank you!</h2>
+  <p>Please export your answers and send the file as instructed. Exporting both formats is fine.</p>
+  <p><button id="doneJson">Export JSON</button> <button id="doneCsv">Export CSV</button> <button id="reviewBtn">Review answers <kbd>[</kbd></button></p>
+</section>
+
+<div id="help" hidden><div class="box">
+  <h2 style="margin-top:0">Instructions</h2>
+  <p>Each clip has four panels. Top: the <b>original image</b> (still) and the <b>animation</b>. Bottom: a <b>zoom</b> on the
+    area around the part that should move, for the original and for the animation. The animation repeats every 2 seconds.</p>
+  <p>The text above the clip says which part should move and how. Watch at least two full loops. Compare the animation with the
+    original: only the named part may move; everything else must stay exactly as in the original. Use the zoom, slow motion and
+    frame stepping for small details.</p>
+  <p><b>Yes</b> means: the named part moves as asked, and you cannot see anything else change or break. Judge only what
+    you can see in the clip; do not worry about how it was made. <b>No</b> means at least one of these problems is visible:</p>
+  <ul id="helpDefects"></ul>
+  <p>If the part should move but you can hardly see it move, that is "barely moves", even if nothing else is wrong.
+    If you are not sure, give your best answer and pick <b>Unsure</b>.</p>
+  <h3>Keys</h3>
+  <table class="keys">
+    <tr><td><kbd>Y</kbd> / <kbd>N</kbd></td><td>Yes / No</td></tr>
+    <tr><td><kbd>O</kbd> <kbd>T</kbd> <kbd>S</kbd> <kbd>B</kbd> <kbd>R</kbd> <kbd>L</kbd> <kbd>X</kbd></td><td>toggle a problem (after No); X = other, then click the box and type</td></tr>
+    <tr><td><kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd></td><td>confidence: unsure, fairly sure, certain</td></tr>
+    <tr><td><kbd>Enter</kbd></td><td>save and go to the next clip</td></tr>
+    <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>previous / next clip (you can change earlier answers)</td></tr>
+    <tr><td><kbd>Space</kbd>, <kbd>Z</kbd></td><td>play/pause, change speed (1x, 0.5x, 0.25x)</td></tr>
+    <tr><td><kbd>,</kbd> <kbd>.</kbd> <kbd>0</kbd></td><td>step one frame back / forward, jump to the first frame</td></tr>
+    <tr><td><kbd>Esc</kbd></td><td>leave the text box; close this help</td></tr>
+  </table>
+  <p><button id="helpClose">Close <kbd>Esc</kbd></button></p>
+</div></div>
+
+<script>
+(() => {
+'use strict';
+const TOOL_VERSION = '1';
+const RATING_SCHEMA = 'anibench-rating-v1';
+// Same codes as src/study/common.py and src/study/judge_schema.json (tests check this).
+const DEFECTS = [
+  {code: 'outside_moved', key: 'o', label: 'Something outside the part moved', help: 'Anything other than the named part moves, shifts, flickers or changes, even slightly (another body part, another person, the whole image).'},
+  {code: 'tore_split', key: 't', label: 'The part tore, split or left a piece behind', help: 'A gap, seam or hole opens, a piece (e.g. a finger or thumb) stays behind or detaches, or a copy of the part remains in its old place.'},
+  {code: 'size_shape', key: 's', label: 'The part changed size or shape', help: 'The part grows, shrinks, stretches, is cropped or is distorted beyond what the motion explains.'},
+  {code: 'barely_moves', key: 'b', label: 'The part barely moves (or does not move)', help: 'The named part does not move, or moves so little that the motion is hard to see.'},
+  {code: 'wrong_pivot', key: 'r', label: 'The part rotates around the wrong point', help: 'It swings around the wrong place (e.g. a hand that should bend at the wrist turns around its centre or around the elbow), or the wrong part moves.'},
+  {code: 'loop_jump', key: 'l', label: 'Jump at the loop, or the first frame differs from the image', help: 'A visible jump or snap when the 2-second loop restarts, or the first frame already differs from the original image.'},
+  {code: 'other', key: 'x', label: 'Other (describe)', help: 'Any other problem. Describe it in the text box.'},
+];
+const CODES = DEFECTS.map(d => d.code);
+const params = new URLSearchParams(location.search);
+const MIN_WATCH_DEFAULT = 4000;
+const $ = (id) => document.getElementById(id);
+
+let manifest = null, byId = {}, resolve = null, storageOK = false, storageKey = null;
+let state = null;             // persisted: answers, drafts, order, pos, times
+let shownAt = null;           // when the current clip became visible (ms), null while hidden
+let exportedSince = true;
+let speeds = [1, 0.5, 0.25], speedIdx = 0;
+const api = window.rater = { DEFECTS, state: null, keyFileSeen: false };
+
+// ---------------------------------------------------------------- storage
+function testStorage() {
+  try { const k = '__anibench_test'; window.localStorage.setItem(k, '1'); window.localStorage.removeItem(k); return true; }
+  catch (e) { return false; }
+}
+function persist() {
+  if (!storageOK || !storageKey) return;
+  try { window.localStorage.setItem(storageKey, JSON.stringify(state)); }
+  catch (e) { storageOK = false; $('storageWarn').hidden = false; }
+}
+function restore(key) {
+  if (!storageOK) return null;
+  try { const s = window.localStorage.getItem(key); return s ? JSON.parse(s) : null; } catch (e) { return null; }
+}
+
+// ---------------------------------------------------------------- helpers
+function nowIso() { return new Date().toISOString(); }
+function hash32(str) { let h = 2166136261 >>> 0; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } return h; }
+function mulberry32(a) { return () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+function shuffled(arr, seed) { const a = arr.slice(), r = mulberry32(seed); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+function minWatch() { const p = params.get('minwatch'); if (p !== null && p !== '' && !isNaN(+p)) return +p; return manifest && manifest.min_watch_ms != null ? manifest.min_watch_ms : MIN_WATCH_DEFAULT; }
+function safe(s) { return String(s).replace(/[^A-Za-z0-9_.-]+/g, '_'); }
+function msg(t) { $('msg').textContent = t || ''; }
+function emptyDraft() { return {pass: null, defects: [], other_text: '', confidence: null}; }
+function curId() { return state.order[state.pos]; }
+function draft() { const id = curId(); if (!state.drafts[id]) state.drafts[id] = state.answers[id] ? pick(state.answers[id]) : emptyDraft(); return state.drafts[id]; }
+function pick(a) { return {pass: a.pass, defects: a.defects.slice(), other_text: a.other_text, confidence: a.confidence}; }
+function nAnswered() { return state ? state.order.filter(id => state.answers[id]).length : 0; }
+
+// ---------------------------------------------------------------- loading
+function fileMap(files) {
+  const m = new Map();
+  for (const f of files) {
+    const rel = (f.webkitRelativePath || f.name).split('/');
+    if (rel.length > 1) rel.shift();               // drop the picked folder's own name
+    m.set(rel.join('/'), f);
+    if (!m.has(f.name)) m.set(f.name, f);
+  }
+  return m;
+}
+async function loadFiles(files) {
+  $('loadMsg').textContent = ''; $('loadWarn').hidden = true;
+  const m = fileMap(files);
+  const warn = [];
+  if ([...m.keys()].some(k => k.split('/').pop() === 'key.json')) {
+    api.keyFileSeen = true;
+    warn.push('This folder contains key.json, which is not meant for raters. Please tell the study team; you can continue.');
+  }
+  const mf = m.get('manifest.json') || [...m.entries()].filter(([k]) => k.endsWith('manifest.json')).map(([, f]) => f)[0];
+  if (!mf) { $('loadMsg').textContent = 'No manifest.json found. Open the study folder that contains manifest.json and clips/.'; return; }
+  let man;
+  try { man = JSON.parse(await mf.text()); } catch (e) { $('loadMsg').textContent = 'manifest.json could not be read: ' + e.message; return; }
+  const urls = new Map();
+  const res = (path) => {
+    if (urls.has(path)) return urls.get(path);
+    const f = m.get(path) || m.get(path.split('/').pop());
+    if (!f) return null;
+    const u = URL.createObjectURL(f); urls.set(path, u); return u;
+  };
+  const missing = (man.clips || []).filter(c => !(m.get(c.video) || m.get(c.video.split('/').pop()))).map(c => c.clip_id);
+  if (missing.length) warn.push(`${missing.length} clip file(s) are missing from the folder (e.g. ${missing.slice(0, 3).join(', ')}).`);
+  if (warn.length) { $('loadWarn').textContent = warn.join(' '); $('loadWarn').hidden = false; }
+  prepared = {man, res};
+  tryStart();
+}
+async function loadUrl(url) {
+  try {
+    const r = await fetch(url, {cache: 'no-store'});
+    const man = await r.json();
+    const base = new URL(url, location.href);
+    prepared = {man, res: (p) => new URL(p, base).href};
+    tryStart();
+  } catch (e) { $('loadMsg').textContent = 'Could not load ' + url + ': ' + e.message; }
+}
+let prepared = null;
+function tryStart() {
+  const rid = $('raterId').value.trim();
+  if (!prepared) { $('loadMsg').textContent = 'Open the study folder first.'; return; }
+  if (!rid) { $('loadMsg').textContent = 'Enter your rater ID, then press Start.'; $('raterId').focus(); return; }
+  start(prepared.man, prepared.res, rid);
+}
+
+function start(man, res, raterId) {
+  if (man.schema && !String(man.schema).startsWith('anibench-study-manifest')) { $('loadMsg').textContent = 'Not an anibench study manifest.'; return; }
+  manifest = man; resolve = res; byId = {};
+  for (const c of man.clips) byId[c.clip_id] = c;
+  const ids = man.clips.map(c => c.clip_id);
+  storageKey = `anibench-rater:v1:${man.study_id}:${raterId}`;
+  const saved = restore(storageKey);
+  const sameSet = saved && saved.order && saved.order.length === ids.length && saved.order.every(id => byId[id]);
+  state = sameSet ? saved : {schema: RATING_SCHEMA, study_id: man.study_id, rater_id: raterId, started_at: nowIso(),
+    order: shuffled(ids, hash32(man.study_id + '|' + raterId)), pos: 0, answers: {}, drafts: {}, time: {}, visits: {}, first_shown: {}};
+  state.drafts = state.drafts || {};
+  $('setup').hidden = true;
+  if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  $('exportCsv').disabled = $('exportJson').disabled = false;
+  if (nAnswered() === ids.length) showDone(); else show(Math.min(state.pos, ids.length - 1));
+}
+
+// ---------------------------------------------------------------- showing a clip
+function leaveClip() {
+  if (!state || shownAt === null || $('rate').hidden) return;
+  const id = curId();
+  state.time[id] = (state.time[id] || 0) + (performance.now() - shownAt);
+  shownAt = null;
+}
+function show(pos) {
+  leaveClip();
+  state.pos = pos;
+  const id = curId(), c = byId[id];
+  $('done').hidden = true; $('rate').hidden = false;
+  $('instruction').textContent = c.instruction;
+  const media = $('media'); media.textContent = '';
+  const src = resolve(c.video);
+  if (!src) { media.textContent = 'Clip file missing: ' + c.video; }
+  else if (/\.(mp4|webm|mov)$/i.test(c.video)) {
+    const v = document.createElement('video');
+    v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.preload = 'auto';
+    v.src = src; v.playbackRate = speeds[speedIdx];
+    v.addEventListener('loadeddata', () => { v.playbackRate = speeds[speedIdx]; v.play().catch(() => {}); });
+    media.appendChild(v);
+  } else {
+    const im = document.createElement('img'); im.src = src; im.alt = 'animation'; media.appendChild(im);
+  }
+  const isVideo = !!media.querySelector('video');
+  for (const b of ['playBtn', 'slowBtn', 'prevFrameBtn', 'nextFrameBtn', 'frame0Btn']) $(b).disabled = !isVideo;
+  if (!state.first_shown[id]) state.first_shown[id] = nowIso();
+  state.visits[id] = (state.visits[id] || 0) + 1;
+  shownAt = document.hidden ? null : performance.now();
+  msg('');
+  renderForm(); renderProgress(); persist();
+}
+function video() { return document.querySelector('#media video'); }
+function mediaReady() {
+  const v = video(); if (v) return v.readyState >= 2;
+  const im = document.querySelector('#media img'); return !!(im && im.complete && im.naturalWidth > 0);
+}
+function clipFps() { const c = byId[curId()]; return (c && c.fps) || 12; }
+function clipFrames() { const c = byId[curId()]; return (c && c.n_frames) || 24; }
+function stepFrame(d) {
+  const v = video(); if (!v) return;
+  v.pause();
+  const fps = clipFps(), total = Math.max(1, Math.round(v.duration * fps) || clipFrames());
+  let k = Math.floor(v.currentTime * fps + 1e-3) + d;
+  k = ((k % total) + total) % total;
+  v.currentTime = (k + 0.5) / fps;
+}
+function togglePlay() { const v = video(); if (!v) return; if (v.paused) v.play().catch(() => {}); else v.pause(); }
+function cycleSpeed() { speedIdx = (speedIdx + 1) % speeds.length; const v = video(); if (v) v.playbackRate = speeds[speedIdx]; }
+function frame0() { const v = video(); if (!v) return; v.pause(); v.currentTime = 0.5 / clipFps(); }
+function tick() {
+  const v = video();
+  if (v && !$('rate').hidden) {
+    const n = clipFrames(), k = Math.floor(v.currentTime * clipFps() + 1e-3) % n;
+    $('playInfo').textContent = `${v.paused ? 'paused' : 'playing'} · ${speeds[speedIdx]}x · frame ${k + 1}/${n}`;
+  } else $('playInfo').textContent = '';
+  requestAnimationFrame(tick);
+}
+
+// ---------------------------------------------------------------- form
+function buildDefects() {
+  const box = $('defects');
+  for (const d of DEFECTS) {
+    const l = document.createElement('label');
+    l.innerHTML = `<input type="checkbox" id="d_${d.code}"> <span></span> <kbd>${d.key.toUpperCase()}</kbd>`;
+    l.querySelector('span').textContent = d.label;
+    l.title = d.help;
+    l.querySelector('input').addEventListener('change', () => toggleDefect(d.code));
+    box.appendChild(l);
+    const li = document.createElement('li'); li.innerHTML = '<b></b>: <span></span>';
+    li.querySelector('b').textContent = d.label; li.querySelector('span').textContent = d.help;
+    $('helpDefects').appendChild(li);
+  }
+}
+function renderForm() {
+  const d = draft();
+  $('passYes').setAttribute('aria-pressed', d.pass === true);
+  $('passNo').setAttribute('aria-pressed', d.pass === false);
+  $('defects').classList.toggle('disabled', d.pass !== false);
+  for (const c of CODES) $('d_' + c).checked = d.defects.includes(c);
+  const ot = $('otherText');
+  ot.disabled = !d.defects.includes('other');
+  if (ot.value !== d.other_text) ot.value = d.other_text;
+  for (const k of [1, 2, 3]) $('conf' + k).setAttribute('aria-pressed', d.confidence === k);
+  $('backBtn').disabled = state.pos === 0;
+  $('fwdBtn').disabled = !state.answers[curId()] || state.pos >= state.order.length - 1;
+}
+function setPass(v) { const d = draft(); d.pass = v; if (v) { d.defects = []; d.other_text = ''; } changed(); }
+function toggleDefect(code) {
+  const d = draft();
+  if (d.pass !== false) { renderForm(); msg('Problems can only be picked after answering No.'); return; }
+  d.defects = d.defects.includes(code) ? d.defects.filter(c => c !== code) : CODES.filter(c => c === code || d.defects.includes(c));
+  changed();
+}
+function setConf(k) { draft().confidence = k; changed(); }
+function changed() { msg(''); renderForm(); persist(); }
+
+function validate() {
+  const d = draft(), id = curId();
+  const watched = (state.time[id] || 0) + (shownAt === null ? 0 : performance.now() - shownAt);
+  const need = minWatch();
+  if (watched < need) return `Please watch the clip a little longer (at least ${Math.ceil(need / 1000)} s, about two loops) before answering.`;
+  if (d.pass === null) return 'Answer the main question first: Y = yes, N = no.';
+  if (d.pass === false && d.defects.length === 0) return 'Pick at least one defect (what went wrong), keys O T S B R L X.';
+  if (d.defects.includes('other') && !d.other_text.trim()) return "Please describe the 'Other' problem in the text box.";
+  if (d.confidence === null) return 'Choose how sure you are: 1, 2 or 3.';
+  return null;
+}
+function save() {
+  if (!state || $('rate').hidden) return;
+  const err = validate();
+  if (err) { msg(err); return; }
+  const id = curId(), d = draft(), prev = state.answers[id];
+  leaveClip();
+  const same = prev && prev.pass === d.pass && prev.confidence === d.confidence && prev.other_text === d.other_text &&
+    prev.defects.join() === d.defects.join();
+  state.answers[id] = {clip_id: id, position: state.pos, pass: d.pass, defects: d.defects.slice(), other_text: d.other_text.trim(),
+    confidence: d.confidence, first_shown_at: state.first_shown[id], answered_at: same ? prev.answered_at : nowIso(),
+    time_ms: Math.round(state.time[id] || 0), n_visits: state.visits[id] || 1, n_edits: prev ? prev.n_edits + (same ? 0 : 1) : 0};
+  delete state.drafts[id];
+  exportedSince = false;
+  persist();
+  const next = state.order.findIndex((x, i) => i > state.pos && !state.answers[x]);
+  const first = state.order.findIndex(x => !state.answers[x]);
+  if (next >= 0) show(next); else if (first >= 0) show(first); else { renderProgress(); showDone(); }
+}
+function back() { if (!$('done').hidden) { show(state.order.length - 1); return; } if (state.pos > 0) show(state.pos - 1); }
+function fwd() {
+  if (!state.answers[curId()]) { msg('Save this clip first (Enter).'); return; }
+  if (state.pos < state.order.length - 1) show(state.pos + 1);
+}
+function showDone() { leaveClip(); $('rate').hidden = true; $('done').hidden = false; const v = video(); if (v) v.pause(); persist(); }
+function renderProgress() {
+  const n = state.order.length, a = nAnswered();
+  $('progressFill').style.width = (100 * a / n) + '%';
+  $('progressText').textContent = `${a} / ${n} rated` + ($('done').hidden ? ` · clip ${state.pos + 1} of ${n}` : '');
+}
+
+// ---------------------------------------------------------------- export
+function ratings() { return state.order.filter(id => state.answers[id]).map(id => state.answers[id]); }
+function exportMeta() {
+  return {schema: RATING_SCHEMA, tool: 'tools/rater.html', tool_version: TOOL_VERSION, study_id: state.study_id,
+    rater_id: state.rater_id, started_at: state.started_at, exported_at: nowIso(), n_clips: state.order.length,
+    n_answered: nAnswered(), min_watch_ms: minWatch(), user_agent: navigator.userAgent};
+}
+function csvCell(v) { const s = v === null || v === undefined ? '' : String(v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; }
+function toCsv() {
+  const meta = exportMeta();
+  const cols = ['study_id', 'rater_id', 'clip_id', 'position', 'pass', 'defects', ...CODES.map(c => 'd_' + c), 'other_text',
+    'confidence', 'first_shown_at', 'answered_at', 'time_ms', 'n_visits', 'n_edits', 'exported_at'];
+  const lines = [cols.join(',')];
+  for (const r of ratings()) {
+    const row = {study_id: meta.study_id, rater_id: meta.rater_id, clip_id: r.clip_id, position: r.position, pass: r.pass ? 1 : 0,
+      defects: r.defects.join(';'), other_text: r.other_text, confidence: r.confidence, first_shown_at: r.first_shown_at,
+      answered_at: r.answered_at, time_ms: r.time_ms, n_visits: r.n_visits, n_edits: r.n_edits, exported_at: meta.exported_at};
+    for (const c of CODES) row['d_' + c] = r.defects.includes(c) ? 1 : 0;
+    lines.push(cols.map(k => csvCell(row[k])).join(','));
+  }
+  return lines.join('\n') + '\n';
+}
+function download(text, ext, type) {
+  if (!state) return;
+  const stamp = nowIso().replace(/[:.]/g, '-');
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([text], {type}));
+  a.download = `ratings_${safe(state.study_id)}_${safe(state.rater_id)}_${stamp}.${ext}`;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  exportedSince = true;
+}
+function exportJson() { download(JSON.stringify({...exportMeta(), ratings: ratings()}, null, 1), 'json', 'application/json'); }
+function exportCsv() { download(toCsv(), 'csv', 'text/csv'); }
+
+// ---------------------------------------------------------------- keys and wiring
+function openHelp(v) { $('help').hidden = !v; }
+document.addEventListener('keydown', (e) => {
+  const t = e.target;
+  if (t && (t.tagName === 'TEXTAREA' || (t.tagName === 'INPUT' && t.type === 'text'))) {
+    if (e.key === 'Escape') { t.blur(); e.preventDefault(); }
+    else if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      if (t.id === 'raterId') tryStart(); else { t.blur(); save(); }
+    }
+    return;
+  }
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
+  if (!$('help').hidden) { if (e.key === 'Escape' || e.key === '?') { openHelp(false); e.preventDefault(); } return; }
+  if (e.key === '?' || e.key === 'h') { openHelp(true); e.preventDefault(); return; }
+  if (!state) return;
+  if (!$('done').hidden) { if (e.key === '[') { back(); e.preventDefault(); } return; }
+  if ($('rate').hidden) return;
+  const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+  const d = DEFECTS.find(x => x.key === k);
+  let handled = true;
+  if (k === 'y') setPass(true);
+  else if (k === 'n') setPass(false);
+  else if (d) toggleDefect(d.code);
+  else if (k === '1' || k === '2' || k === '3') setConf(+k);
+  else if (k === 'Enter') save();
+  else if (k === '[') back();
+  else if (k === ']') fwd();
+  else if (k === ' ') togglePlay();
+  else if (k === 'z') cycleSpeed();
+  else if (k === ',') stepFrame(-1);
+  else if (k === '.') stepFrame(1);
+  else if (k === '0') frame0();
+  else handled = false;
+  if (handled) { e.preventDefault(); if (document.activeElement && document.activeElement.tagName === 'BUTTON') document.activeElement.blur(); }
+});
+document.addEventListener('visibilitychange', () => {
+  if (!state || $('rate').hidden) return;
+  if (document.hidden) leaveClip(); else if (shownAt === null) shownAt = performance.now();
+});
+window.addEventListener('beforeunload', (e) => {
+  if (state && !storageOK && !exportedSince && nAnswered() > 0) { e.preventDefault(); e.returnValue = ''; }
+});
+$('otherText').addEventListener('input', () => { draft().other_text = $('otherText').value; persist(); });
+$('passYes').onclick = () => setPass(true);
+$('passNo').onclick = () => setPass(false);
+for (const k of [1, 2, 3]) $('conf' + k).onclick = () => setConf(k);
+$('saveBtn').onclick = save; $('backBtn').onclick = back; $('fwdBtn').onclick = fwd;
+$('playBtn').onclick = togglePlay; $('slowBtn').onclick = cycleSpeed; $('frame0Btn').onclick = frame0;
+$('prevFrameBtn').onclick = () => stepFrame(-1); $('nextFrameBtn').onclick = () => stepFrame(1);
+$('exportJson').onclick = exportJson; $('exportCsv').onclick = exportCsv;
+$('doneJson').onclick = exportJson; $('doneCsv').onclick = exportCsv; $('reviewBtn').onclick = back;
+$('helpBtn').onclick = () => openHelp(true); $('helpClose').onclick = () => openHelp(false);
+$('helpLink').onclick = (e) => { e.preventDefault(); openHelp(true); };
+$('startBtn').onclick = tryStart;
+$('pickDir').addEventListener('change', (e) => { if (e.target.files.length) loadFiles([...e.target.files]); });
+$('pickFiles').addEventListener('change', (e) => { if (e.target.files.length) loadFiles([...e.target.files]); });
+
+buildDefects();
+storageOK = testStorage();
+$('storageWarn').hidden = storageOK;
+if (params.get('rater')) $('raterId').value = params.get('rater');
+if (params.get('manifest')) loadUrl(params.get('manifest'));
+Object.assign(api, {
+  mediaReady, save, show,
+  current: () => (state && !$('rate').hidden ? {clip_id: curId(), ...draft()} : null),
+  exportData: () => ({...exportMeta(), ratings: ratings()}),
+  csv: toCsv,
+});
+Object.defineProperty(api, 'state', {get: () => state});
+requestAnimationFrame(tick);
+})();
+</script>
+</body>
+</html>
