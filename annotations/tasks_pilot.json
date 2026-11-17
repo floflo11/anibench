@@ -1,0 +1,30 @@
+{
+  "schema_version": 1,
+  "description": "Pilot task set T01-T24 (formerly hard-coded in src/tasks.py). kind: rotate | rotate_hat | translate_up | jump | body | flutter | human; amp is degrees (rotate*) or pixels. 'pivot' overrides the part pivot (T14 rotates the hat about the brim end).",
+  "tasks": [
+    {"id": "T01", "tier": 1, "image": "lineup", "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.", "parts": ["A1_hand"], "kind": "rotate", "amp": 25},
+    {"id": "T02", "tier": 1, "image": "lineup", "instruction": "Make the girl with pigtails wave her raised forearm from the elbow.", "parts": ["A2_forearm"], "kind": "rotate", "amp": 20},
+    {"id": "T03", "tier": 1, "image": "lineup", "instruction": "Make the small boy in the striped shirt wave his raised hand from the wrist.", "parts": ["A3_hand"], "kind": "rotate", "amp": 25},
+    {"id": "T04", "tier": 1, "image": "lineup", "instruction": "Make the girl in the white dress (far right) wave her raised forearm from the elbow.", "parts": ["A4_forearm"], "kind": "rotate", "amp": 20},
+    {"id": "T05", "tier": 1, "image": "toddlers", "instruction": "Make the toddler in the red jacket wave her raised hand from the wrist.", "parts": ["B1_hand"], "kind": "rotate", "amp": 25},
+    {"id": "T06", "tier": 1, "image": "toddlers", "instruction": "Make the toddler in the navy jacket swing his whole raised arm from the shoulder.", "parts": ["B2_arm"], "kind": "rotate", "amp": 15},
+    {"id": "T07", "tier": 1, "image": "lineup", "instruction": "Make the red earrings of the girl in the white dress (far right) swing gently, as if in a breeze.", "parts": ["A4_earringL", "A4_earringR"], "kind": "rotate", "amp": 25},
+    {"id": "T08", "tier": 1, "image": "lineup", "instruction": "Make the pigtails of the girl with pigtails swing side to side.", "parts": ["A2_pigtailL", "A2_pigtailR"], "kind": "rotate", "amp": 12},
+    {"id": "T09", "tier": 1, "image": "lineup", "instruction": "Make the boy on the far left nod his head.", "parts": ["A1_head"], "kind": "rotate", "amp": 8},
+    {"id": "T10", "tier": 1, "image": "toddlers", "instruction": "Make the toddler in the navy jacket nod his head; his hat stays on his head.", "parts": ["B2_head"], "kind": "rotate", "amp": 8},
+    {"id": "T11", "tier": 1, "image": "lineup", "instruction": "Make the small boy in the striped shirt tilt his head side to side.", "parts": ["A3_head"], "kind": "rotate", "amp": 10},
+    {"id": "T12", "tier": 1, "image": "lineup", "instruction": "Make all four children wave their raised hands at the same time.", "parts": ["A1_hand", "A2_forearm", "A3_hand", "A4_forearm"], "kind": "rotate", "amp": 22},
+    {"id": "T13", "tier": 2, "image": "toddlers", "instruction": "Make the toddler in the red jacket lift her hat off her head and settle it back down.", "parts": ["B1_hat"], "kind": "translate_up", "amp": 70},
+    {"id": "T14", "tier": 2, "image": "toddlers", "instruction": "Make the toddler in the navy jacket tilt his hat up and back in greeting, pivoting on the left end of the brim (viewer's left).", "parts": ["B2_hat"], "kind": "rotate_hat", "amp": 15, "pivot": [560, 160]},
+    {"id": "T15", "tier": 2, "image": "lineup", "instruction": "Make the small boy in the striped shirt jump once; the other three children stay perfectly still.", "parts": ["A3_body"], "kind": "jump", "amp": 80},
+    {"id": "T16", "tier": 2, "image": "toddlers", "instruction": "Make the toddler in the red jacket jump; the other toddler stays perfectly still.", "parts": ["B1_body"], "kind": "jump", "amp": 80},
+    {"id": "T17", "tier": 2, "image": "lineup", "instruction": "Make the girl with pigtails squat down and stand back up.", "parts": ["A2_body"], "kind": "body", "amp": 60},
+    {"id": "T18", "tier": 2, "image": "toddlers", "instruction": "Make the toddler in the navy jacket bounce at the knees.", "parts": ["B2_body"], "kind": "body", "amp": 40},
+    {"id": "T19", "tier": 2, "image": "lineup", "instruction": "Make the lace veil of the girl in the white dress (far right) flutter in the wind.", "parts": ["A4_veil"], "kind": "flutter", "amp": 35},
+    {"id": "T20", "tier": 2, "image": "lineup", "instruction": "Make the boy on the far left wave with his left hand.", "parts": ["A1_hand"], "kind": "rotate", "amp": 25},
+    {"id": "T21", "tier": 2, "image": "toddlers", "instruction": "Make the toddler in the red jacket wave with her right hand.", "parts": ["B1_hand"], "kind": "rotate", "amp": 25},
+    {"id": "T22", "tier": 3, "image": "toddlers", "instruction": "Make the toddler in the navy jacket give a thumbs up with his raised hand.", "parts": ["B2_arm"], "kind": "human", "amp": 0},
+    {"id": "T23", "tier": 3, "image": "lineup", "instruction": "Make the small boy in the striped shirt walk in place.", "parts": ["A3_body"], "kind": "human", "amp": 0},
+    {"id": "T24", "tier": 3, "image": "toddlers", "instruction": "Make the toddler in the red jacket clap her hands.", "parts": ["B1_body"], "kind": "human", "amp": 0}
+  ]
+}
