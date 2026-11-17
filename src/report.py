@@ -32,6 +32,11 @@ LABEL = {"sonnet": "Claude Sonnet 5.5", "sol": "GPT-6.1 Sol", "qwen": "Qwen 3.8 
          "gemini4": "Gemini 4 Carbon", "grok": "Grok 4.7", "kimi": "Kimi K3.1 Pro", "deepseek": "DeepSeek V4 Flash Vision"}
 
 
+def cost_cell(model, s):
+    """Valkyrie imports carry no token cost (the platform does not report it): say so instead of $0."""
+    return "not reported" if model.endswith("-cc") or model.endswith("-codex") else f"${s['cost']}"
+
+
 def final_grade(d):
     """Use the repair turn's grade if there was one, else the first."""
     for stage in ("repair", "first"):
@@ -265,7 +270,7 @@ def main():
     for m in models:
         s = summ[m]
         t1, t2 = s["by_tier"][1], s["by_tier"][2]
-        lines.append(f"| {s['label']} | {s['n']} | {s['passed']} ({(s['pass_rate'] or 0) * 100:.0f}%) | {t1['passed']}/{t1['n']} | {t2['passed']}/{t2['n']} | {s['runtime_fail']} | ${s['cost']} |")
+        lines.append(f"| {s['label']} | {s['n']} | {s['passed']} ({(s['pass_rate'] or 0) * 100:.0f}%) | {t1['passed']}/{t1['n']} | {t2['passed']}/{t2['n']} | {s['runtime_fail']} | {cost_cell(m, s)} |")
     lines += ["", "## Failure rate per check", "", "| Check | " + " | ".join(LABEL.get(m, m) for m in models) + " |", "| --- |" + " --- |" * len(models)]
     for k in GRADERS:
         cells = []

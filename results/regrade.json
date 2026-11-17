@@ -1,0 +1,1444 @@
+{
+ "regraded": 73,
+ "status_flips": [
+  {
+   "run": "runs/grok/T12/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G2b",
+     "G2c",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T01/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T05/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T06/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T08/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T19/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T21/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T03/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T06/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T20/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  }
+ ],
+ "all": [
+  {
+   "run": "runs/deepseek/T03/1",
+   "stage": "first",
+   "before": {
+    "status": "RUNTIME",
+    "failed": []
+   },
+   "after": {
+    "status": "RUNTIME",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/deepseek/T21/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/grok/T02/1",
+   "stage": "first",
+   "before": {
+    "status": "RUNTIME",
+    "failed": []
+   },
+   "after": {
+    "status": "RUNTIME",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/grok/T12/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G2b",
+     "G2c",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/grok/T18/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/kimi/T01/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T02/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G3"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G3",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T03/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G2"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T04/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/kimi/T05/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T06/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T07/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/kimi/T08/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T09/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G5"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T10/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G5"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T11/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T18/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/kimi/T19/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T20/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G2"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/kimi/T21/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T01/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2b",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T01/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T02/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T02/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T03/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G2c",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T03/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T04/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T04/2",
+   "stage": "first",
+   "before": {
+    "status": "RUNTIME",
+    "failed": []
+   },
+   "after": {
+    "status": "RUNTIME",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/nemotron/T04/2",
+   "stage": "repair",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G3",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T05/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T05/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T06/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T06/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T07/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T07/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T08/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T08/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2b",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T09/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G3"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G3"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T09/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T10/1",
+   "stage": "repair",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2b",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T10/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2b",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T11/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G4"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2b",
+     "G4"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T11/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G4"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G4"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T12/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T12/2",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T13/1",
+   "stage": "first",
+   "before": {
+    "status": "RUNTIME",
+    "failed": []
+   },
+   "after": {
+    "status": "RUNTIME",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/nemotron/T13/1",
+   "stage": "repair",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T14/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T15/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T16/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T17/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G2",
+     "G2b",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T18/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T19/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T20/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T21/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G5"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2c",
+     "G5"
+    ]
+   }
+  },
+  {
+   "run": "runs/nemotron/T22/1",
+   "stage": "first",
+   "before": {
+    "status": "HUMAN",
+    "failed": []
+   },
+   "after": {
+    "status": "HUMAN",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/nemotron/T23/1",
+   "stage": "first",
+   "before": {
+    "status": "HUMAN",
+    "failed": []
+   },
+   "after": {
+    "status": "HUMAN",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/nemotron/T24/1",
+   "stage": "first",
+   "before": {
+    "status": "HUMAN",
+    "failed": []
+   },
+   "after": {
+    "status": "HUMAN",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/qwen/T01/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/qwen/T02/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G2"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2",
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T03/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T04/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T05/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T06/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b",
+     "G2c"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T07/1",
+   "stage": "first",
+   "before": {
+    "status": "RUNTIME",
+    "failed": []
+   },
+   "after": {
+    "status": "RUNTIME",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/qwen/T08/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/qwen/T09/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T11/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G4"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G4"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T17/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "PASS",
+    "failed": []
+   }
+  },
+  {
+   "run": "runs/qwen/T18/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G4"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G4"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T19/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G4"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G4"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T20/1",
+   "stage": "first",
+   "before": {
+    "status": "PASS",
+    "failed": []
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G2b"
+    ]
+   }
+  },
+  {
+   "run": "runs/qwen/T21/1",
+   "stage": "first",
+   "before": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   },
+   "after": {
+    "status": "FAIL",
+    "failed": [
+     "G1",
+     "G3",
+     "G5",
+     "G6"
+    ]
+   }
+  }
+ ]
+}

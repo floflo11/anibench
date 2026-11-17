@@ -39,9 +39,17 @@
    "value": 1,
    "base": 1
   },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
   "G3": {
    "ok": true,
-   "value": 0.0265
+   "value": 0.0211,
+   "loss": 0.0211,
+   "gain": 0.001
   },
   "G4": {
    "ok": true,

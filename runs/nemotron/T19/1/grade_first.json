@@ -32,11 +32,18 @@
  "grades": {
   "G1": {
    "ok": false,
-   "value": 0.42649
+   "value": 0.40257
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": false,
-   "value": 0.5603
+   "value": 0.5603,
+   "loss": 0.0,
+   "gain": 0.5603
   },
   "G4": {
    "ok": true,
@@ -44,7 +51,9 @@
   },
   "G5": {
    "ok": false,
-   "value": 0.748
+   "value": 0.748,
+   "frac": 0.748,
+   "disp": null
   },
   "G6": {
    "ok": false,

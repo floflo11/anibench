@@ -17,6 +17,7 @@ def main():
     caught = adm["caught"]
     cats = json.loads((ROOT / "results/nemotron_categories.json").read_text())
     nem = summ.get("nemotron")
+    cc = summ.get("sonnet-cc", dict(passed=0, n=0))
     qwen_rows = [r for r in rows if r["model"] == "qwen"]
     nem_rows = [r for r in rows if r["model"] == "nemotron" and r["tier"] in ("1", "2")]
     # fidelity: frame 0 did not match the original image
@@ -31,7 +32,8 @@ def main():
     all_total = sum(len(v["kept"]) + len(v["dropped"]) for v in adm["tasks"].values())
 
     gf = nem["grader_fail"] if nem else {}
-    names = {"G1": "Isolation", "G2": "Integrity", "G3": "Area", "G4": "Motion", "G5": "Pivot", "G6": "Loop and fidelity"}
+    names = {"G1": "Isolation", "G2": "Integrity", "G2b": "Connectivity", "G2c": "Residual", "G3": "Area", "G4": "Motion",
+             "G5": "Pivot", "G6": "Loop and fidelity"}
     fail_lines = "\n".join(f"| {k} {names[k]} | {gf[k]['failed']}/{gf[k]['n']} ({pct(gf[k]['failed'], gf[k]['n'])}) |" for k in names if k in gf)
     qwen_txt = ", ".join(f"{r['task']}: {r['status']}" for r in qwen_rows)
 
@@ -48,9 +50,10 @@ to 25 frames and score it with **eight image-math checks**, not a model judge.
 
 {ranking}
 - In the single-shot setting (image in the prompt, one answer plus one repair turn), models failed in visible, specific ways:
-  Nemotron flipped or shifted the image in {cats.get('image flipped or shifted', 0)} of {len(nem_rows)} runs and left the canvas blank in {cats.get('blank canvas', 0)};
+  Nemotron flipped or shifted the image in {cats.get('image flipped or shifted', 0)} of {sum(r['try_'] == '1' for r in nem_rows)} first-try runs and left the canvas blank in {cats.get('blank canvas', 0)};
   Gemini 4 Carbon and DeepSeek often spent their whole 32k-token budget reasoning and never wrote the file.
-- On Valkyrie, the reference solutions score **21/21**, so the packaging and checks hold up inside the platform.
+- **On Valkyrie** (agent setting: Claude Code, which can open the image and iterate), Claude Sonnet 5.5 passed **{cc['passed']}/{cc['n']} ({pct(cc['passed'], cc['n'])})**; reference solutions score **21/21**. It passed T01 in a separate smoke run and failed it here, so results vary run to run. The GPT-6.1 Sol run did not start before the deadline (the CLI returned no run ID). Its grades come from the Valkyrie verifier at the time (grader v1) and could not be re-graded here: the run's HTML was not imported.
+- Gemini 4 Carbon is left out of the table: in 8 of 8 completed runs it used the whole 32k-token budget reasoning and returned no file.
 - Every check is validated before use: a reference animation must pass it, and deliberately broken copies must fail it.
 
 ## Why this benchmark
@@ -129,8 +132,7 @@ All runs are in `results/library/` as GIFs.
 
 ## Limits
 
-- One model ran the full set. Claude Sonnet 5.5 and GPT-6.1 Sol were planned but the OpenRouter account had no credits overnight;
-  the runner is ready to add them (`runs/jobs/full.json`).
+- Single-shot models (OpenRouter) and the Claude Code agent (Valkyrie) are different setups; compare within a setup. Some single-shot runs were lost to network drops, so run counts differ by model.
 - Single-turn generation with one repair turn for outputs that don't run. An agent that renders and looks at its own output
   might do much better; that's the natural next experiment.
 - Checks are tolerant of faint artifacts (e.g. a light halo around a cut-out). G2b counts a repaint of the uncovered area in a

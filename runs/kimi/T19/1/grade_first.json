@@ -28,15 +28,22 @@
   }
  },
  "latency_s": 106.212,
- "status": "PASS",
+ "status": "FAIL",
  "grades": {
   "G1": {
    "ok": true,
    "value": 0.0
   },
+  "G2c": {
+   "ok": false,
+   "value": 679,
+   "frame": 18
+  },
   "G3": {
    "ok": true,
-   "value": 0.1162
+   "value": 0.1162,
+   "loss": 0.0,
+   "gain": 0.1162
   },
   "G4": {
    "ok": true,
@@ -44,13 +51,15 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.0
+   "value": 0.0,
+   "frac": 0.0,
+   "disp": null
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": true
+  "pass": false
  }
 }

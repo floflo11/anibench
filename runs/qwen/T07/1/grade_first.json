@@ -30,8 +30,5 @@
  "latency_s": 1190.175,
  "status": "RUNTIME",
  "error": "RUNTIME: ANIM_READY/setTime not available within 15s",
- "logs": [
-  "warning: [.WebGL-0xba40016fe00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
-  "error: Failed to load resource: the server responded with a status of 404 (File not found)"
- ]
+ "logs": []
 }

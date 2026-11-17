@@ -39,9 +39,22 @@
    "value": 3,
    "base": 2
   },
+  "G2b": {
+   "ok": true,
+   "value": 1,
+   "base": 1,
+   "frame": 0
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
+  },
   "G3": {
    "ok": false,
-   "value": 0.9538
+   "value": 0.9346,
+   "loss": 0.9346,
+   "gain": 0.0001
   },
   "G4": {
    "ok": true,
@@ -49,7 +62,9 @@
   },
   "G5": {
    "ok": true,
-   "value": 0.038
+   "value": 0.038,
+   "frac": 0.038,
+   "disp": null
   },
   "G6": {
    "ok": true,

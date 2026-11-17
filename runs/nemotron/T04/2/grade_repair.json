@@ -32,11 +32,29 @@
  "grades": {
   "G1": {
    "ok": false,
-   "value": 0.03363
+   "value": 0.03043
+  },
+  "G2": {
+   "ok": false,
+   "value": 3,
+   "base": 1
+  },
+  "G2b": {
+   "ok": false,
+   "value": 5,
+   "base": 1,
+   "frame": 15
+  },
+  "G2c": {
+   "ok": true,
+   "value": 0,
+   "frame": 0
   },
   "G3": {
    "ok": false,
-   "value": 1.3461
+   "value": 0.8973,
+   "loss": 0.1224,
+   "gain": 0.8973
   },
   "G4": {
    "ok": true,
@@ -44,7 +62,9 @@
   },
   "G5": {
    "ok": false,
-   "value": 1.0
+   "value": 1.0,
+   "frac": 1.0,
+   "disp": null
   },
   "G6": {
    "ok": true,

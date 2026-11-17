@@ -31,17 +31,36 @@
  "status": "FAIL",
  "grades": {
   "G1": {
+   "ok": true,
+   "value": 0.00081
+  },
+  "G2b": {
    "ok": false,
-   "value": 0.0042
+   "value": 5,
+   "base": 1,
+   "frame": 4
+  },
+  "G2c": {
+   "ok": false,
+   "value": 697,
+   "frame": 6
   },
   "G3": {
    "ok": true,
-   "value": 0.0955,
+   "value": 0.0487,
+   "loss": 0.0,
+   "gain": 0.0487,
    "skull_keep": 0.967
   },
   "G4": {
    "ok": true,
    "value": 0.816
+  },
+  "G5": {
+   "ok": false,
+   "value": 0.757,
+   "frac": 0.757,
+   "disp": 10.8
   },
   "G6": {
    "ok": true,
