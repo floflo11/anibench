@@ -1,0 +1,519 @@
+{
+ "schema": "anibench-study-key-v1",
+ "study_id": "anibench-e4-dryrun",
+ "created": "2026-11-17T01:51:15+00:00",
+ "seed": 0,
+ "salt": "dryrun",
+ "n_requested": 20,
+ "clips": {
+  "cbddbd3aa": {
+   "run": "nemotron/T19/1",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T19",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "cc2dfe3ac": {
+   "run": "qwen/T01/1",
+   "model": "qwen",
+   "setting": "chat",
+   "task": "T01",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c162c3fc8": {
+   "run": "kimi/T03/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T03",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": true,
+    "G2": false,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "cae7a8edf": {
+   "run": "grok/T18/1",
+   "model": "grok",
+   "setting": "chat",
+   "task": "T18",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c8d96c374": {
+   "run": "deepseek/T21/1",
+   "model": "deepseek",
+   "setting": "chat",
+   "task": "T21",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c4f41f983": {
+   "run": "qwen/T09/1",
+   "model": "qwen",
+   "setting": "chat",
+   "task": "T09",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "c5bce655c": {
+   "run": "nemotron/T11/1",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T11",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "ca824f02f": {
+   "run": "grok/T12/1",
+   "model": "grok",
+   "setting": "chat",
+   "task": "T12",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G3": true,
+    "G4": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "ca1bab5d1": {
+   "run": "kimi/T02/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T02",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": false,
+    "G3": false,
+    "G4": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "ce21304bd": {
+   "run": "nemotron/T10/2",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T10",
+   "try_": "2",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "c1ba3dc93": {
+   "run": "kimi/T05/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T05",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c78c343e1": {
+   "run": "qwen/T04/1",
+   "model": "qwen",
+   "setting": "chat",
+   "task": "T04",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "c7c176687": {
+   "run": "kimi/T07/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T07",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "cf3c14660": {
+   "run": "nemotron/T20/1",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T20",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "ca108d4fe": {
+   "run": "qwen/T08/1",
+   "model": "qwen",
+   "setting": "chat",
+   "task": "T08",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c43345eb8": {
+   "run": "nemotron/T06/1",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T06",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G3": false,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "c78d0052f": {
+   "run": "qwen/T17/1",
+   "model": "qwen",
+   "setting": "chat",
+   "task": "T17",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "c3bc7860f": {
+   "run": "kimi/T11/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T11",
+   "try_": "1",
+   "stage": "first",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": false,
+    "G3": true,
+    "G4": true,
+    "G5": false,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "c5944b4b5": {
+   "run": "kimi/T01/1",
+   "model": "kimi",
+   "setting": "chat",
+   "task": "T01",
+   "try_": "1",
+   "stage": "first",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": false,
+   "expected": null
+  },
+  "cd6c56405": {
+   "run": "nemotron/T13/1",
+   "model": "nemotron",
+   "setting": "chat",
+   "task": "T13",
+   "try_": "1",
+   "stage": "repair",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G3": false,
+    "G4": true,
+    "G6": false
+   },
+   "passed": false,
+   "attention": false,
+   "expected": null
+  },
+  "ce47bc8ea": {
+   "run": "validation/T01/ref",
+   "model": "attention:ref",
+   "setting": "attention",
+   "task": "T01",
+   "try_": "0",
+   "stage": "ref",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": true,
+   "expected": {
+    "pass": true,
+    "defects": []
+   }
+  },
+  "cc1b63d4d": {
+   "run": "validation/T09/ref",
+   "model": "attention:ref",
+   "setting": "attention",
+   "task": "T09",
+   "try_": "0",
+   "stage": "ref",
+   "status": "PASS",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": true,
+   "attention": true,
+   "expected": {
+    "pass": true,
+    "defects": []
+   }
+  },
+  "c6cddd58f": {
+   "run": "validation/T06/whole",
+   "model": "attention:whole",
+   "setting": "attention",
+   "task": "T06",
+   "try_": "0",
+   "stage": "ref",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": true,
+    "G5": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": true,
+   "expected": {
+    "pass": false,
+    "defects": [
+     "outside_moved"
+    ]
+   }
+  },
+  "c0d6fcd0a": {
+   "run": "validation/T02/frozen",
+   "model": "attention:frozen",
+   "setting": "attention",
+   "task": "T02",
+   "try_": "0",
+   "stage": "ref",
+   "status": "FAIL",
+   "checks": {
+    "G1": true,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": true,
+   "expected": {
+    "pass": false,
+    "defects": [
+     "barely_moves"
+    ]
+   }
+  },
+  "cbd98eae3": {
+   "run": "validation/T20/wrong_part",
+   "model": "attention:wrong_part",
+   "setting": "attention",
+   "task": "T20",
+   "try_": "0",
+   "stage": "ref",
+   "status": "FAIL",
+   "checks": {
+    "G1": false,
+    "G2": true,
+    "G3": true,
+    "G4": false,
+    "G5": true,
+    "G6": true
+   },
+   "passed": false,
+   "attention": true,
+   "expected": {
+    "pass": false,
+    "defects": [
+     "outside_moved",
+     "barely_moves"
+    ]
+   }
+  }
+ }
+}

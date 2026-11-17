@@ -1,0 +1,838 @@
+{
+ "schema": "anibench-study-manifest-v1",
+ "study_id": "anibench-e4-dryrun",
+ "created": "2026-11-17T01:51:15+00:00",
+ "question": "Did the animation do what was asked without breaking anything else?",
+ "defects": [
+  {
+   "code": "outside_moved",
+   "label": "Something outside the part moved"
+  },
+  {
+   "code": "tore_split",
+   "label": "The part tore, split or left a piece behind"
+  },
+  {
+   "code": "size_shape",
+   "label": "The part changed size or shape"
+  },
+  {
+   "code": "barely_moves",
+   "label": "The part barely moves (or does not move)"
+  },
+  {
+   "code": "wrong_pivot",
+   "label": "The part rotates around the wrong point"
+  },
+  {
+   "code": "loop_jump",
+   "label": "Jump at the loop, or the first frame differs from the image"
+  },
+  {
+   "code": "other",
+   "label": "Other (describe)"
+  }
+ ],
+ "clips": [
+  {
+   "clip_id": "c0d6fcd0a",
+   "task": "T02",
+   "instruction": "Make the girl with pigtails wave her raised forearm from the elbow.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    324,
+    102,
+    736,
+    334
+   ],
+   "video": "clips/c0d6fcd0a.mp4",
+   "still": "../judge_media/c0d6fcd0a_orig.png",
+   "still_zoom": "../judge_media/c0d6fcd0a_origzoom.png",
+   "sheet_full": "../judge_media/c0d6fcd0a_sheet.png",
+   "sheet_zoom": "../judge_media/c0d6fcd0a_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c162c3fc8",
+   "task": "T03",
+   "instruction": "Make the small boy in the striped shirt wave his raised hand from the wrist.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    628,
+    147,
+    937,
+    321
+   ],
+   "video": "clips/c162c3fc8.mp4",
+   "still": "../judge_media/c162c3fc8_orig.png",
+   "still_zoom": "../judge_media/c162c3fc8_origzoom.png",
+   "sheet_full": "../judge_media/c162c3fc8_sheet.png",
+   "sheet_zoom": "../judge_media/c162c3fc8_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c1ba3dc93",
+   "task": "T05",
+   "instruction": "Make the toddler in the red jacket wave her raised hand from the wrist.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    0,
+    72,
+    364,
+    277
+   ],
+   "video": "clips/c1ba3dc93.mp4",
+   "still": "../judge_media/c1ba3dc93_orig.png",
+   "still_zoom": "../judge_media/c1ba3dc93_origzoom.png",
+   "sheet_full": "../judge_media/c1ba3dc93_sheet.png",
+   "sheet_zoom": "../judge_media/c1ba3dc93_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c3bc7860f",
+   "task": "T11",
+   "instruction": "Make the small boy in the striped shirt tilt his head side to side.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    478,
+    62,
+    910,
+    305
+   ],
+   "video": "clips/c3bc7860f.mp4",
+   "still": "../judge_media/c3bc7860f_orig.png",
+   "still_zoom": "../judge_media/c3bc7860f_origzoom.png",
+   "sheet_full": "../judge_media/c3bc7860f_sheet.png",
+   "sheet_zoom": "../judge_media/c3bc7860f_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c43345eb8",
+   "task": "T06",
+   "instruction": "Make the toddler in the navy jacket swing his whole raised arm from the shoulder.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    412,
+    35,
+    1023,
+    379
+   ],
+   "video": "clips/c43345eb8.mp4",
+   "still": "../judge_media/c43345eb8_orig.png",
+   "still_zoom": "../judge_media/c43345eb8_origzoom.png",
+   "sheet_full": "../judge_media/c43345eb8_sheet.png",
+   "sheet_zoom": "../judge_media/c43345eb8_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c4f41f983",
+   "task": "T09",
+   "instruction": "Make the boy on the far left nod his head.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    0,
+    0,
+    444,
+    250
+   ],
+   "video": "clips/c4f41f983.mp4",
+   "still": "../judge_media/c4f41f983_orig.png",
+   "still_zoom": "../judge_media/c4f41f983_origzoom.png",
+   "sheet_full": "../judge_media/c4f41f983_sheet.png",
+   "sheet_zoom": "../judge_media/c4f41f983_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c5944b4b5",
+   "task": "T01",
+   "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    66,
+    71,
+    394,
+    256
+   ],
+   "video": "clips/c5944b4b5.mp4",
+   "still": "../judge_media/c5944b4b5_orig.png",
+   "still_zoom": "../judge_media/c5944b4b5_origzoom.png",
+   "sheet_full": "../judge_media/c5944b4b5_sheet.png",
+   "sheet_zoom": "../judge_media/c5944b4b5_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c5bce655c",
+   "task": "T11",
+   "instruction": "Make the small boy in the striped shirt tilt his head side to side.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    478,
+    62,
+    910,
+    305
+   ],
+   "video": "clips/c5bce655c.mp4",
+   "still": "../judge_media/c5bce655c_orig.png",
+   "still_zoom": "../judge_media/c5bce655c_origzoom.png",
+   "sheet_full": "../judge_media/c5bce655c_sheet.png",
+   "sheet_zoom": "../judge_media/c5bce655c_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c6cddd58f",
+   "task": "T06",
+   "instruction": "Make the toddler in the navy jacket swing his whole raised arm from the shoulder.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    412,
+    35,
+    1023,
+    379
+   ],
+   "video": "clips/c6cddd58f.mp4",
+   "still": "../judge_media/c6cddd58f_orig.png",
+   "still_zoom": "../judge_media/c6cddd58f_origzoom.png",
+   "sheet_full": "../judge_media/c6cddd58f_sheet.png",
+   "sheet_zoom": "../judge_media/c6cddd58f_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c78c343e1",
+   "task": "T04",
+   "instruction": "Make the girl in the white dress (far right) wave her raised forearm from the elbow.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    750,
+    114,
+    1199,
+    367
+   ],
+   "video": "clips/c78c343e1.mp4",
+   "still": "../judge_media/c78c343e1_orig.png",
+   "still_zoom": "../judge_media/c78c343e1_origzoom.png",
+   "sheet_full": "../judge_media/c78c343e1_sheet.png",
+   "sheet_zoom": "../judge_media/c78c343e1_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c78d0052f",
+   "task": "T17",
+   "instruction": "Make the girl with pigtails squat down and stand back up.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    0,
+    0,
+    1128,
+    600
+   ],
+   "video": "clips/c78d0052f.mp4",
+   "still": "../judge_media/c78d0052f_orig.png",
+   "still_zoom": "../judge_media/c78d0052f_origzoom.png",
+   "sheet_full": "../judge_media/c78d0052f_sheet.png",
+   "sheet_zoom": "../judge_media/c78d0052f_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c7c176687",
+   "task": "T07",
+   "instruction": "Make the red earrings of the girl in the white dress (far right) swing gently, as if in a breeze.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    889,
+    140,
+    1134,
+    278
+   ],
+   "video": "clips/c7c176687.mp4",
+   "still": "../judge_media/c7c176687_orig.png",
+   "still_zoom": "../judge_media/c7c176687_origzoom.png",
+   "sheet_full": "../judge_media/c7c176687_sheet.png",
+   "sheet_zoom": "../judge_media/c7c176687_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "c8d96c374",
+   "task": "T21",
+   "instruction": "Make the toddler in the red jacket wave with her right hand.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    0,
+    72,
+    364,
+    277
+   ],
+   "video": "clips/c8d96c374.mp4",
+   "still": "../judge_media/c8d96c374_orig.png",
+   "still_zoom": "../judge_media/c8d96c374_origzoom.png",
+   "sheet_full": "../judge_media/c8d96c374_sheet.png",
+   "sheet_zoom": "../judge_media/c8d96c374_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "ca108d4fe",
+   "task": "T08",
+   "instruction": "Make the pigtails of the girl with pigtails swing side to side.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    202,
+    48,
+    625,
+    286
+   ],
+   "video": "clips/ca108d4fe.mp4",
+   "still": "../judge_media/ca108d4fe_orig.png",
+   "still_zoom": "../judge_media/ca108d4fe_origzoom.png",
+   "sheet_full": "../judge_media/ca108d4fe_sheet.png",
+   "sheet_zoom": "../judge_media/ca108d4fe_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "ca1bab5d1",
+   "task": "T02",
+   "instruction": "Make the girl with pigtails wave her raised forearm from the elbow.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    324,
+    102,
+    736,
+    334
+   ],
+   "video": "clips/ca1bab5d1.mp4",
+   "still": "../judge_media/ca1bab5d1_orig.png",
+   "still_zoom": "../judge_media/ca1bab5d1_origzoom.png",
+   "sheet_full": "../judge_media/ca1bab5d1_sheet.png",
+   "sheet_zoom": "../judge_media/ca1bab5d1_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "ca824f02f",
+   "task": "T12",
+   "instruction": "Make all four children wave their raised hands at the same time.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    83,
+    0,
+    1200,
+    600
+   ],
+   "video": "clips/ca824f02f.mp4",
+   "still": "../judge_media/ca824f02f_orig.png",
+   "still_zoom": "../judge_media/ca824f02f_origzoom.png",
+   "sheet_full": "../judge_media/ca824f02f_sheet.png",
+   "sheet_zoom": "../judge_media/ca824f02f_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cae7a8edf",
+   "task": "T18",
+   "instruction": "Make the toddler in the navy jacket bounce at the knees.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    0,
+    0,
+    1024,
+    683
+   ],
+   "video": "clips/cae7a8edf.mp4",
+   "still": "../judge_media/cae7a8edf_orig.png",
+   "still_zoom": "../judge_media/cae7a8edf_origzoom.png",
+   "sheet_full": "../judge_media/cae7a8edf_sheet.png",
+   "sheet_zoom": "../judge_media/cae7a8edf_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cbd98eae3",
+   "task": "T20",
+   "instruction": "Make the boy on the far left wave with his left hand.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    66,
+    71,
+    394,
+    256
+   ],
+   "video": "clips/cbd98eae3.mp4",
+   "still": "../judge_media/cbd98eae3_orig.png",
+   "still_zoom": "../judge_media/cbd98eae3_origzoom.png",
+   "sheet_full": "../judge_media/cbd98eae3_sheet.png",
+   "sheet_zoom": "../judge_media/cbd98eae3_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cbddbd3aa",
+   "task": "T19",
+   "instruction": "Make the lace veil of the girl in the white dress (far right) flutter in the wind.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    136,
+    0,
+    1199,
+    598
+   ],
+   "video": "clips/cbddbd3aa.mp4",
+   "still": "../judge_media/cbddbd3aa_orig.png",
+   "still_zoom": "../judge_media/cbddbd3aa_origzoom.png",
+   "sheet_full": "../judge_media/cbddbd3aa_sheet.png",
+   "sheet_zoom": "../judge_media/cbddbd3aa_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cc1b63d4d",
+   "task": "T09",
+   "instruction": "Make the boy on the far left nod his head.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    0,
+    0,
+    444,
+    250
+   ],
+   "video": "clips/cc1b63d4d.mp4",
+   "still": "../judge_media/cc1b63d4d_orig.png",
+   "still_zoom": "../judge_media/cc1b63d4d_origzoom.png",
+   "sheet_full": "../judge_media/cc1b63d4d_sheet.png",
+   "sheet_zoom": "../judge_media/cc1b63d4d_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cc2dfe3ac",
+   "task": "T01",
+   "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    66,
+    71,
+    394,
+    256
+   ],
+   "video": "clips/cc2dfe3ac.mp4",
+   "still": "../judge_media/cc2dfe3ac_orig.png",
+   "still_zoom": "../judge_media/cc2dfe3ac_origzoom.png",
+   "sheet_full": "../judge_media/cc2dfe3ac_sheet.png",
+   "sheet_zoom": "../judge_media/cc2dfe3ac_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cd6c56405",
+   "task": "T13",
+   "instruction": "Make the toddler in the red jacket lift her hat off her head and settle it back down.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    44,
+    0,
+    561,
+    291
+   ],
+   "video": "clips/cd6c56405.mp4",
+   "still": "../judge_media/cd6c56405_orig.png",
+   "still_zoom": "../judge_media/cd6c56405_origzoom.png",
+   "sheet_full": "../judge_media/cd6c56405_sheet.png",
+   "sheet_zoom": "../judge_media/cd6c56405_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "ce21304bd",
+   "task": "T10",
+   "instruction": "Make the toddler in the navy jacket nod his head; his hat stays on his head.",
+   "width": 1024,
+   "height": 683,
+   "box": [
+    399,
+    0,
+    1001,
+    339
+   ],
+   "video": "clips/ce21304bd.mp4",
+   "still": "../judge_media/ce21304bd_orig.png",
+   "still_zoom": "../judge_media/ce21304bd_origzoom.png",
+   "sheet_full": "../judge_media/ce21304bd_sheet.png",
+   "sheet_zoom": "../judge_media/ce21304bd_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "ce47bc8ea",
+   "task": "T01",
+   "instruction": "Make the boy on the far left wave his raised hand, bending at the wrist.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    66,
+    71,
+    394,
+    256
+   ],
+   "video": "clips/ce47bc8ea.mp4",
+   "still": "../judge_media/ce47bc8ea_orig.png",
+   "still_zoom": "../judge_media/ce47bc8ea_origzoom.png",
+   "sheet_full": "../judge_media/ce47bc8ea_sheet.png",
+   "sheet_zoom": "../judge_media/ce47bc8ea_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  },
+  {
+   "clip_id": "cf3c14660",
+   "task": "T20",
+   "instruction": "Make the boy on the far left wave with his left hand.",
+   "width": 1200,
+   "height": 600,
+   "box": [
+    66,
+    71,
+    394,
+    256
+   ],
+   "video": "clips/cf3c14660.mp4",
+   "still": "../judge_media/cf3c14660_orig.png",
+   "still_zoom": "../judge_media/cf3c14660_origzoom.png",
+   "sheet_full": "../judge_media/cf3c14660_sheet.png",
+   "sheet_zoom": "../judge_media/cf3c14660_zoom.png",
+   "fps": 12,
+   "n_frames": 24,
+   "loops": 3,
+   "sheet_times": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0,
+    1.25,
+    1.5,
+    1.75,
+    1.917
+   ]
+  }
+ ]
+}
