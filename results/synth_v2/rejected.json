@@ -1,0 +1,849 @@
+[
+ {
+  "id": "S004",
+  "seed": 4000,
+  "motion": "raise_arm",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 45.96,
+   "min_dist_px": 0.0,
+   "target_area_px": 2577,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S009",
+  "seed": 9000,
+  "motion": "wave",
+  "failed": [
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 18.98,
+   "min_dist_px": 0.0,
+   "target_area_px": 2155,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S010",
+  "seed": 10000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 95.47,
+   "min_dist_px": 0.0,
+   "target_area_px": 56,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S014",
+  "seed": 14000,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 3.23,
+   "min_dist_px": 9.82,
+   "target_area_px": 1677,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S015",
+  "seed": 15000,
+  "motion": "swing_earring",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 20.55,
+   "min_dist_px": 0.0,
+   "target_area_px": 491,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S016",
+  "seed": 16000,
+  "motion": "wag_tail",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 58.7,
+   "min_dist_px": 0.0,
+   "target_area_px": 914,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S016",
+  "seed": 16001,
+  "motion": "wag_tail",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 76.23,
+   "min_dist_px": 0.0,
+   "target_area_px": 776,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S018",
+  "seed": 18000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 90.78,
+   "min_dist_px": 0.0,
+   "target_area_px": 162,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S026",
+  "seed": 26000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 89.4,
+   "min_dist_px": 0.0,
+   "target_area_px": 76,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S034",
+  "seed": 34000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 88.74,
+   "min_dist_px": 0.0,
+   "target_area_px": 189,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S035",
+  "seed": 35000,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 46.03,
+   "min_dist_px": 0.0,
+   "target_area_px": 2629,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S036",
+  "seed": 36000,
+  "motion": "raise_arm",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 54.77,
+   "min_dist_px": 0.0,
+   "target_area_px": 3342,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S043",
+  "seed": 43000,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 43.42,
+   "min_dist_px": 0.0,
+   "target_area_px": 3712,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S050",
+  "seed": 50000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 77.72,
+   "min_dist_px": 0.0,
+   "target_area_px": 125,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S050",
+  "seed": 50001,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 93.6,
+   "min_dist_px": 0.0,
+   "target_area_px": 124,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S050",
+  "seed": 50002,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 86.59,
+   "min_dist_px": 0.0,
+   "target_area_px": 121,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S054",
+  "seed": 54000,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 10.15,
+   "min_dist_px": 0.0,
+   "target_area_px": 2018,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S058",
+  "seed": 58000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 87.91,
+   "min_dist_px": 0.0,
+   "target_area_px": 235,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S058",
+  "seed": 58001,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 98.64,
+   "min_dist_px": 0.0,
+   "target_area_px": 23,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S061",
+  "seed": 61000,
+  "motion": "nod",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 19.4,
+   "min_dist_px": 0.0,
+   "target_area_px": 10018,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S066",
+  "seed": 66000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 86.03,
+   "min_dist_px": 0.0,
+   "target_area_px": 100,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S070",
+  "seed": 70000,
+  "motion": "tip_hat",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 0.0,
+   "min_dist_px": 12.0,
+   "target_area_px": 5052,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S072",
+  "seed": 72000,
+  "motion": "wag_tail",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 32.8,
+   "min_dist_px": 0.0,
+   "target_area_px": 1604,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S075",
+  "seed": 75000,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 50.6,
+   "min_dist_px": 0.0,
+   "target_area_px": 1485,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S081",
+  "seed": 81000,
+  "motion": "wave",
+  "failed": [
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 37.45,
+   "min_dist_px": 0.0,
+   "target_area_px": 1896,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S083",
+  "seed": 83000,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 3.69,
+   "min_dist_px": 0.0,
+   "target_area_px": 3473,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S088",
+  "seed": 88000,
+  "motion": "wag_tail",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 18.73,
+   "min_dist_px": 0.0,
+   "target_area_px": 829,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S089",
+  "seed": 89000,
+  "motion": "wave",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 1.5,
+   "min_dist_px": 0.0,
+   "target_area_px": 2882,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S093",
+  "seed": 93000,
+  "motion": "nod",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 7.37,
+   "min_dist_px": 0.0,
+   "target_area_px": 18535,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S097",
+  "seed": 97000,
+  "motion": "wave",
+  "failed": [
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 23.97,
+   "min_dist_px": 0.0,
+   "target_area_px": 1091,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S097",
+  "seed": 97001,
+  "motion": "wave",
+  "failed": [
+   "G2",
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 1.96,
+   "min_dist_px": 0.0,
+   "target_area_px": 1749,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S099",
+  "seed": 99000,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 50.93,
+   "min_dist_px": 0.0,
+   "target_area_px": 1291,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S099",
+  "seed": 99001,
+  "motion": "bend_elbow",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 3.94,
+   "min_dist_px": 0.0,
+   "target_area_px": 1803,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S100",
+  "seed": 100000,
+  "motion": "raise_arm",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 58.36,
+   "min_dist_px": 0.0,
+   "target_area_px": 2634,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S110",
+  "seed": 110000,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 3.74,
+   "min_dist_px": 0.0,
+   "target_area_px": 2242,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S114",
+  "seed": 114000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 63.85,
+   "min_dist_px": 0.0,
+   "target_area_px": 265,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S121",
+  "seed": 121000,
+  "motion": "wave",
+  "failed": [
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 54.39,
+   "min_dist_px": 0.0,
+   "target_area_px": 416,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S126",
+  "seed": 126000,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 0.0,
+   "min_dist_px": 10.18,
+   "target_area_px": 1231,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S138",
+  "seed": 138000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 89.27,
+   "min_dist_px": 0.0,
+   "target_area_px": 182,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S146",
+  "seed": 146000,
+  "motion": "wiggle_fingers",
+  "failed": [
+   "visible"
+  ],
+  "factors": {
+   "occlusion_pct": 91.87,
+   "min_dist_px": 0.0,
+   "target_area_px": 75,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S152",
+  "seed": 152000,
+  "motion": "wag_tail",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 69.16,
+   "min_dist_px": 0.0,
+   "target_area_px": 1059,
+   "style": "chibi"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S153",
+  "seed": 153000,
+  "motion": "wave",
+  "failed": [
+   "G4"
+  ],
+  "factors": {
+   "occlusion_pct": 52.46,
+   "min_dist_px": 0.0,
+   "target_area_px": 639,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S158",
+  "seed": 158000,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 20.6,
+   "min_dist_px": 0.0,
+   "target_area_px": 2988,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S158",
+  "seed": 158001,
+  "motion": "tip_hat",
+  "failed": [
+   "G5"
+  ],
+  "factors": {
+   "occlusion_pct": 0.56,
+   "min_dist_px": 0.0,
+   "target_area_px": 1958,
+   "style": "lanky"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "near"
+  }
+ },
+ {
+  "id": "S160",
+  "seed": 160000,
+  "motion": "wag_tail",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 35.5,
+   "min_dist_px": 0.0,
+   "target_area_px": 1259,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S160",
+  "seed": 160001,
+  "motion": "wag_tail",
+  "failed": [
+   "G3"
+  ],
+  "factors": {
+   "occlusion_pct": 63.7,
+   "min_dist_px": 0.0,
+   "target_area_px": 587,
+   "style": "robot"
+  },
+  "knobs": {
+   "occl": "none",
+   "prox": "far"
+  }
+ },
+ {
+  "id": "S160",
+  "seed": 160002,
+  "motion": "wag_tail",
+  "failed": [
+   "G2"
+  ],
+  "factors": {
+   "occlusion_pct": 30.26,
+   "min_dist_px": 0.0,
+   "target_area_px": 3928,
+   "style": "animal"
+  },
+  "knobs": {
+   "occl": "some",
+   "prox": "near"
+  }
+ }
+]

@@ -108,16 +108,16 @@ def scene_for(spec):
 
 
 def _worker(jobs, tasks_dir, q):
-    from render import Renderer, prepare, save_gif
-    R = Renderer()
+    from framecache import CachedRenderer
+    from render import save_gif
+    R = CachedRenderer()
     for tid in jobs:
         td = Path(tasks_dir) / tid
         spec = json.loads((td / "spec.json").read_text())
         sc = scene_for(spec)
         assert np.array_equal(sc.composite(), np.array(Image.open(td / "image.png").convert("RGB"))), tid
         d = write_page(sc, ROOT / "out/synth_ref" / tid)
-        prepare(d, td)
-        fr, err, logs = R.render(d, spec["width"], spec["height"])
+        fr, err, logs = R.render(d, td, spec["width"], spec["height"])
         if fr is None:
             q.put((tid, {"error": err, "logs": logs[-5:]}))
             continue

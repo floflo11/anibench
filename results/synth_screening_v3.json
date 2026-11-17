@@ -1,0 +1,100 @@
+{
+ "v2": {
+  "n": 160,
+  "occ_mean": 25.2,
+  "occ_median": 21.5,
+  "occ_hist": {
+   "0-1%": 30,
+   "1-10%": 31,
+   "10-25%": 34,
+   "25-50%": 36,
+   "50-101%": 29
+  },
+  "occ_ge25": 65,
+  "area_median": 2528,
+  "first_seed": 122,
+  "by_motion_attempts": {
+   "bend_elbow": 1.3,
+   "nod": 1.1,
+   "raise_arm": 1.15,
+   "swing_earring": 1.05,
+   "tip_hat": 1.35,
+   "wag_tail": 1.4,
+   "wave": 1.35,
+   "wiggle_fingers": 1.65
+  }
+ },
+ "v3": {
+  "n": 160,
+  "occ_mean": 28.0,
+  "occ_median": 22.0,
+  "occ_hist": {
+   "0-1%": 24,
+   "1-10%": 30,
+   "10-25%": 32,
+   "25-50%": 40,
+   "50-101%": 34
+  },
+  "occ_ge25": 74,
+  "area_median": 2163,
+  "first_seed": 143,
+  "by_motion_attempts": {
+   "bend_elbow": 1.0,
+   "nod": 1.1,
+   "raise_arm": 1.0,
+   "swing_earring": 1.05,
+   "tip_hat": 1.05,
+   "wag_tail": 1.05,
+   "wave": 1.35,
+   "wiggle_fingers": 1.4
+  }
+ },
+ "rejected": {
+  "v2": 47,
+  "v3": 20,
+  "v2_by": {
+   "G3": 19,
+   "G4": 5,
+   "visible": 8,
+   "G5": 7,
+   "G2": 7,
+   "G2+G4": 1
+  },
+  "v3_by": {
+   "G4": 5,
+   "visible": 7,
+   "G2": 6,
+   "G3": 1,
+   "G2+G4": 1
+  },
+  "v2_rej_occ_mean": 45.9,
+  "v3_rej_occ_mean": 47.1
+ },
+ "v2_rejected_seeds_now_accepted": 22,
+ "admission": {
+  "G2b_dropped": 52,
+  "G2c_dropped": 57,
+  "G2b_dropped_occ_mean": 44.0,
+  "G2b_kept_occ_mean": 20.3,
+  "G2c_dropped_by_motion": {
+   "wiggle_fingers": 6,
+   "raise_arm": 7,
+   "tip_hat": 16,
+   "wag_tail": 7,
+   "nod": 11,
+   "wave": 8,
+   "swing_earring": 1,
+   "bend_elbow": 1
+  },
+  "G2b_dropped_by_motion": {
+   "wiggle_fingers": 20,
+   "bend_elbow": 9,
+   "raise_arm": 7,
+   "tip_hat": 3,
+   "swing_earring": 3,
+   "wag_tail": 3,
+   "wave": 1,
+   "nod": 6
+  }
+ }
+}

@@ -16,3 +16,6 @@ build/
 # synthetic tasks: regenerate with python src/synth/make_tasks.py; only the 10-task sample is tracked
 tasks_synth/*
 !tasks_synth/sample/
+
+# synthetic broken copies (python3 src/validate.py --tasks-dir tasks_synth --out validation/synth): regenerable
+validation/synth/
