@@ -41,7 +41,7 @@
    538,
    256
   ],
-  "area": 4161
+  "area": 3755
  },
  "A2_pigtailL": {
   "image": "lineup",
@@ -73,7 +73,7 @@
    695,
    246
   ],
-  "area": 13393
+  "area": 13375
  },
  "A4_forearm": {
   "image": "lineup",
@@ -87,17 +87,17 @@
   "image": "lineup",
   "pivot": [
    967,
-   197
+   199
   ],
-  "area": 180
+  "area": 223
  },
  "A4_earringR": {
   "image": "lineup",
   "pivot": [
    1062,
-   187
+   181
   ],
-  "area": 165
+  "area": 226
  },
  "A4_veil": {
   "image": "lineup",
@@ -152,7 +152,7 @@
    690,
    238
   ],
-  "area": 47196
+  "area": 47138
  },
  "B2_hat": {
   "image": "toddlers",

@@ -203,8 +203,16 @@ def test_migration_script_reproduces_committed_json():
     sys.path.insert(0, str(ROOT / "scripts"))
     import migrate_legacy_parts as M
 
-    for name, ann in M.migrate().items():  # migrate() asserts every mask equals the legacy mask
-        assert json.loads((ROOT / f"annotations/{name}.json").read_text()) == ann
+    # parts corrected by hand after the migration (grader v3; see results/grader_v3.md): T07 earrings + chain,
+    # B2_head sleeve sliver, A2_forearm pigtail strip, A3_head fleck. Every other part is still the migration's.
+    edited = {"A4_earringL", "A4_earringR", "B2_head", "A2_forearm", "A3_head"}
+    for name, ann in M.migrate().items():  # migrate() asserts every mask equals the legacy colour-rule mask
+        cur = json.loads((ROOT / f"annotations/{name}.json").read_text())
+        assert {k: v for k, v in cur.items() if k != "parts"} == {k: v for k, v in ann.items() if k != "parts"}
+        assert [p["name"] for p in cur["parts"]] == [p["name"] for p in ann["parts"]]
+        for pc, pm in zip(cur["parts"], ann["parts"]):
+            if pc["name"] not in edited:
+                assert pc == pm, pc["name"]
 
 
 def test_preview_writes_overlay(tmp_path):
