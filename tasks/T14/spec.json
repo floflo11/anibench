@@ -12,6 +12,7 @@
  "amp": 15,
  "graders": [
   "G1",
+  "G2b",
   "G3",
   "G4",
   "G6"
@@ -27,6 +28,7 @@
  "skull": true,
  "graders_all": [
   "G1",
+  "G2b",
   "G3",
   "G4",
   "G5",
