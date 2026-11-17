@@ -70,7 +70,7 @@ const PULSE = {
     const u = ((t / 2) % 1 + 1) % 1;
     for (const { s, P } of sprites) {
       s.material.rotation = 0; s.position.y = C.H - P.ay; s.scale.set(P.w, P.h, 1);
-      if (P.mode === 'rot') s.material.rotation = P.amp * Math.PI / 180 * SWING[C.curve](u);
+      if (P.mode === 'rot') s.material.rotation = P.amp * Math.PI / 180 * (P.one ? PULSE[C.curve](u) : SWING[C.curve](u));  // + = counter-clockwise = up
       else if (P.mode === 'lift') s.position.y += P.amp * PULSE[C.curve](u);
       else s.scale.y = P.h * (1 - P.amp * PULSE[C.curve](u));
     }
@@ -98,6 +98,6 @@ def build(info, out, curve, level, pivot_shift=None):
         rgba(info["img"], p.mask, p.bbox).save(out / f"sprite{i}.png")
         ax, ay = p.pivot if pivot_shift is None else shifted_pivot(p, pivot_shift)
         parts.append(dict(src=f"./sprite{i}.png", x0=x0, y0=y0, w=x1 - x0, h=y1 - y0, ax=float(ax), ay=float(ay),
-                          mode=p.mode, amp=round(p.amount(level), 4)))
+                          mode=p.mode, one=p.one_sided, amp=round(p.amount(level), 4)))
     cfg = dict(W=info["W"], H=info["H"], base="./base.png", curve=curve, parts=parts)
     (out / "index.html").write_text(PAGE.replace("__CFG__", js(cfg)))

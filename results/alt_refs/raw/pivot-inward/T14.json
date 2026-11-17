@@ -14,12 +14,12 @@
   },
   "G3": {
    "ok": true,
-   "value": 0.3015,
-   "skull_keep": 0.967
+   "value": 0.1425,
+   "skull_keep": 1.0
   },
   "G4": {
    "ok": true,
-   "value": 0.832
+   "value": 0.75
   },
   "G6": {
    "ok": true,

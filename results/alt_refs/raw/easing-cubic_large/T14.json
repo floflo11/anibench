@@ -13,25 +13,20 @@
    "value": 0.0
   },
   "G3": {
-   "ok": false,
-   "value": 0.5437,
-   "skull_keep": 0.967
+   "ok": true,
+   "value": 0.149,
+   "skull_keep": 1.0
   },
   "G4": {
    "ok": true,
-   "value": 0.942
+   "value": 0.87
   },
   "G6": {
    "ok": true,
    "loop": 0.0,
    "first_vs_orig": 0.0
   },
-  "pass": false
+  "pass": true
  },
- "failed": [
-  "G3"
- ],
- "evidence": {
-  "G3": "evidence/easing-cubic_large__T14__G3.png"
- }
+ "failed": []
 }

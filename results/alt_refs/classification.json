@@ -1,0 +1,97 @@
+{
+ "easing-cubic_large/T07/G3": {
+  "class": "b",
+  "cause": "mask",
+  "reason": "Earring swing at 35 deg (top of the plausible range). The bead swings clear of its gold chain, which is not in the earring mask and stays put, so the bead visibly floats off its hook (rule 3). G3 fires for a different reason: the bead occludes the cheek and veil, so the net foreground count drops (0.71 of a 345 px target). The verdict is right, but the reason is wrong (see G3 recommendation)."
+ },
+ "easing-cubic_large/T08/G5": {
+  "class": "a",
+  "cause": "texture",
+  "reason": "Pigtails at 20 deg (top of range) about the annotated tie pivot. The pivot is correct. Pixels within 10 px of the pivot move at most 3.5 px, but the high-frequency hair texture turns that into 38% changed pixels. Small white slivers at the tie root are the white fill showing (rule 2)."
+ },
+ "easing-cubic_large/T13/G3": {
+  "class": "b",
+  "cause": "style",
+  "reason": "110 px hat lift: 69% of the hat leaves the top of the canvas (the hat starts at y=7), so it is no longer a visible lift (rule 6). G3 correctly reports the lost area."
+ },
+ "squash_stretch-strong/T13/G1": {
+  "class": "a",
+  "cause": "deformation",
+  "reason": "Landing squash of the hat, anchored at the brim. Widening at or below the +-15% limit pushes the brim 20-25 px beyond the allowed region, which is built from rigid vertical shifts + 10 px. A probe at k=0.13 (max axis scale 1.149, inside rule 4) still fails G1 (0.0023); k=0.10 passes."
+ },
+ "squash_stretch-strong/T14/G1": {
+  "class": "a",
+  "cause": "deformation",
+  "reason": "Hat tip with a 15% stretch along the hat axis: the far brim end overshoots the region of rigid rotations by about 15 px at the top right. The k=0.13 probe also fails (0.0022); k=0.10 passes."
+ },
+ "squash_stretch-strong/T16/G1": {
+  "class": "a",
+  "cause": "deformation",
+  "reason": "Jump with a crouch and landing squash: the raised arm and the jacket widen past the region of vertical shifts (dilated 22 px). The k=0.13 probe fails (0.013) and so does k=0.10 (0.0055). A cartoon jump with mild squash fails G1 here."
+ },
+ "alt_impl-canvas2d/T10/G2": {
+  "class": "b",
+  "cause": "mask",
+  "reason": "The B2_head mask includes a ~65 px sliver of the raised sleeve near the shoulder (around x=850, y=195). When the head nods, the sliver goes with it: a solid dark fleck floats off the sleeve (median contrast 179) and a notch opens. This is a real detached piece (rules 2 and 3) inherited from the annotation. The reference and easing-sine_typ (same 8 deg sine) pass because at their poses the fleck stays under 60 px or attached."
+ },
+ "easing-bounce/T10/G2": {
+  "class": "b",
+  "cause": "mask",
+  "reason": "Same B2_head sleeve sliver: a 60 px solid fleck detaches (median contrast 187)."
+ },
+ "squash_stretch-mild/T10/G2": {
+  "class": "b",
+  "cause": "mask",
+  "reason": "Same B2_head sleeve sliver: a 65 px solid fleck detaches (median contrast 177)."
+ },
+ "squash_stretch-strong/T10/G2": {
+  "class": "b",
+  "cause": "mask",
+  "reason": "Same B2_head sleeve sliver: a 67 px solid fleck detaches (median contrast 168)."
+ },
+ "easing-bounce/T17/G2": {
+  "class": "a",
+  "cause": "halo",
+  "reason": "The new piece is a 79 px, 1-2 px wide, light-grey wisp of hair halo (median contrast 63) just outside the A2_body mask, left behind when the body lowers by 1-3%. This is the tolerated anti-aliasing halo; at normal size it shows only as a faint line beside the hair."
+ },
+ "follow_through-lag/T17/G2": {
+  "class": "a",
+  "cause": "halo",
+  "reason": "Same 79 px faint hair-halo strip (contrast 63) outside the A2_body mask."
+ },
+ "squash_stretch-mild/T17/G2": {
+  "class": "a",
+  "cause": "halo",
+  "reason": "Same 79 px faint hair-halo strip (contrast 63) outside the A2_body mask."
+ },
+ "follow_through-drag/T15/G2": {
+  "class": "a",
+  "cause": "texture",
+  "reason": "The skinned body stretches smoothly in flight. The new 'piece' (65 px, median contrast 42) is a pale stripe of the boy's shirt: the shirt's near-white stripes sit around FG_T=30, so the shirt's foreground has internal gaps that shift as it deforms. Nothing tears."
+ },
+ "squash_stretch-strong/T07/G2": {
+  "class": "b",
+  "cause": "style",
+  "reason": "Stretching the earring 15% along the lobe-to-bead axis about the lobe pivot (14 px above the bead) pulls the bead 2-3 px off its chain: a visible gap opens and the solid bead (184 px, contrast 189) becomes its own piece (rule 3)."
+ },
+ "squash_stretch-strong/T08/G5": {
+  "class": "a",
+  "cause": "texture",
+  "reason": "12 deg swing plus 15% stretch about the correct tie pivot. Joint pixels move up to ~4 px. G5's 26% comes from hair texture."
+ },
+ "pivot-inward/T08/G5": {
+  "class": "a",
+  "cause": "pivot",
+  "reason": "Pivot moved 9-10 px along each pigtail from the annotated tie point (rule 7 limit: 0.08 x length 113-124 px). At 12 deg the annotated pivot point moves ~2 px and the joint pixels up to ~4 px, staying under the tie. Hair texture turns that into 37.5% changed. Borderline: a stricter reader may call 10 px on a small tie the wrong joint."
+ },
+ "pivot-lateral/T08/G5": {
+  "class": "a",
+  "cause": "pivot",
+  "reason": "Pivot moved 9-10 px across each pigtail (rule 7 limit). The annotated pivot point moves ~2 px and the joint pixels up to ~4 px. Small white slivers at the tie come from the white fill. Hair texture gives 49.5%. Borderline, as for pivot-inward."
+ },
+ "pivot-lateral/T04/G5": {
+  "class": "a",
+  "cause": "pivot",
+  "reason": "Pivot moved 10 px across the elbow (forearm length 132 px, rule 7 limit). At 20 deg the annotated elbow point shifts ~3.5 px and stays inside the sleeve frill. The white gap behind the elbow is the uncovered area (rule 2) and also appears with the exact pivot."
+ }
+}

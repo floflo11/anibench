@@ -77,7 +77,10 @@ function compose(m, jx, jy, ang, axisAng, sAlong, sAcross, dy, z) {
     const u = ((t % 2) + 2) % 2 / 2;
     for (const { mesh, p } of items) {
       let ang = 0, dy = 0, along = 1, across = 1, axisAng = p.axisAng;
-      if (p.mode === 'rot') {
+      if (p.mode === 'rot' && p.one) {   // one-way tip (up = counter-clockwise), stretch going up, squash coming back
+        const a = 0.5 - 0.5 * Math.cos(2 * Math.PI * u), s = 1 + cfg.k * Math.sin(2 * Math.PI * u);
+        ang = a * p.amp * Math.PI / 180; along = s; across = 1 / s;
+      } else if (p.mode === 'rot') {
         const [a, s] = swing(u, cfg.k);
         ang = -a * p.amp * Math.PI / 180; along = s; across = 1 / s;
       } else if (p.mode === 'lift') {
@@ -107,7 +110,7 @@ def build(info, out, k):
         x0, y0, x1, y1 = p.bbox
         rgba(info["img"], p.mask, p.bbox).save(out / f"part_{i}.png")
         parts.append(dict(tex=f"./part_{i}.png", x0=x0, y0=y0, x1=x1, y1=y1, jx=p.pivot[0], jy=p.pivot[1],
-                          mode=p.mode, amp=round(p.amount("typ"), 4), crouch=p.action == "jump",
+                          mode=p.mode, one=p.one_sided, amp=round(p.amount("typ"), 4), crouch=p.action == "jump",
                           axisAng=math.atan2(-p.axis[1], p.axis[0]), z=0.01 * (i + 1)))
     cfg = dict(W=info["W"], H=info["H"], base="./base.png", k=k, parts=parts)
     (out / "index.html").write_text(PAGE.replace("__CFG__", js(cfg)))

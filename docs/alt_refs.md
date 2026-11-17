@@ -89,6 +89,21 @@ Every style except the pivot style runs on every admitted task (T01 to T21; T22 
 checks). Each run is graded with the task's admitted checks (`spec.json` `graders`, as narrowed in
 `validation/admission.md`).
 
+### Fixes made to the styles during the run (T13 and T14 re-run with `--force`)
+
+Reviewing the first failures showed two places where our own styles were not valid. We fixed both before
+classifying, without looking at which checks the fixes would pass:
+
+1. **T14 hat tip went both ways.** Every style swung the hat symmetrically, so for half the loop the hat
+   tipped *down* over the boy's eyes. The instruction says "tilt his hat up and back". All styles now tip one
+   way only (up), then return, optionally with a small settle. `src/reference.py` has the same two-way swing
+   (`sin`), so the reference that admits T14 tips the hat into the face. That is a validity bug in the
+   reference, reported to its owner rather than fixed here.
+2. **The head under a hat.** The skull keep mask covers only the hat's lining band, so filling just that band
+   left white wedges in the sides of the head once the hat moved. The styles now fill the convex hull of the
+   skull and the visible head (both ears included): a flat sampled colour for the white-fill styles, and a
+   nearest-colour fill for the others. The reference fills only the band.
+
 ## How failures are classified
 
 For each failed check we look at the evidence image (original | the failing frame | offending pixels) and the

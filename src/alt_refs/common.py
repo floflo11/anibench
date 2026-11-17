@@ -82,6 +82,11 @@ class Part:
     length: float           # max distance from pivot to a mask pixel
     bbox: tuple             # x0, y0, x1, y1 (exclusive), padded and clipped to the image
 
+    @property
+    def one_sided(self):
+        """Hat tip: "tilt his hat up and back", so the swing goes one way (up) and returns."""
+        return self.action == "hat_tilt"
+
     def amount(self, level):
         v = RANGES[self.action][LEVEL[level] if isinstance(level, str) else level]
         if self.action == "flutter":  # tip travel in px -> swing angle
@@ -151,6 +156,21 @@ def nearest_fill(img, hole):
     return out
 
 
+def head_region(info, solid, hole):
+    """Where the head continues under a hat: the convex hull of the skull mask and the visible head (the
+    solid foreground touching the skull, within the hat's rows and 30 px below, which takes in the ears);
+    everything else under the hat is sky."""
+    from skimage.morphology import convex_hull_image
+    sk = info["skull"]
+    ys = np.nonzero(hole.any(1))[0]
+    slab = np.zeros_like(hole)
+    slab[ys.min():ys.max() + 31] = True       # the hat's rows and a little below, so both ears are included
+    lab, _ = ndimage.label(solid & slab)
+    touch = np.unique(lab[ndimage.binary_dilation(sk, iterations=8) & (lab > 0)])
+    head = np.isin(lab, touch[touch > 0]) | sk
+    return convex_hull_image(head)
+
+
 def base_image(info, how):
     """Background with every moving part removed. how: 'white' (white, with the skull painted in a flat
     sampled hair colour) or 'nearest' (nearest-colour fill). For a hat, 'nearest' fills the skull and a
@@ -162,14 +182,7 @@ def base_image(info, how):
         if info["skull"] is not None:
             fg = ((255 - img.astype(int)).max(-1) > 30) & ~hole
             solid = ndimage.binary_opening(fg, structure=np.ones((5, 5)))
-            # the head continues under the hat: in every column the skull spans, everything below the
-            # skull's top edge is head (filled); above it is sky (white)
-            sk = info["skull"]
-            cols = np.nonzero(sk.any(0))[0]
-            top = np.full(sk.shape[1], sk.shape[0])
-            top[cols] = np.argmax(sk[:, cols], axis=0)
-            head = np.arange(sk.shape[0])[:, None] >= top[None, :]
-            keep = (sk | head | ndimage.binary_dilation(solid, iterations=6)) & hole
+            keep = (head_region(info, solid, hole) | ndimage.binary_dilation(solid, iterations=6)) & hole
             out[hole & ~keep] = 255
         return out
     out = img.copy()
@@ -179,7 +192,9 @@ def base_image(info, how):
         below = ndimage.binary_dilation(sk, iterations=12) & ~hole & ~sk
         below &= (255 - img.astype(int)).max(-1) > 60          # foreground (hair/skin), not background
         col = np.median(img[below], axis=0) if below.any() else np.array([40, 30, 25])
-        out[sk & hole] = col.astype(np.uint8)
+        fg = ((255 - img.astype(int)).max(-1) > 30) & ~hole
+        solid = ndimage.binary_opening(fg, structure=np.ones((5, 5)))
+        out[(sk | head_region(info, solid, hole)) & hole] = col.astype(np.uint8)
     return out
 
 

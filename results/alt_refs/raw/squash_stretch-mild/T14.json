@@ -10,16 +10,16 @@
  "result": {
   "G1": {
    "ok": true,
-   "value": 0.00068
+   "value": 0.00065
   },
   "G3": {
    "ok": true,
-   "value": 0.3409,
-   "skull_keep": 0.978
+   "value": 0.1717,
+   "skull_keep": 0.999
   },
   "G4": {
    "ok": true,
-   "value": 0.851
+   "value": 0.69
   },
   "G6": {
    "ok": true,

@@ -38,7 +38,8 @@ scene.add(new THREE.Mesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMater
 // one rig object per part, keyframed: position.x = angle (deg), position.y = lift (px), scale.y = squash
 function clipFor(P, name) {
   const A = P.amp, tr = [];
-  if (P.mode === 'rot') tr.push(new THREE.NumberKeyframeTrack(name + '.position[x]', [0, 0.45, 1.0, 1.45, 2], [0, A, 0, -0.85 * A, 0]));
+  if (P.mode === 'rot' && P.one) tr.push(new THREE.NumberKeyframeTrack(name + '.position[x]', [0, 0.5, 1.0, 1.5, 2], [0, -A, -0.9 * A, 0, 0]));  // canvas: - = up
+  else if (P.mode === 'rot') tr.push(new THREE.NumberKeyframeTrack(name + '.position[x]', [0, 0.45, 1.0, 1.45, 2], [0, A, 0, -0.85 * A, 0]));
   else if (P.action === 'jump') tr.push(new THREE.NumberKeyframeTrack(name + '.position[y]', [0, 0.25, 0.5, 0.75, 1.0, 1.25, 2], [0, 0, 0.75 * A, A, 0.75 * A, 0, 0]));
   else if (P.mode === 'lift') tr.push(new THREE.NumberKeyframeTrack(name + '.position[y]', [0, 0.6, 1.1, 1.7, 2], [0, A, A, 0, 0]));
   else tr.push(new THREE.NumberKeyframeTrack(name + '.scale[y]', [0, 0.2, 0.7, 1.1, 1.6, 2], [1, 1, 1 - A, 1 - A, 1, 1]));
@@ -135,7 +136,8 @@ void main() {
     const u = ((t / 2) % 1 + 1) % 1;
     Q.parts.forEach((P, k) => {
       let a = 0, dy = 0, sy = 1;
-      if (P.mode === 'rot') a = P.amp * Math.PI / 180 * swing(u);
+      if (P.mode === 'rot' && P.one) a = -P.amp * Math.PI / 180 * (0.5 - 0.5 * Math.cos(2 * Math.PI * u));  // - = up
+      else if (P.mode === 'rot') a = P.amp * Math.PI / 180 * swing(u);
       else if (P.action === 'jump') dy = -P.amp * jump(u);
       else if (P.mode === 'lift') dy = -P.amp * trap(u);
       else sy = 1 - P.amp * (0.5 - 0.5 * Math.cos(2 * Math.PI * u));
@@ -164,7 +166,7 @@ def build(info, out, tech):
             a = np.zeros((info["H"], info["W"], 4), np.uint8)
             a[..., 3] = p.mask.astype(np.uint8) * 255
             Image.fromarray(a).save(out / f"mask{i}.png")
-            parts.append(dict(mask=f"./mask{i}.png", px=p.pivot[0], py=p.pivot[1], mode=p.mode, action=p.action,
+            parts.append(dict(mask=f"./mask{i}.png", px=p.pivot[0], py=p.pivot[1], mode=p.mode, one=p.one_sided, action=p.action,
                               amp=round(p.amount("typ"), 4)))
         cfg = dict(W=info["W"], H=info["H"], image="./image.png", base="./base.png", parts=parts)
         page = CANVAS_PAGE
@@ -173,7 +175,8 @@ def build(info, out, tech):
         lab = np.zeros((info["H"], info["W"]), np.uint8)
         for i, p in enumerate(info["parts"]):
             lab[p.mask] = 60 * (i + 1)
-            parts.append(dict(px=p.pivot[0], py=p.pivot[1], mode=p.mode, action=p.action, amp=round(p.amount("typ"), 4)))
+            parts.append(dict(px=p.pivot[0], py=p.pivot[1], mode=p.mode, one=p.one_sided, action=p.action,
+                              amp=round(p.amount("typ"), 4)))
         Image.fromarray(np.stack([lab] * 3, -1)).save(out / "labels.png")
         cfg = dict(W=info["W"], H=info["H"], image="./image.png", base="./base.png", labels="./labels.png", parts=parts)
         page = SHADER_PAGE

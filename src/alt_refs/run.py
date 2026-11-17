@@ -71,14 +71,24 @@ def worst_frames(frames, task_dir):
     out["G1"] = max(range(len(frames)), key=lambda i: (ch[i] & ~allowed).sum())
     out["G1_px"] = ch[out["G1"]] & ~allowed
     out["G2"] = max(range(len(frames)), key=lambda i: blobs(fgs[i] & allowed))
-    lab, n = ndimage.label(fgs[out["G2"]] & allowed)
-    sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1)) if n else []
-    small = np.zeros_like(allowed)
-    big = [k + 1 for k, s in enumerate(sizes) if s >= 60]
-    if big:
+
+    def pieces(fg):
+        lab, n = ndimage.label(fg)
+        sizes = ndimage.sum(np.ones_like(lab), lab, range(1, n + 1)) if n else []
+        big = [k + 1 for k, s in enumerate(sizes) if s >= 60]
+        if not big:
+            return []
         main = max(big, key=lambda k: sizes[k - 1])
-        small = np.isin(lab, [k for k in big if k != main])
-    out["G2_px"] = small
+        return [lab == k for k in big if k != main]
+    # offending = pieces of the failing frame that were not already separate pieces in the original
+    before = np.zeros_like(allowed)
+    for m in pieces(fg0 & allowed):
+        before |= m
+    new = np.zeros_like(allowed)
+    for m in pieces(fgs[out["G2"]] & allowed):
+        if (m & before).sum() < 0.5 * m.sum():
+            new |= m
+    out["G2_px"] = new
     area0 = (fg0 & allowed).sum()
     out["G3"] = max(range(len(frames)), key=lambda i: abs(int((fgs[i] & allowed).sum()) - int(area0)))
     out["G3_px"] = (fgs[out["G3"]] ^ fg0) & allowed
@@ -137,7 +147,11 @@ def evidence(frames, tid, variant, failed):
         dr = ImageDraw.Draw(sheet)
         dr.text((4, 4), f"{variant} {tid} {k} ({CHECK_NAMES[k]}) frame {i}: original | frame | "
                         f"red = offending px, blue = allowed border", fill=(0, 0, 0))
-        dr.text((4, H + 28), f"zoom x{zs:.1f} at ({zx0},{zy0})-({zx1},{zy1}): original | frame", fill=(0, 0, 0))
+        info = ""
+        if px.any():
+            contrast = (255 - f[px].astype(int)).max(-1)
+            info = f"; offending px: {int(px.sum())}, contrast vs white median {int(np.median(contrast))}"
+        dr.text((4, H + 28), f"zoom x{zs:.1f} at ({zx0},{zy0})-({zx1},{zy1}): original | frame{info}", fill=(0, 0, 0))
         p = EVID / f"{variant}__{tid}__{k}.png"
         sheet.save(p)
         paths[k] = p.relative_to(RES).as_posix()
@@ -276,6 +290,12 @@ def render_md(S, recs, cls, variants, tasks, by):
          f"**Raw fail rate:** {_pct(o['failed'], o['runs'])}. "
          f"**False-fail rate** (failed, and no failed check is classified as a real rule break): "
          f"{_pct(o['false_fail'], o['runs'])}.", "",
+         "## Per style", "", "| Style | Runs | Failed | False fails | False-fail rate |", "| --- | --- | --- | --- | --- |"]
+    for st in sorted({S["variants"][v]["style"] for v in variants}):
+        vs = [S["variants"][v] for v in variants if S["variants"][v]["style"] == st]
+        n, f, ff = sum(x["runs"] for x in vs), sum(x["failed"] for x in vs), sum(x["false_fail"] for x in vs)
+        L.append(f"| {st} | {n} | {f} | {ff} | {100 * ff / max(1, n):.1f}% |")
+    L += ["",
          "## Per variant", "",
          "| Variant | Style | Runs | Failed | False fails | " + " | ".join(f"{k} fail" for k in CHECKS) + " |",
          "| --- | --- | --- | --- | --- |" + " --- |" * len(CHECKS)]
@@ -355,13 +375,13 @@ def gifs(per_style=None):
         R.close()
 
 
-def redo_evidence():
+def redo_evidence(checks=None):
     """Re-render every failing run and rewrite its evidence images (pages are rebuilt deterministically)."""
     from render import Renderer, prepare
     R = Renderer()
     try:
         for r in load_raw():
-            if not r.get("failed"):
+            if not r.get("failed") or (checks and not set(checks) & set(r["failed"])):
                 continue
             tid, v = r["task"], r["variant"]
             spec = json.loads((ROOT / "tasks" / tid / "spec.json").read_text())
@@ -384,6 +404,7 @@ if __name__ == "__main__":
     ap.add_argument("--variants")
     ap.add_argument("--workers", type=int, default=2)
     ap.add_argument("--force", action="store_true")
+    ap.add_argument("--checks", help="evidence: only runs that failed one of these checks")
     a = ap.parse_args()
     if a.cmd == "render":
         render_all(a.tasks.split(",") if a.tasks else None, a.variants.split(",") if a.variants else None,
@@ -391,6 +412,6 @@ if __name__ == "__main__":
     elif a.cmd == "report":
         report()
     elif a.cmd == "evidence":
-        redo_evidence()
+        redo_evidence(a.checks.split(",") if a.checks else None)
     else:
         gifs()

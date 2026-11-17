@@ -101,6 +101,10 @@ function pose(rig, t) {
     bones.forEach((b, i) => {
       b.rotation.z = -P.amp * deg * share[i] * envelope(wrap(t)) * Math.sin(2 * Math.PI * (wrap(t) - i * S.lag) + P.phase);
     });
+  } else if (P.mode === 'rot' && P.one) {             // hat tip: up (counter-clockwise), back, small dip, settle
+    const e = S.lag > 0.15 ? 0.6 : 0.7;
+    const g = u < e ? 0.5 - 0.5 * Math.cos(2 * Math.PI * u / e) : -0.1 * Math.sin(Math.PI * (u - e) / (1 - e));
+    bones[0].rotation.z = P.amp * deg * g;
   } else if (P.mode === 'rot') {                        // rigid part: swing out, overshoot and settle
     const g = Math.sin(4 * Math.PI * u) * Math.exp(-(S.lag > 0.15 ? 2 : 3) * u) / 0.72;
     bones[0].rotation.z = -P.amp * deg * g;
@@ -149,7 +153,7 @@ def build(info, out, lag):
         joints, band = CHAINS[p.action]
         parts.append(dict(tex=f"./skin{i}.png", x0=x0, y0=y0, x1=x1, y1=y1, jx=p.pivot[0], jy=p.pivot[1],
                           axis=list(p.axis), len=p.length, joints=joints, band=band,
-                          ramp=p.action in ("squat", "bounce"), mode=p.mode, action=p.action,
+                          ramp=p.action in ("squat", "bounce"), mode=p.mode, one=p.one_sided, action=p.action,
                           amp=round(p.amount("typ"), 4), phase=0.0))
     cfg = dict(W=info["W"], H=info["H"], base="./base.png", lag=lag, parts=parts)
     (out / "index.html").write_text(PAGE.replace("__CFG__", js(cfg)))
