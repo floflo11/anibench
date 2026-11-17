@@ -10,7 +10,7 @@ benchmark = "anibench"
 task_id = "T01"
 tier = 1
 image = "lineup"
-checks = ["G1", "G2", "G3", "G4", "G5", "G6"]
+checks = ["G1", "G2", "G2b", "G3", "G4", "G5", "G6"]
 setting = "feedback"
 
 [verifier]

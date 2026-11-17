@@ -7,6 +7,7 @@ annotation files via src/annotations.py.
 
     python src/tasks.py [--tasks annotations/tasks_pilot.json] [--out tasks]
 """
+from graders import candidate_checks  # noqa: E402
 import argparse
 import json
 import shutil
@@ -145,6 +146,7 @@ def build(out=None, task_file=None, ann_dir=None):
             graders.remove("G2")  # a lifted hat is meant to come apart from the head
         if kind == "human":
             graders = []
+        graders = candidate_checks({"graders": graders})  # adds G2b connectivity to every scored task
         # pivot per target part: the task's override (e.g. T14's brim end) or the part's own pivot
         part_pivots = [tuple(t["pivot"]) if t.get("pivot") else lib[p]["pivot"] for p in parts]
         if kind in ("rotate", "rotate_hat") and graders and None in part_pivots:

@@ -10,7 +10,7 @@ benchmark = "anibench"
 task_id = "T21"
 tier = 2
 image = "toddlers"
-checks = ["G1", "G2", "G3", "G4", "G5", "G6"]
+checks = ["G1", "G2", "G2b", "G3", "G4", "G5", "G6"]
 
 [verifier]
 timeout_sec = 600
