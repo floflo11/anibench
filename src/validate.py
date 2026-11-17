@@ -69,7 +69,8 @@ def worker(jobs, tasks_dir, out_dir, gifs, q):
     R.close()
 
 
-def main(n=2, only=None, tasks_dir=ROOT / "tasks", out_dir=ROOT / "validation", results=None, sample=None, gifs=True):
+def main(n=2, only=None, tasks_dir=ROOT / "tasks", out_dir=ROOT / "validation", results=None, sample=None, gifs=True,
+         shard=None, resume=False):
     tasks_dir, out_dir = Path(tasks_dir), Path(out_dir)
     results = Path(results) if results else out_dir / "results.json"
     idx = json.loads((tasks_dir / "index.json").read_text())
@@ -78,18 +79,25 @@ def main(n=2, only=None, tasks_dir=ROOT / "tasks", out_dir=ROOT / "validation", 
         ids = ids[:: max(1, len(ids) // sample)][:sample]
     if only is not None:
         ids = [i for i in ids if i in only]
+    if shard:
+        k, m = shard
+        ids = ids[k::m]
     specs = {i: json.loads((tasks_dir / i / "spec.json").read_text()) for i in ids}
-    jobs = [(i, v) for i in ids for v in variants(specs[i])]
+    prev = json.loads(results.read_text()) if (resume and results.exists()) else {}
+    jobs = [(i, v) for i in ids for v in variants(specs[i]) if v not in prev.get(i, {})]
     q = mp.Queue()
     ps = [mp.Process(target=worker, args=(jobs[i::n], tasks_dir, out_dir, gifs, q)) for i in range(n)]
     for p in ps:
         p.start()
-    res = json.loads(results.read_text()) if (only is not None and results.exists()) else {}
+    res = json.loads(results.read_text()) if ((only is not None or resume) and results.exists()) else {}
     for tid in ids:
-        res[tid] = {}
-    for _ in jobs:
+        res[tid] = res.get(tid, {}) if resume else {}
+    results.parent.mkdir(parents=True, exist_ok=True)
+    for j in range(len(jobs)):
         tid, v, g = q.get()
         res.setdefault(tid, {})[v] = g
+        if resume and j % 10 == 9:  # long runs: keep partial results, so a restart resumes with --resume
+            results.write_text(json.dumps(dict(sorted(res.items())), indent=1))
         print(tid, v, "ERR " + g["error"] if "error" in g else ("PASS" if g["pass"] else "fail " + ",".join(
             k for k, x in g.items() if k not in ("pass", "oracle") and not x["ok"])), flush=True)
     for p in ps:
@@ -108,6 +116,9 @@ if __name__ == "__main__":
     ap.add_argument("--results", default=None, help="results JSON (default <out>/results.json)")
     ap.add_argument("--sample", type=int, default=None, help="validate an evenly spaced sample of this many tasks")
     ap.add_argument("--no-gifs", action="store_true")
+    ap.add_argument("--shard", default=None, help="k/m: validate only every m-th task starting at k")
+    ap.add_argument("--resume", action="store_true", help="keep results already in the results file; save as you go")
     a = ap.parse_args()
     main(n=a.workers, only=None if a.only == "all" else a.only.split(","), tasks_dir=a.tasks_dir, out_dir=a.out,
-         results=a.results, sample=a.sample, gifs=not a.no_gifs)
+         results=a.results, sample=a.sample, gifs=not a.no_gifs,
+         shard=tuple(int(x) for x in a.shard.split("/")) if a.shard else None, resume=a.resume)
