@@ -18,6 +18,7 @@ to every study; they look like any other clip in the manifest and are flagged on
 
 python3 src/study/make_clips.py --out build/study/pilot --n 600 --seed 0          # sample from runs/
 python3 src/study/make_clips.py --out build/study/x kimi/T01/1 qwen/T03/1           # given runs
+python3 src/study/make_clips.py --out build/study/pilot --split 100                  # rater batches
 """
 import argparse
 import hashlib
@@ -425,6 +426,35 @@ def build_study(runs, out, n=None, seed=0, salt=None, attention=True, frames_fn=
     return manifest, keyd
 
 
+def split_study(out, batch_size, seed=0):
+    """Split a built study into rater batches: <out>/batches/bNN/ with its own manifest.json (a subset of the
+    clips plus every attention clip) and clips/ (hard links, or copies across file systems). Clips are dealt
+    out in a seeded random order, so every batch mixes tasks and models. Returns the batch directories."""
+    out = Path(out)
+    man = json.loads((out / "rater/manifest.json").read_text())
+    key = json.loads((out / "key.json").read_text())["clips"]
+    att = [c for c in man["clips"] if key[c["clip_id"]]["attention"]]
+    main_ = [c for c in man["clips"] if not key[c["clip_id"]]["attention"]]
+    random.Random(seed).shuffle(main_)
+    dirs = []
+    for b, i in enumerate(range(0, len(main_), batch_size)):
+        d = out / "batches" / f"b{b + 1:02d}"
+        (d / "clips").mkdir(parents=True, exist_ok=True)
+        clips = sorted(main_[i:i + batch_size] + att, key=lambda c: c["clip_id"])
+        for c in clips:
+            src, dst = out / "rater" / c["video"], d / c["video"]
+            if not dst.exists():
+                try:
+                    os.link(src, dst)
+                except OSError:
+                    shutil.copy(src, dst)
+        m = dict(man, study_id=f"{man['study_id']}-b{b + 1:02d}", parent_study_id=man["study_id"],
+                 clips=[{k: v for k, v in c.items() if not str(v).startswith("../")} for c in clips])
+        (d / "manifest.json").write_text(json.dumps(m, indent=1))
+        dirs.append(d)
+    return dirs
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("runs", nargs="*", help="model/task/try under --runs-dir, or run directories (default: all)")
@@ -438,7 +468,13 @@ def main(argv=None):
     ap.add_argument("--no-attention", action="store_true")
     ap.add_argument("--include-ungraded", action="store_true")
     ap.add_argument("--study-id", default=None)
+    ap.add_argument("--split", type=int, default=None, metavar="SIZE",
+                    help="only split an already built --out study into rater batches of SIZE clips (+ attention)")
     a = ap.parse_args(argv)
+    if a.split:
+        for d in split_study(a.out, a.split, a.seed):
+            print(d, len(json.loads((d / "manifest.json").read_text())["clips"]), "clips")
+        return
     runs = resolve_runs(a.runs, a.runs_dir) if a.runs else discover_runs(a.runs_dir, a.include_ungraded)
     print(f"{len(runs)} candidate runs")
     man, key = build_study(runs, a.out, a.n, a.seed, a.salt, not a.no_attention, fmt=a.fmt, panel_w=a.panel,

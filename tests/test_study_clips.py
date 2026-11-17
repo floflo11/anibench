@@ -183,3 +183,26 @@ def test_build_study_is_anonymized(tmp_path):
     # same seed and salt -> same study
     man2, _ = M.build_study(runs, tmp_path / "study2", n=4, seed=0, salt="test", frames_fn=frames_fn, fmt="webp", panel_w=200)
     assert [c["clip_id"] for c in man2["clips"]] == ids
+
+
+def test_split_study(tmp_path):
+    runs_dir = tmp_path / "runs"
+    for m in MODELS:
+        for t in ("T01", "T02"):
+            write_run(runs_dir, m, t, 1, "PASS")
+    out = tmp_path / "study"
+    M.build_study(M.discover_runs(runs_dir), out, n=None, seed=0, salt="s", fmt="webp", panel_w=120,
+                  frames_fn=lambda it: synth_frames(w=it["width"], h=it["height"])[1])
+    dirs = M.split_study(out, 4)
+    assert len(dirs) == 2
+    seen = []
+    for d in dirs:
+        man = json.loads((d / "manifest.json").read_text())
+        ids = [c["clip_id"] for c in man["clips"]]
+        assert len(ids) in (4 + 5, 2 + 5)
+        assert all((d / c["video"]).exists() for c in man["clips"])
+        assert man["study_id"].startswith(man["parent_study_id"] + "-b")
+        seen += ids
+    att = {k for k, v in json.loads((out / "key.json").read_text())["clips"].items() if v["attention"]}
+    assert all(seen.count(a) == 2 for a in att)
+    assert len(set(seen) - att) == 6 and len(seen) == 6 + 2 * len(att)
