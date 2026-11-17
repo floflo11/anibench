@@ -30,6 +30,7 @@ const movers = [];
       if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * ph;
       else if (L.kind === 'lift') g.position.y += L.amp * ph2;
       else if (L.kind === 'squash') g.scale.y = 1 - L.amp * ph2;
+      if (L.off) { g.position.x += L.off[0] * ph2; g.position.y -= L.off[1] * ph2; }
       if (CFG.hole && ph > 0.3) mesh.visible = false;
     }
     if (CFG.whole) { root.rotation.z = 0.02 * ph; }

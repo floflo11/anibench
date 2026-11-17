@@ -24,7 +24,8 @@ G6_LOOP = 0.001
 G6_ORIG = 0.005
 SKULL_KEEP = 0.85
 G2B_MIN = 20       # px: a piece of the part at least this big counts as a piece
-G2B_EMBED = 0.9    # a footprint-free piece whose border is >= this fraction unchanged scenery is ignored
+G2B_EMBED = 0.75   # a footprint-free piece whose border is >= this fraction unchanged scenery is ignored
+                   # (islands seen on references: 0.81-1.0 enclosed; 0.9 failed T12's lace sleeve)
 G2B_BG = 8         # original pixels within this distance of white are blank background, not scenery
 EIGHT = np.ones((3, 3), bool)
 

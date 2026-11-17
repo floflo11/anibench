@@ -1,0 +1,41 @@
+<!doctype html><html><head><style>body{margin:0;background:#fff}canvas{display:block}</style></head><body>
+<script type="module">
+import * as THREE from './vendor/three.module.js';
+const CFG = {"W": 1200, "H": 600, "base": "./base.png", "layers": [{"kind": "rotate", "amp": 10, "url": "./layer0d.png", "px": 695, "py": 246, "off": [0.021, -2.0]}], "whole": false, "frozen": false, "hole": false, "noLoop": false};
+const W = CFG.W, H = CFG.H;
+const r = new THREE.WebGLRenderer({antialias:false, preserveDrawingBuffer:true});
+r.setPixelRatio(1); r.setSize(W, H); r.setClearColor(0xffffff, 1); r.toneMapping = THREE.NoToneMapping;
+document.body.appendChild(r.domElement);
+const scene = new THREE.Scene();
+const cam = new THREE.OrthographicCamera(0, W, 0, -H, -10, 10);
+const root = new THREE.Group(); scene.add(root);
+const loader = new THREE.TextureLoader();
+function tex(url){ return new Promise(res => loader.load(url, t => { t.colorSpace = THREE.SRGBColorSpace; t.minFilter = t.magFilter = THREE.NearestFilter; t.generateMipmaps = false; res(t); })); }
+function layer(t, z){ const m = new THREE.Mesh(new THREE.PlaneGeometry(W, H), new THREE.MeshBasicMaterial({map:t, transparent:true})); m.position.set(W/2, -H/2, z); return m; }
+const movers = [];
+(async () => {
+  root.add(layer(await tex(CFG.base), 0));
+  for (const [i, L] of CFG.layers.entries()) {
+    const pivot = new THREE.Group(); pivot.position.set(L.px, -L.py, 0);
+    const m = layer(await tex(L.url), 0.01 * (i + 1)); m.position.x -= L.px; m.position.y += L.py;
+    pivot.add(m); root.add(pivot); movers.push({g: pivot, mesh: m, L});
+  }
+  window.setTime = (t) => {
+    const ph = CFG.noLoop ? t / 2 : Math.sin(2 * Math.PI * t / 2);
+    const ph2 = CFG.noLoop ? t / 2 : 0.5 - 0.5 * Math.cos(2 * Math.PI * t / 2);
+    root.rotation.z = 0; root.position.set(0, 0, 0);
+    for (const {g, mesh, L} of movers) {
+      g.rotation.z = 0; g.scale.set(1, 1, 1); g.position.set(L.px, -L.py, 0); mesh.visible = true;
+      if (CFG.frozen) continue;
+      if (L.kind === 'rotate') g.rotation.z = -L.amp * Math.PI / 180 * ph;
+      else if (L.kind === 'lift') g.position.y += L.amp * ph2;
+      else if (L.kind === 'squash') g.scale.y = 1 - L.amp * ph2;
+      if (L.off) { g.position.x += L.off[0] * ph2; g.position.y -= L.off[1] * ph2; }
+      if (CFG.hole && ph > 0.3) mesh.visible = false;
+    }
+    if (CFG.whole) { root.rotation.z = 0.02 * ph; }
+    r.render(scene, cam);
+  };
+  window.setTime(0); window.ANIM_READY = true;
+})();
+</script></body></html>
