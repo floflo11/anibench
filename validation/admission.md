@@ -30,4 +30,4 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 
 **Detachment copies caught, counting only copies where the part really comes apart:** Missed thumb 12/12; Detach small 14/14; Detach tip 20/21; Gap seam 11/12
 
-**Which intended check fired (a copy can trip several):** Whole image G1 21; Missed thumb G2 5, G2b 12, G2c 13; Hole left G3 21; Frozen G4 21; Center pivot G5 16; No loop G6 20; Wrong part G1 17, G4 21; Detach small G2b 14, G2c 13; Detach tip G2 13, G2b 20; Gap seam G2 8, G2b 11, G2c 3
+**Which intended check fired (a copy can trip several):** Whole image G1 21; Missed thumb G2 5, G2b 12, G2c 13; Hole left G3 21; Frozen G4 21; Center pivot G5 16; No loop G6 20; Wrong part G1 17, G4 21; Detach small G2b 14, G2c 13; Detach tip G2 13, G2b 20; Gap seam G2 8, G2b 11, G2c 4
