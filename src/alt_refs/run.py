@@ -161,17 +161,16 @@ def evidence(frames, tid, variant, failed):
 # ---- render + grade ------------------------------------------------------------------------------
 
 def _worker(jobs, q):
+    from framecache import CachedRenderer
     from graders import grade
-    from render import Renderer, prepare
-    R = Renderer()
+    R = CachedRenderer()
     try:
         for tid, v in jobs:
             spec = json.loads((ROOT / "tasks" / tid / "spec.json").read_text())
             d = PAGES / v / tid
             try:
                 alt_refs.build(tid, v, d)
-                prepare(d, ROOT / "tasks" / tid)
-                fr, err, logs = R.render(d, spec["width"], spec["height"])
+                fr, err, logs = R.render(d, ROOT / "tasks" / tid, spec["width"], spec["height"])
             except Exception as e:  # noqa: BLE001
                 fr, err, logs = None, f"BUILD: {type(e).__name__}: {e}", []
             if fr is None:

@@ -21,15 +21,15 @@ SPLIT_VARIANTS = ("missed_thumb", "detach_small", "detach_tip", "gap_seam")
 
 
 def worker(jobs, q):
-    from render import Renderer, prepare, save_gif
+    from render import save_gif
+    from framecache import CachedRenderer
     from graders import candidate_checks, grade
     from reference import oracle_split
-    R = Renderer()
+    R = CachedRenderer()
     for tid, v in jobs:
         d = ROOT / "validation" / tid / v
         spec = json.loads((ROOT / "tasks" / tid / "spec.json").read_text())
-        prepare(d, ROOT / "tasks" / tid)
-        fr, err, logs = R.render(d, spec["width"], spec["height"])
+        fr, err, logs = R.render(d, ROOT / "tasks" / tid, spec["width"], spec["height"])
         if fr is None:
             q.put((tid, v, {"error": err, "logs": logs[-5:]}))
             continue
