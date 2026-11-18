@@ -12,6 +12,10 @@ Updated: 2026-11-16 (evening)
 | 2.1 Rater UI + analysis | rater-ui | rater | merged | pass: 158 tests total, 20-clip dry run end to end | Valkyrie runs need HTML imported before clipping; Iris to review rater question wording; ~0.5 min/clip, ~$400-530 for 600 clips x 3 raters |
 | 2.2 Alternate valid animations | alt-refs | altrefs | merged (39d5a20) | pass: 229 tests; false-fail 12/242 (5.0%) | Threshold fixes for G1/G2/G5/G3 and annotation fixes are in the grader v3 queue |
 
+| 3.1 Grader v3 | grader-v3 | grader | merged (e5fde07) | 274 tests; separating corruptions 57/59; false rejections 36 -> 29 of 242 (14.9% -> 12.0%); synthetic rejects 47 -> 20 | Next: grader v4 (G2b repaint rule, G5 displacement as a failing test); Sonnet runs need HTML imported for re-grade |
+| 3.2 Deep research | research-2 | research | merged | 116 refs, landscape/trends/directions | Folded into report |
+| 3.3 Cut-out research | research-cutout | research | merged | 150 refs, report Section sec:cutout | Probe specified |
+
 ## Follow-up queue (main agent)
 - Grader v3 (after grader-v2 merges), one agent:
   - an occlusion-aware G3, normalized for tiny parts

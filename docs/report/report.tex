@@ -27,13 +27,13 @@
 \title{\anibench: Measuring Side Effects When Agents Animate One Part of an Image\\[4pt]
 \large Working Report: Benchmark, Grader Validation, and Positioning}
 \author{Draft for the author team}
-\date{Living document, last updated 17 November 2026 (grader v2; literature snapshot of the same date).\\ Revision history in Appendix~\ref{app:rev}. Internal; not for distribution.}
+\date{Living document, last updated 18 November 2026 (grader v3; literature snapshot of 17 November 2026).\\ Revision history in Appendix~\ref{app:rev}. Internal; not for distribution.}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Large language model (LLM) agents are increasingly asked to modify artifacts on a user's behalf, and a correct modification must satisfy two requirements: the requested change must occur, and nothing else may change. Recent benchmarks verify requested animations deterministically and score side effects deterministically in discrete state, but none measures the side effects of a motion applied to a raster image, where the model must infer the part, its joint and the region it may sweep. We present \anibench{}, a benchmark in which an agent animates one named part of a still image by writing a three.js program, and every submission is scored by deterministic pixel checks that separately verify the requested motion (Motion, Pivot, Loop) and the absence of side effects (Isolation, Integrity, Connectivity, Area). This report documents the current state of the benchmark rather than final results. We describe 21 automatically scored illustrated tasks and a procedural split of 160 tasks with recorded difficulty factors. We then evaluate the grader itself. Against seeded corruptions, the checks detect every corruption in which the animated part physically separates (56/56; 95\% CI \ci{93.6}{100}\%) and at least 92\% of each corruption family that does not involve detachment, while the reference animation passes every admitted check. Against 242 independently authored valid animations, the checks reject 12 (5.0\%; 95\% CI \ci{2.9}{8.5}\%). We also identify a grader-induced selection effect that removes occluded configurations from the procedural split, and three annotation defects in the pilot data. Preliminary model results, obtained with heterogeneous protocols, suggest that the strongest systems pass roughly half of the tasks and that their failures concentrate in pivot and integrity checks rather than in motion; these numbers are not yet comparable across models and are reported only to motivate the controlled evaluation that follows. A second literature review identifies the closest prior work and motivates a recommended direction: making the phenomena that model judges cannot detect the headline of the paper.
+Large language model (LLM) agents are increasingly asked to modify artifacts on a user's behalf, and a correct modification must satisfy two requirements: the requested change must occur, and nothing else may change. Recent benchmarks verify requested animations deterministically and score side effects deterministically in discrete state, but none measures the side effects of a motion applied to a raster image, where the model must infer the part, its joint and the region it may sweep. We present \anibench{}, a benchmark in which an agent animates one named part of a still image by writing a three.js program, and every submission is scored by deterministic pixel checks that separately verify the requested motion (Motion, Pivot, Loop) and the absence of side effects (Isolation, Integrity, Connectivity, Area). This report documents the current state of the benchmark rather than final results. We describe 21 automatically scored illustrated tasks and a procedural split of 160 tasks with recorded difficulty factors. We then evaluate the grader itself. With the current grader (v3), the checks detect 57 of 59 seeded corruptions in which the animated part physically separates (96.6\%; 95\% CI \ci{88.5}{99.1}\%) and at least 95\% of each corruption family that does not involve detachment, while the reference animation passes every admitted check. Against 242 independently authored valid animations, the checks reject 29 (12.0\%; 95\% CI \ci{8.5}{16.7}\%), of which 27 are attributable to a single check whose correction we specify. We also identify and correct a grader-induced selection effect that removed occluded configurations from the procedural split, and five annotation defects in the pilot data. Preliminary model results, obtained with heterogeneous protocols, suggest that failures concentrate in connectivity, residual and pivot checks rather than in motion; these numbers are not yet comparable across models and are reported only to motivate the controlled evaluation that follows. A second literature review identifies the closest prior work and motivates a recommended direction: making the phenomena that model judges cannot detect the headline of the paper.
 \end{abstract}
 
 \section{Introduction}
@@ -46,10 +46,10 @@ Because many animations satisfy a given instruction, we do not compare submissio
 
 This report documents the work completed to date. Our main findings are as follows:
 \begin{itemize}
-\item \textbf{We formalize} seven pixel checks that separate the requested change from its side effects, including a connectivity check (\chk{G2b}) that detects a part coming apart, the failure mode that motivated the benchmark (Section~\ref{sec:checks}).
-\item \textbf{We show} that the checks detect every seeded corruption in which the part physically separates (56/56) and at least 92\% of each corruption family that does not involve detachment, and we characterize the remaining blind spot: a left-behind fragment that remains in contact with the moving part (Section~\ref{sec:detect}).
-\item \textbf{We measure} a false-rejection rate of 5.0\% on 242 valid animations produced in 12 independent styles, attribute every rejection to a specific check, and identify three annotation defects that a single reference animation had concealed (Section~\ref{sec:falsefail}).
-\item \textbf{We identify} a grader-induced selection effect: screening procedural tasks with the area check removed 47 of 207 candidate configurations, disproportionately occluded ones (Section~\ref{sec:bias}).
+\item \textbf{We formalize} eight pixel checks that separate the requested change from its side effects, including a connectivity check (\chk{G2b}) that detects a part coming apart and a residual check (\chk{G2c}) that detects a fragment left behind while still touching the moving part, the failure mode that motivated the benchmark (Section~\ref{sec:checks}).
+\item \textbf{We show} that the checks detect 57 of 59 seeded corruptions in which the part physically separates and at least 95\% of each corruption family that does not involve detachment, and we characterize the remaining blind spots: fragments concealed beneath the moving part, and motions too small to fit (Section~\ref{sec:detect}).
+\item \textbf{We measure} a false-rejection rate of 12.0\% on 242 valid animations produced in 12 independent styles, attribute every rejection to a specific check, and identify five annotation defects that a single reference animation had concealed (Section~\ref{sec:falsefail}).
+\item \textbf{We identify and correct} a grader-induced selection effect: screening procedural tasks with the original area check removed 47 of 207 candidate configurations, disproportionately occluded ones; the corrected check removes 20 (Section~\ref{sec:bias}).
 \end{itemize}
 
 \section{Related Work and Positioning}
@@ -112,18 +112,20 @@ SNF-Bench & video & video & \y & \y\ (frames) & \n & injected corruptions \\
 
 Let $\Delta(a,b)$ be the binary map of pixels whose largest per-channel difference exceeds $\tau=24$, and $\tilde\Delta$ its morphological opening with a $3\times3$ element, which suppresses isolated rendering noise. Let $\phi(x)$ mark foreground pixels, those farther than $30$ from white in some channel. All fractions are maxima over frames.
 \begin{align*}
-\chk{G1}\ \text{Isolation:}\quad & \max_t \tfrac{|\tilde\Delta(F_t,I)\setminus A|}{|\bar A|} \le 0.002\\
+\chk{G1}\ \text{Isolation:}\quad & \max_t \tfrac{|\tilde\Delta(F_t,I)\setminus A^{+}|}{|\overline{A^{+}}|} \le 0.002\\
 \chk{G4}\ \text{Motion:}\quad & \max_t \tfrac{|\tilde\Delta(F_t,I)\cap T|}{|T|} \ge 0.20\\
-\chk{G5}\ \text{Pivot:}\quad & \max_t \tfrac{|\tilde\Delta(F_t,I)\cap D_{10}(p)\cap T|}{|D_{10}(p)\cap T|} \le 0.20 \quad \forall p\in P \text{ with } |D_{10}(p)\cap T|\ge 30\\
+\chk{G5}\ \text{Pivot:}\quad & \max_t \tfrac{|\tilde\Delta(F_t,I)\cap D_{10}(p)\cap T|}{|D_{10}(p)\cap T|} \le 0.30 \quad \forall p\in P \text{ with } |D_{10}(p)\cap T|\ge 30\\
 \chk{G6}\ \text{Loop and fidelity:}\quad & \operatorname{mean}\tilde\Delta(F_0,F_{24})\le 0.001 \ \text{ and } \ \operatorname{mean}\tilde\Delta(F_0,I)\le 0.005\\
-\chk{G3}\ \text{Area:}\quad & \max_t \tfrac{\bigl|\,|\phi(F_t)\cap A| - |\phi(I)\cap A|\,\bigr|}{|\phi(I)\cap T|} \le 0.5\\
+\chk{G3}\ \text{Area:}\quad & \max_t \tfrac{\max(L_t,\,G_t)}{\max(|\phi(I)\cap T|,\,400)} \le 0.5\\
 & \text{and, for hat tasks, } \min_t |\phi(F_t)\cap S| \ge 0.85\,|\phi(I)\cap S|
 \end{align*}
-where $D_{10}(p)$ is the disc of radius 10\,px around pivot $p$. \chk{G2} (Integrity) requires that the number of foreground components of at least 60\,px inside $A$ never exceed its value in the source image (or in $F_0$, whichever is larger). \chk{G4}, \chk{G5} and \chk{G6} verify the requested change; \chk{G1}, \chk{G2}, \chk{G2b} and \chk{G3} verify that it causes no side effects.
+where $A^{+}$ is $A$ dilated by $\lceil 0.075\,e(T)\rceil$ pixels, $e(T)$ being the larger side of the part's bounding box, a margin that admits squash and stretch; $D_{10}(p)$ is the disc of radius 10\,px around pivot $p$; and $L_t$ and $G_t$ are the part's area loss and gain in frame $t$, defined below. A pivot that exceeds the \chk{G5} limit still passes if the rigid fit described below is trusted in every offending frame and moves the pivot by at most 4\,px; this rule can only rescue a joint, never fail one. \chk{G2} (Integrity) requires that the number of foreground components of at least 60\,px inside $A$, excluding components whose median contrast against white is below 80, never exceed its value in the source image (or in $F_0$, whichever is larger). \chk{G4}, \chk{G5} and \chk{G6} verify the requested change; \chk{G1}, \chk{G2}, \chk{G2b}, \chk{G2c} and \chk{G3} verify that it causes no side effects.
 
 \paragraph{Connectivity (\chk{G2b}).} \chk{G2} counts components of the whole allowed region, so a thumb left behind that still touches the forearm leaves the count unchanged. \chk{G2b} instead isolates the part in each frame. A foreground pixel inside $A$ is attributed to the part if it lies in the original footprint $T$ (which retains a fragment left behind) or differs from the source by more than $\tau$ (which retains a fragment dragged elsewhere); unchanged pixels outside $T$, such as the parent limb, are excluded, so they cannot reconnect a detached fragment. We count 8-connected pieces of at least 20\,px that retain at least 4\,px after erosion, and fail a frame if it contains more pieces than the source part. Two refinements were each introduced in response to a documented failure of the reference: the raw rather than opened difference map is used, because opening erased thin slivers where the part crossed similar colors (T05, T19); and a piece with no footprint pixel whose border is at least 75\% unchanged scenery is ignored, because a part crossing a similarly colored region produces such enclosed islands (T04, T05, T06, T12, T14).
 
-\paragraph{Admission.} A check is retained for a task only if the reference animation passes it. Of the 21 scored pilot tasks, \chk{G2} is dropped on 7, \chk{G5} on 3, and \chk{G2b} on 1 (T19, a lace veil on which connectivity is not meaningful). Table~\ref{tab:thresholds} in the appendix lists all constants.
+\paragraph{Rigid fit, residual (\chk{G2c}) and area (\chk{G3}).} \chk{G2b} cannot detect a fragment that remains in contact with the moving part, such as a stationary fingertip swept past by its neighbor. We therefore estimate, in every frame, the rigid pose of each independently moving part by matching edge and texture pixels, with partial credit for pixels that may be hidden behind unchanged scenery; each task ships a label map so that parts are fitted separately. \chk{G2c} fails if a piece of the original part of at least 20\,px remains unchanged (at most 3 per channel) while the fitted motion carries it at least 10\,px away and the moved part does not cover it. The 10\,px threshold was chosen by a sweep from 4 to 12\,px: 4\,px rejected two valid non-rigid bends on T06, while 10\,px retained every detection. The same fit defines \chk{G3}. The loss $L_t$ is the smaller of the fitted loss, which counts pixels behind unchanged scenery as hidden rather than lost, and the drop in the part's own pixel count; the gain $G_t$ is new foreground beyond the part's known occluded area (zero for illustrated tasks). Normalizing by $\max(\text{area}, 400)$ rather than 1000 was necessary to retain detection of the hole corruption on T07, whose earring covers 449\,px.
+
+\paragraph{Admission.} A check is retained for a task only if the reference animation passes it. Of the 21 scored pilot tasks under grader v3, \chk{G2} is dropped on 7, \chk{G5} on 5, \chk{G2c} on 2, and \chk{G2b} on 1 (T19, a lace veil on which connectivity is not meaningful). Table~\ref{tab:thresholds} in the appendix lists all constants.
 
 \paragraph{Statistics.} For model results we report pass@1 estimated from $k$ samples per task and percentile bootstrap intervals over tasks (10{,}000 resamples, seed 0). For validation proportions we report Wilson score intervals.
 
@@ -133,74 +135,80 @@ where $D_{10}(p)$ is the disc of radius 10\,px around pivot $p$. \chk{G2} (Integ
 \subsection{Detection of seeded corruptions}
 \label{sec:detect}
 
-For every scored task we construct up to ten corrupted versions of the reference animation, each designed to violate one property, and record whether any of its intended checks fails. Three families (detach small, detach tip, gap seam) were added with \chk{G2b}. Table~\ref{tab:detect} reports the results.
-
-\begin{table}[t]
-\centering
-\small
-\begin{tabular}{llrrc}
-\toprule
-Corruption & Intended check(s) & Caught & Rate (\%) & 95\% CI \\
-\midrule
-Whole image moves & \chk{G1} & 21/21 & 100.0 & \ci{84.5}{100} \\
-Hole left behind & \chk{G3} & 21/21 & 100.0 & \ci{84.5}{100} \\
-Frozen part & \chk{G4} & 21/21 & 100.0 & \ci{84.5}{100} \\
-Wrong part moves & \chk{G1}/\chk{G4} & 21/21 & 100.0 & \ci{84.5}{100} \\
-No loop & \chk{G6} & 20/21 & 95.2 & \ci{77.3}{99.2} \\
-Centered pivot & \chk{G5} & 12/13 & 92.3 & \ci{66.7}{98.6} \\
-Detach tip & \chk{G2}/\chk{G2b} & 20/20 & 100.0 & \ci{83.9}{100} \\
-Gap seam & \chk{G2}/\chk{G2b} & 14/15 & 93.3 & \ci{70.2}{98.8} \\
-Detach small & \chk{G2}/\chk{G2b} & 14/20 & 70.0 & \ci{48.1}{85.5} \\
-Missed thumb & \chk{G2}/\chk{G2b} & 11/20 & 55.0 & \ci{34.2}{74.2} \\
-\midrule
-\multicolumn{2}{l}{All corruptions in which the part physically separates} & 56/56 & 100.0 & \ci{93.6}{100} \\
-\bottomrule
-\end{tabular}
-\caption{Detection of seeded corruptions on the 21 scored pilot tasks (grader v2). Denominators count corruptions for which at least one intended check is admitted for the task.}
-\label{tab:detect}
-\end{table}
-
-Two corruption families fall below 90\%. In every missed case, the part does not physically separate. We verified this with an oracle that renders the part alone, frame by frame, using the page's own motion parameters, and counts its connected pieces: in all 9 missed \emph{missed thumb} copies and all 6 missed \emph{detach small} copies, the fragment left behind remains in contact with the moving part. This occurs when a stationary fingertip is swept past by an adjacent finger (T03, T05, T21), when an earring bead slides along its neighbor (T07), on head tilts (T09 to T11), and when the fragment is hidden behind the body during a jump (T15, T16). Restricted to corruptions in which the part separates, detection is 56/56. For comparison, the hackathon grader, which lacked \chk{G2b}, caught 4 of 12 missed-thumb corruptions; the denominators differ because \chk{G2b} makes the family applicable to additional tasks.
-
-Connectivity cannot, by construction, detect a fragment that remains in contact. The visual defect is nevertheless real: a stationary thumb beside a waving hand is wrong even if the pixels touch. Detecting it requires reasoning about motion rather than topology, for example by fitting a rigid transform to the part and flagging footprint pixels that remain static while the fitted transform displaces them. We are implementing this check for the next grader version. The two remaining misses (\emph{no loop} and \emph{centered pivot}) both occur on T07, whose annotation we later found to be defective (Section~\ref{sec:falsefail}).
-
-\subsection{Rejection of valid animations}
-\label{sec:falsefail}
-
-Detection rates bound only one type of error. A grader tuned against a single reference animation may encode that animation's style and reject valid alternatives, which would penalize capable models. To estimate this error, we implemented 12 animation variants in four families designed to differ from the reference in both motion and implementation: alternative easing and amplitude (sine at three amplitudes, ease-in-out cubic, settling bounce); squash and stretch at two strengths; hierarchical follow-through with two lag values; a two-dimensional canvas renderer and a full-screen shader renderer; and pivots displaced by up to 10\,px. Each variant receives the same inputs as the reference and no grader annotations. Before running them at scale, we wrote down what a human animator would accept for each motion type. We ran all variants on all applicable pilot tasks (242 runs) and classified each failure, with frame-level evidence, as either a valid animation rejected by an overly strict check or a genuine violation by the variant. This study was run with checks \chk{G1} to \chk{G6}; \chk{G2b} has not yet been evaluated against these variants.
+For every scored task we construct up to ten corrupted versions of the reference animation, each designed to violate one property, and record whether any of its intended checks fails. Table~\ref{tab:detect} reports the results for grader v3 alongside v2. Both graders score the same rendered frames, and each receives its own admission.
 
 \begin{table}[t]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
-\begin{tabular}{lrrrrc}
+\begin{tabular}{llrrrc}
 \toprule
-Check & Applic. & Failed & Genuine & Too strict & False rej.\ (\%) [95\% CI] \\
+Corruption & Intended check(s) & v2 & v3 & v3 rate (\%) & v3 95\% CI \\
 \midrule
-\chk{G1} Isolation & 242 & 3 & 0 & 3 & 1.2\ci{0.4}{3.6} \\
-\chk{G2} Integrity & 136 & 9 & 5 & 4 & 2.9\ci{1.1}{7.3} \\
-\chk{G3} Area & 242 & 2 & 2 & 0 & 0.0 \\
-\chk{G4} Motion & 242 & 0 & 0 & 0 & 0.0 \\
-\chk{G5} Pivot & 156 & 5 & 0 & 5 & 3.2\ci{1.4}{7.3} \\
-\chk{G6} Loop & 242 & 0 & 0 & 0 & 0.0 \\
+Whole image moves & \chk{G1} & 21/21 & 21/21 & 100.0 & \ci{84.5}{100} \\
+Hole left behind & \chk{G3} & 21/21 & 21/21 & 100.0 & \ci{84.5}{100} \\
+Frozen part & \chk{G4} & 21/21 & 21/21 & 100.0 & \ci{84.5}{100} \\
+Wrong part moves & \chk{G1}/\chk{G4} & 21/21 & 21/21 & 100.0 & \ci{84.5}{100} \\
+Centered pivot & \chk{G5} & 12/12 & 16/16 & 100.0 & \ci{80.6}{100} \\
+No loop & \chk{G6} & 20/21 & 20/21 & 95.2 & \ci{77.3}{99.2} \\
+Detach tip & \chk{G2}/\chk{G2b}/\chk{G2c} & 20/20 & 20/21 & 95.2 & \ci{77.3}{99.2} \\
+Gap seam & \chk{G2}/\chk{G2b}/\chk{G2c} & 13/15 & 13/16 & 81.2 & \ci{57.0}{93.4} \\
+Detach small & \chk{G2}/\chk{G2b}/\chk{G2c} & 14/20 & 15/21 & 71.4 & \ci{50.0}{86.2} \\
+Missed thumb & \chk{G2}/\chk{G2b}/\chk{G2c} & 12/20 & 15/21 & 71.4 & \ci{50.0}{86.2} \\
 \midrule
-Any check (per run) & 242 & 19 & 7 & 12 & 5.0\ci{2.9}{8.5} \\
+\multicolumn{2}{l}{Corruptions in which the part physically separates} & 57/57 & 57/59 & 96.6 & \ci{88.5}{99.1} \\
 \bottomrule
 \end{tabular}
-\caption{Failures of 242 valid alternative animations (12 variants on up to 21 tasks). \emph{Genuine} failures are real violations by the variant; \emph{too strict} failures are valid animations rejected by the check.}
+\caption{Detection of seeded corruptions on the 21 scored pilot tasks, graders v2 and v3 on identical frames. Denominators count corruptions for which at least one intended check is admitted for the task, and therefore differ between graders.}
+\label{tab:detect}
+\end{table}
+
+Grader v3 detects more of the detachment families than v2, and every family that does not involve detachment at 95\% or more. Restricted to corruptions in which the part physically separates, verified with an oracle that renders the part alone frame by frame and counts its connected pieces, v3 detects 57 of 59; both misses occur on T19, where the reference fails \chk{G2} and \chk{G2b} on the lace veil, so those checks are dropped, and the flutter rotates by about 6 degrees, too little for the rigid fit. The residual check \chk{G2c} recovers the missed-thumb corruptions that v2 could not detect on T03, T05 and T21, where a stationary fingertip remains in contact with the moving hand, and the detach-small corruption on T03. The remaining misses in the missed-thumb and detach-small families have a different cause: on head tilts (T09 to T11) and jumps (T15, T16), the fragment is left where the moving part covers it, so nothing visible remains behind. We regard this as a limit of any pixel-based test rather than of a particular threshold. For reference, the hackathon grader, which lacked \chk{G2b} and \chk{G2c}, detected 4 of 12 missed-thumb corruptions.
+
+On the procedural split, evaluated on a sample of 64 tasks stratified by motion, v3 detects more detachments than v2 (missed thumb 35 versus 25 of 64; detach small 33 versus 26), but three checks are weak on flat-colored characters in both graders: centered pivot (11 of 64), gap seam (8 of 64) and hole (45 of 64). On flat colors, a rotated joint disc changes almost no pixels, and a vanished part that reveals the exact layers beneath it leaves the pixel count nearly unchanged. The second case cannot arise for a model, which has no access to hidden layers. For the first, the fitted pivot displacement separates the corruptions well: 62 of 65 centered-pivot copies move the fitted pivot by more than 4\,px, against 3 of 65 references. Making this displacement a failing test, not only a rescue, is the principal change planned for the next grader version.
+
+\subsection{Rejection of valid animations}
+\label{sec:falsefail}
+
+Detection rates bound only one type of error. A grader tuned against a single reference animation may encode that animation's style and reject valid alternatives, which would penalize capable models. To estimate this error, we implemented 12 animation variants in four families designed to differ from the reference in both motion and implementation: alternative easing and amplitude (sine at three amplitudes, ease-in-out cubic, settling bounce); squash and stretch at two strengths; hierarchical follow-through with two lag values; a two-dimensional canvas renderer and a full-screen shader renderer; and pivots displaced by up to 10\,px. Each variant receives the same inputs as the reference and no grader annotations. Before running them at scale, we wrote down what a human animator would accept for each motion type. We ran all variants on all applicable pilot tasks (242 runs) and classified each failure, with frame-level evidence, as either a valid animation rejected by an overly strict check or a genuine violation by the variant. We report the study for graders v2 and v3, both including \chk{G2b}.
+
+\begin{table}[t]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{lrrrr}
+\toprule
+ & \multicolumn{2}{c}{Grader v2} & \multicolumn{2}{c}{Grader v3} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-5}
+Check & Applicable & False rejections & Applicable & False rejections \\
+\midrule
+\chk{G1} Isolation & 242 & 3 & 242 & 0 \\
+\chk{G2} Integrity & 136 & 4 & 160 & 0 \\
+\chk{G2b} Connectivity & 230 & 27 & 230 & 27 \\
+\chk{G2c} Residual & -- & -- & 222 & 0 \\
+\chk{G3} Area & 242 & 1 & 242 & 0 \\
+\chk{G4} Motion & 242 & 0 & 242 & 0 \\
+\chk{G5} Pivot & 144 & 5 & 192 & 7 \\
+\chk{G6} Loop & 242 & 0 & 242 & 0 \\
+\midrule
+Any check (per run) & 242 & 36 (14.9\%) & 242 & 29 (12.0\%) \\
+ & & \ci{10.9}{19.9} & & \ci{8.5}{16.7} \\
+\bottomrule
+\end{tabular}
+\caption{False rejections of 242 valid alternative animations (12 variants on up to 21 tasks), with Wilson 95\% intervals for the per-run rate. A failure is a false rejection if no failed check is classified as a genuine violation by the variant.}
 \label{tab:falsefail}
 \end{table}
 
-Table~\ref{tab:falsefail} summarizes the outcome. The motion and loop checks rejected no valid animation. The 12 false rejections have three causes. (i) \chk{G5} on textured joints (5 runs, of which 4 are on T08, swinging pigtails): pixels near the joint move by only 2 to 4\,px, but on hair this changes 26 to 50\% of the pixels in the 10\,px disc; three of these runs use a displaced pivot at the boundary of our validity rule and are borderline. (ii) \chk{G1} under squash and stretch (3 runs): the allowed region is built from rigid poses, so a deformation within $\pm$15\% leaves it. (iii) \chk{G2} on faint pixels (4 runs): a faint gray halo of hair and a pale shirt stripe near the foreground threshold separate into new components. False rejections concentrate by variant (squash and stretch at strong setting: 4 of 21 runs; alternative renderers: 0 of 42) and by task (T08 and T17 account for 7 of 12).
+Table~\ref{tab:falsefail} summarizes the outcome. We first correct an error in an earlier version of this report, which gave a false-rejection rate of 5.0\%: that analysis omitted \chk{G2b}, which alone falsely rejects 27 valid runs. With \chk{G2b} included, the rate was 14.9\% for grader v2 and is 12.0\% for v3. The changes introduced in v3 remove every false rejection by \chk{G1}, \chk{G2} and \chk{G3}, and the new residual check rejects no valid animation. Motion and loop checks rejected no valid animation under either grader.
 
-We evaluated threshold changes on the failing runs together with the reference and its corruptions on the same tasks. Growing the allowed region by 7.5\% of the part's extent, ignoring components whose median contrast against white is below 80, and raising the \chk{G5} limit to 0.30 together resolve 9 of the 12 false rejections. None of these changes causes a missed corruption among those evaluated, except that the contrast rule loses one missed-thumb detection by \chk{G2} on T18. Because this analysis did not re-run the 223 passing alternative runs, a projected false-rejection rate of 1.2\% (3/242) should be read as optimistic until the full re-run is complete.
+The remaining false rejections have two sources. \chk{G2b} accounts for 27: in 20 runs, a valid animation repaints the region uncovered by the moving part in a neighboring color (hair behind the thumb on T02 and T12, hair beneath the lifted hat on T13), and \chk{G2b} counts the repainted region as a loose piece; in 5, white gaps open between strands of the swinging pigtails on T08, which we regard as borderline; and 1 involves pale shirt stripes on T15. Because a left-behind fragment is unchanged by definition, a rule that ignores pieces lying entirely inside the original footprint, containing no unchanged pixel and having a flat color would remove the repaint false alarms without affecting detection; we specify this rule for grader v4 but have not yet re-validated it. \chk{G5} accounts for the other 7 rejections, all under squash and stretch, where deformation moves pixels near the joint.
 
-The study also exposed three defects in our own pilot data that a single reference animation could not reveal. The earring mask on T07 excluded the chain, so a bead could separate from its chain without violating any check, and its pivot lay outside the mask, which made \chk{G5} vacuous on that task. The head mask on T10 included a sliver of the raised sleeve, so a correct head tilt tears a fragment from the sleeve. The reference animation on T14 tipped the hat in both directions, so for half of each loop the hat moves down over the eyes, contrary to the instruction. We conclude that validating a benchmark against one reference solution is insufficient; at minimum, independently implemented valid solutions are required.
+The study also exposed defects in our own pilot data that a single reference animation could not reveal. The earring mask on T07 excluded the chain, so a bead could separate from its chain without violating any check, and its pivot lay outside the mask, which made \chk{G5} vacuous on that task. The head mask on T10 included a sliver of the raised sleeve. The reference animation on T14 tipped the hat in both directions, contrary to the instruction. Running \chk{G2b} on the alternative animations revealed two further defects: a 402\,px strip of pigtail hair inside a forearm mask (T02, T12) and an 18\,px fleck inside a head mask (T11). All five are corrected in the current task set. We conclude that validating a benchmark against one reference solution is insufficient; independently implemented valid solutions are required at minimum.
 
 \subsection{Grader-induced selection effects}
 \label{sec:bias}
 
-The procedural generator screens each candidate configuration by simulating the reference and discarding seeds that fail any check. Of 207 screened seeds, 47 were discarded (22.7\%): 19 by \chk{G3}, 8 by \chk{G2}, 8 because the target was nearly fully hidden, 7 by \chk{G5} and 6 by \chk{G4}. Thirty of the 47 had occlusion enabled. The mechanism is that \chk{G3} treats any change in visible foreground area as damage, while a part that legitimately swings behind another part changes its visible area. Left uncorrected, screening would systematically remove small, occluded parts that move across other parts, which are likely the hardest configurations. This is an instance of a general risk for judge-free benchmarks: when the grader filters the task distribution, its blind spots become the distribution's blind spots. The next grader version measures area on the part's own pixels; we will re-screen the rejected seeds and report the change in the occlusion distribution.
+The procedural generator screens each candidate configuration by simulating the reference and discarding seeds that fail any check. Of 207 screened seeds, 47 were discarded (22.7\%): 19 by \chk{G3}, 8 by \chk{G2}, 8 because the target was nearly fully hidden, 7 by \chk{G5} and 6 by \chk{G4}. Thirty of the 47 had occlusion enabled. The mechanism is that \chk{G3} treats any change in visible foreground area as damage, while a part that legitimately swings behind another part changes its visible area. Left uncorrected, screening would systematically remove small, occluded parts that move across other parts, which are likely the hardest configurations. This is an instance of a general risk for judge-free benchmarks: when the grader filters the task distribution, its blind spots become the distribution's blind spots. Grader v3 measures area on the part's own pixels and admits \chk{G2b} and \chk{G2c} per task rather than rejecting seeds that fail them. Under v3, 20 seeds are rejected (\chk{G3}: 1), 22 previously rejected configurations are accepted, and the number of tasks with at least 25\% occlusion rises from 65 to 74 of 160 (mean occlusion from 25.2\% to 28.0\%). The reference still passes all 160 tasks in the browser. One consequence is that connectivity is not tested on heavily occluded procedural tasks: \chk{G2b} is dropped on 52 tasks (mean occlusion 44\%, against 20\% where it is kept) and \chk{G2c} on 57.
 
 \section{Preliminary Model Results}
 \label{sec:models}
@@ -213,20 +221,20 @@ The procedural generator screens each candidate configuration by simulating the 
 \toprule
 System & Protocol & Tasks & No output & pass@1 (\%) [95\% CI] & Partial (\%) [95\% CI] \\
 \midrule
-Claude Sonnet 5.5 & agent & 21 & 0 & 57.1\ci{38.1}{76.2} & 83.5\ci{72.4}{93.0} \\
-Kimi K3.1 Pro & single shot & 15 & 0 & 60.0\ci{33.3}{86.7} & 87.1\ci{75.3}{96.7} \\
-Qwen 3.8 27B & single shot & 15 & 1 & 40.0\ci{20.0}{66.7} & 66.4\ci{47.8}{84.0} \\
-Grok 4.7 & single shot & 14 & 12 & 14.3\ci{0.0}{35.7} & 14.3\ci{0.0}{35.7} \\
+Claude Sonnet 5.5$^\dagger$ & agent & 21 & 0 & 57.1\ci{38.1}{76.2} & 83.5\ci{72.4}{93.0} \\
+Kimi K3.1 Pro & single shot & 15 & 0 & 20.0\ci{0.0}{40.0} & 76.5\ci{66.3}{85.8} \\
+Qwen 3.8 27B & single shot & 15 & 1 & 20.0\ci{0.0}{40.0} & 68.8\ci{54.2}{81.7} \\
+Grok 4.7 & single shot & 14 & 12 & 7.1\ci{0.0}{21.4} & 10.7\ci{0.0}{28.6} \\
 DeepSeek V4 Flash Vis. & single shot & 13 & 12 & 7.7\ci{0.0}{23.1} & 7.7\ci{0.0}{23.1} \\
-Nemotron 3.5 Super VL & single shot & 21 & 0 & 0.0\ci{0.0}{0.0} & 43.9\ci{36.5}{52.1} \\
+Nemotron 3.5 Super VL & single shot & 21 & 0 & 0.0\ci{0.0}{0.0} & 51.9\ci{46.4}{57.9} \\
 Gemini 4 Carbon & single shot & 8 & 8 & 0.0 & 0.0 \\
 \bottomrule
 \end{tabular}
-\caption{Preliminary results from the hackathon runs, scored with checks \chk{G1} to \chk{G6} (before \chk{G2b}), one sample per task. Claude Sonnet 5.5 ran as an agent in Claude Code on Valkyrie; all other systems were queried once through OpenRouter. \emph{No output} counts runs that produced no gradable page, which are scored as failures. Task subsets, protocols and budgets differ across rows, so rows are not comparable.}
+\caption{Preliminary results from the hackathon runs, one sample per task, re-graded with grader v3 where the generated page was available. $^\dagger$Claude Sonnet 5.5 retains its grades from the hackathon grader, which lacked \chk{G2b} and \chk{G2c}, because its pages were not imported from the evaluation platform; its row is therefore not comparable with the others even in principle. Claude Sonnet 5.5 ran as an agent in Claude Code on Valkyrie; all other systems were queried once through OpenRouter. \emph{No output} counts runs that produced no gradable page, which are scored as failures. Task subsets, protocols and budgets differ across rows, so rows are not comparable.}
 \label{tab:models}
 \end{table}
 
-Table~\ref{tab:models} reports the only model results currently available. They were collected under a deadline with different protocols, task subsets and token budgets, and we report them to motivate the controlled evaluation, not as findings about model capability. Three observations nevertheless inform its design. First, for three of seven systems, the dominant outcome is the absence of a gradable page (Gemini 8 of 8, DeepSeek 12 of 13, Grok 12 of 14 runs), so their scores measure output budget rather than animation; the controlled evaluation fixes the budget and reports the rate of gradable outputs separately. Second, among the two systems with complete outputs and the highest pass rates, \chk{G4} (motion) is the least frequently failed check (1 of 21 and 0 of 15 runs), whereas \chk{G5} fails in 5 of 13 and 3 of 13 applicable runs and \chk{G2} in 3 of 12 and 4 of 9. With samples of this size, the pattern is suggestive only, but it is consistent with the hypothesis that current systems usually produce the requested motion and less often keep it correctly localized. Third, re-grading the 65 locally rendered outputs with \chk{G2b} (an exploratory analysis, not yet the official scoring) changes 8 runs from pass to fail. We inspected all 8: five are genuine detachments, including floating fingertips produced by two different systems on the same arm-swing task (T06); two are torn fragments of clothing dragged by the moving part; and one is a borderline case in which slivers of the forearm remain along the cut line while the hand is intact. The headline failure that motivated the benchmark therefore occurs in real model outputs, and the previous grader accepted it.
+Table~\ref{tab:models} reports the only model results currently available. They were collected under a deadline with different protocols, task subsets and token budgets, and we report them to motivate the controlled evaluation, not as findings about model capability. Three observations nevertheless inform its design. First, for three of seven systems, the dominant outcome is the absence of a gradable page (Gemini 8 of 8, DeepSeek 12 of 13, Grok 12 of 14 runs), so their scores measure output budget rather than animation; the controlled evaluation fixes the budget and reports the rate of gradable outputs separately. Second, the re-grade with grader v3 changed 10 of 73 locally rendered runs from pass to fail and none from fail to pass. Kimi K3.1 Pro fell from 9 to 3 of 15 first-attempt passes, Qwen 3.8 27B from 6 to 3 of 15, and Grok 4.7 from 2 to 1 of 14. Eight of the ten are tears detected by \chk{G2b}, including floating fingertips produced by two different systems on the same arm-swing task (T06); two are detected by \chk{G2c} alone, a pinky tip left beside a waving hand (T01) and a strip of veil left beside the arm (T19), both confirmed by inspection. The failure that motivated the benchmark therefore occurs in real model outputs, and the hackathon grader accepted it. Third, for the system with the most complete outputs, Kimi K3.1 Pro, the most frequently failed checks are connectivity (9 of 14 applicable runs), residual (6 of 14), integrity (4 of 10) and pivot (4 of 14), while motion is never failed (0 of 15). With samples of this size the pattern is suggestive only, but it is consistent with the hypothesis that current systems usually produce the requested motion and fail to keep the part whole and correctly localized.
 
 \IfFileExists{sections/cutout.tex}{\input{sections/cutout}}{}
 
@@ -270,6 +278,7 @@ Direction (f) consists of analyses built from assets already in place. \emph{Jud
 \item \textbf{Corruptions are author-designed.} Detection rates are conditional on the corruption families we constructed and do not bound detection of failure modes we have not anticipated. The human study (planned, 600 clips rated by three raters) addresses this by comparing the checks with human judgment on real model outputs.
 \item \textbf{Procedural reference.} The procedural reference uses the true occluded layers, which no model has, so its 160/160 pass rate shows that tasks are satisfiable under the checks, not solvable from the image.
 \item \textbf{Rendering.} Scores depend on a software renderer; small numerical differences between our simulation and the browser were observed but did not change any pass or fail outcome. The evaluation pins the browser build in a container.
+\item \textbf{Grader v3 is not final.} It still falsely rejects 12.0\% of valid animations, mainly through the \chk{G2b} repaint false alarm, and three checks are weak on flat-colored procedural characters (Section~\ref{sec:detect}); both corrections are specified but not yet validated. The rigid fit also adds 2 to 30\,s of grading per render.
 \item \textbf{Model results.} Table~\ref{tab:models} mixes protocols, uses one sample per task and the previous grader, and should not be cited as a comparison.
 \end{itemize}
 
@@ -285,25 +294,26 @@ The next grader version adds a motion-based fragment check, measures area on the
 \begin{table}[h]
 \centering
 \small
-\begin{tabular}{lll}
+\begin{tabularx}{\linewidth}{llL}
 \toprule
 Constant & Value & Role \\
 \midrule
 $\tau$ (change threshold) & 24 & per-channel difference counted as changed \\
 foreground threshold & 30 & distance from white counted as foreground \\
-\chk{G1} limit & 0.002 & fraction of pixels outside $A$ allowed to change \\
-\chk{G2} minimum component & 60\,px & component size counted by \chk{G2} \\
+\chk{G1} limit / margin & 0.002 / $0.075\,e(T)$ & fraction of pixels outside $A^{+}$ allowed to change; dilation of $A$ \\
+\chk{G2} minimum component / contrast & 60\,px / 80 & component size; minimum median contrast against white \\
+\chk{G2c} piece / static / shift & 20\,px / 3 / 10\,px & residual piece size; per-channel change allowed; fitted displacement \\
 \chk{G2b} minimum piece / core & 20\,px / 4\,px & piece size; pixels surviving $3\times3$ erosion \\
 \chk{G2b} island border & 0.75 & enclosed-island threshold \\
-\chk{G3} tolerance & 0.5 & area change relative to $|\phi(I)\cap T|$ \\
+\chk{G3} tolerance & 0.5 & loss or gain relative to $\max(|\phi(I)\cap T|, 400)$ \\
 keep (hat tasks) & 0.85 & retained scalp fraction \\
 \chk{G4} minimum & 0.20 & fraction of $T$ changed at peak \\
-\chk{G5} radius / limit & 10\,px / 0.20 & joint disc; changed fraction allowed \\
+\chk{G5} radius / limit / rescue & 10\,px / 0.30 / 4\,px & joint disc; changed fraction allowed; fitted pivot shift that rescues \\
 \chk{G6} loop / fidelity & 0.001 / 0.005 & mean change $F_0$ vs.\ $F_{24}$; $F_0$ vs.\ $I$ \\
 frames & 25 over 2\,s & $t_i = 2i/24$ \\
 \bottomrule
-\end{tabular}
-\caption{Constants of grader v2.}
+\end{tabularx}
+\caption{Constants of grader v3.}
 \label{tab:thresholds}
 \end{table}
 
@@ -313,6 +323,7 @@ frames & 25 over 2\,s & $t_i = 2i/24$ \\
 \item 17 Nov 2026: initial report on benchmark construction and grader validation (grader v2).
 \item 17 Nov 2026: integrated the second literature review; rewrote the related work as Related Work and Positioning; retracted three claims; added Recommended Direction; aligned abstract, introduction and next steps.
 \item 17 Nov 2026: added Section~\ref{sec:cutout}, a review of evidence on the cut-out step (part grounding, joint inference, tool use, reveal fill), with a specified diagnostic probe; 34 references added (150 total). The SAM~3 part-versus-object result was re-verified against Table~1 of the source.
+\item 18 Nov 2026: updated to grader v3 (rigid fit, residual check \chk{G2c}, revised \chk{G1}, \chk{G2}, \chk{G3}, \chk{G5}); corrected the false-rejection rate from 5.0\% to 14.9\% for v2 (the earlier analysis omitted \chk{G2b}) and reported 12.0\% for v3; updated detection, selection-effect and model results after the official re-grade; documented two further annotation defects.
 \end{itemize}
 
 \end{document}
