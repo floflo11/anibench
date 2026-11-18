@@ -21,6 +21,25 @@ References passing every candidate check: v2 11/21, v3 14/21 (v3 adds G2c; check
 
 Checks dropped by admission (of 21 tasks whose reference fails them), v2 / v3: G1 0/0; G2 9/7; G2b 1/1; G2c -/2; G3 0/0; G4 0/0; G5 9/5; G6 0/0 (v2 had no G2c).
 
+## Mutation suite: Synthetic sample (64 tasks)
+
+References passing every candidate check: v2 47/64, v3 24/64 (v3 adds G2c; checks a reference fails are dropped for that task).
+
+| Broken copy | Intended checks | v2 caught | v3 caught | v2 caught, part really comes apart | v3 caught, part really comes apart |
+| --- | --- | --- | --- | --- | --- |
+| Whole image | G1 | 64/64 | 64/64 | - | - |
+| Missed thumb | G2/G2b/G2c | 25/64 | 35/64 | 25/30 | 28/30 |
+| Hole left | G3 | 51/59 | 45/64 | - | - |
+| Frozen | G4 | 64/64 | 64/64 | - | - |
+| Center pivot | G5 | 14/64 | 11/64 | - | - |
+| No loop | G6 | 42/64 | 42/64 | - | - |
+| Wrong part | G1/G4 | 64/64 | 64/64 | - | - |
+| Detach small | G2/G2b/G2c | 26/64 | 33/64 | 26/37 | 32/37 |
+| Detach tip | G2/G2b/G2c | 60/64 | 59/64 | 60/64 | 59/64 |
+| Gap seam | G2/G2b/G2c | 5/64 | 8/64 | 4/47 | 5/47 |
+
+Checks dropped by admission (of 64 tasks whose reference fails them), v2 / v3: G1 0/0; G2 4/4; G2b 17/17; G2c -/29; G3 5/0; G4 0/0; G5 0/0; G6 0/0 (v2 had no G2c).
+
 ## Valid alternate animations (src/alt_refs)
 
 Runs: 242. Any check failed: v2 37, v3 30. False fails (no failed check classified as a real break in results/alt_refs/classification.json): v2 36 (14.9%), v3 29 (12.0%).
@@ -61,6 +80,22 @@ task like raster checks. Their layer-exact references reveal content behind the 
 colours (a dark head under a dark hat) and occlusion splits the visible part, so G2b is dropped on 52 tasks (mean
 occlusion 44% vs 20% where kept) and G2c on 57. Chrome reference check: 160/160 after S009 dropped G2c (the browser
 render differs from the screening simulation by a few pixels).
+
+Synthetic mutation suite (tables above; 64 tasks: the first 40-task sample was a plain stride that hit only wave
+and nod, so 4 tasks of each other motion were added; `--sample` is now stratified by motion). v3 catches more
+detachments (missed thumb 25 -> 35, detach small 26 -> 33 of 64), but on flat-coloured synthetic characters three
+checks are weak in both graders:
+- **Center pivot 11/64 (v2 14/64).** On flat colours the joint disc hardly changes under any rotation, so G5's
+  fraction is ~0 for references and broken copies alike. The fitted pivot displacement separates them
+  (results/synth_g5_probe.json, src/synth/g5_probe.py): center-pivot copies move the pivot 3.5-30 px (median 10.6,
+  62/65 above 4 px); references stay under 4 px except 3 of 65 (S053 5.4, S098 4.1, S104 11.5; S063's fit is not
+  trusted). Making displacement a failing test (not only a rescue) is the obvious v4 change; it was not made here
+  because it would re-open the synthetic screening and needs a confidence gate first.
+- **Hole left 45/64 (v2 51/59).** In the synthetic hole copy the vanished part reveals the exact layers underneath, so
+  the part's pixel count barely drops and v3's loss (the smaller of the fitted and the visible count) misses it. A
+  model cannot reveal hidden layers, so its hole shows white or a fill and is caught; on raster tasks hole stays 21/21.
+- **Gap seam 8/64, no loop 42/64:** a 2 px seam that reveals the parent's exact colour, and loops whose jump changes
+  < 0.1% of a large canvas. Unchanged from v2.
 
 ## Model runs (official re-grade, results/regrade.json)
 

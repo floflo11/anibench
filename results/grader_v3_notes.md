@@ -24,6 +24,22 @@ colours (a dark head under a dark hat) and occlusion splits the visible part, so
 occlusion 44% vs 20% where kept) and G2c on 57. Chrome reference check: 160/160 after S009 dropped G2c (the browser
 render differs from the screening simulation by a few pixels).
 
+Synthetic mutation suite (tables above; 64 tasks: the first 40-task sample was a plain stride that hit only wave
+and nod, so 4 tasks of each other motion were added; `--sample` is now stratified by motion). v3 catches more
+detachments (missed thumb 25 -> 35, detach small 26 -> 33 of 64), but on flat-coloured synthetic characters three
+checks are weak in both graders:
+- **Center pivot 11/64 (v2 14/64).** On flat colours the joint disc hardly changes under any rotation, so G5's
+  fraction is ~0 for references and broken copies alike. The fitted pivot displacement separates them
+  (results/synth_g5_probe.json, src/synth/g5_probe.py): center-pivot copies move the pivot 3.5-30 px (median 10.6,
+  62/65 above 4 px); references stay under 4 px except 3 of 65 (S053 5.4, S098 4.1, S104 11.5; S063's fit is not
+  trusted). Making displacement a failing test (not only a rescue) is the obvious v4 change; it was not made here
+  because it would re-open the synthetic screening and needs a confidence gate first.
+- **Hole left 45/64 (v2 51/59).** In the synthetic hole copy the vanished part reveals the exact layers underneath, so
+  the part's pixel count barely drops and v3's loss (the smaller of the fitted and the visible count) misses it. A
+  model cannot reveal hidden layers, so its hole shows white or a fill and is caught; on raster tasks hole stays 21/21.
+- **Gap seam 8/64, no loop 42/64:** a 2 px seam that reveals the parent's exact colour, and loops whose jump changes
+  < 0.1% of a large canvas. Unchanged from v2.
+
 ## Model runs (official re-grade, results/regrade.json)
 
 73 outputs with HTML re-rendered and re-graded with v3: 10 flip from PASS to FAIL, none from FAIL to PASS.

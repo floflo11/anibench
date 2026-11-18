@@ -9,7 +9,13 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 | S009 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | caught | caught | missed |
 | S013 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
 | S017 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | missed (no split) | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
+| S018 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed (no split) |
+| S019 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | caught | caught | caught | caught | caught | caught | caught | missed | missed (no split) |
+| S020 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | caught | caught | caught | caught | caught | missed (no split) |
 | S021 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
+| S022 | G1, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | caught | caught | caught | caught | caught | missed (no split) |
+| S023 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | missed | caught | missed | missed | caught | caught | caught | missed (no split) |
+| S024 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S025 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
 | S029 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S033 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | missed | missed |
@@ -19,7 +25,13 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 | S049 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
 | S053 | G1, G2, G3, G4, G5, G6 | G2b, G2c | caught | missed (no split) | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
 | S057 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
+| S058 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | missed (no split) | caught | caught | missed | missed | caught | missed (no split) | caught | missed (no split) |
+| S059 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | caught | caught | caught | caught | caught | caught |
+| S060 | G1, G2, G3, G4, G5, G6 | G2b, G2c | caught | caught | missed | caught | caught | caught | caught | missed | missed | missed (no split) |
 | S061 | G1, G2, G3, G4, G5, G6 | G2b, G2c | caught | caught | caught | caught | missed | caught | caught | missed | caught | missed |
+| S062 | G1, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | caught | caught | caught | caught | caught | missed (no split) |
+| S063 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
+| S064 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S065 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
 | S069 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | missed | caught | caught | caught | caught | caught |
 | S073 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
@@ -29,7 +41,13 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 | S089 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | missed | caught | missed | missed | caught | caught | caught | missed |
 | S093 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S097 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
+| S098 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | missed (no split) | caught | caught | missed | missed | caught | missed (no split) | caught | missed (no split) |
+| S099 | G1, G2, G3, G4, G5, G6 | G2b, G2c | caught | missed | missed | caught | caught | caught | caught | missed | missed | missed (no split) |
+| S100 | G1, G2, G3, G4, G5, G6 | G2b, G2c | caught | missed | caught | caught | missed | caught | caught | missed | caught | missed (no split) |
 | S101 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
+| S102 | G1, G2b, G3, G4, G5, G6 | G2c | caught | caught | caught | caught | caught | caught | caught | caught | caught | missed (no split) |
+| S103 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | caught | missed | caught | missed | caught | caught | caught | missed | missed |
+| S104 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | missed | caught | missed | caught | caught | caught | caught | caught |
 | S105 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
 | S109 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S113 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | missed (no split) | caught | caught | missed | missed | caught | missed (no split) | caught | missed |
@@ -39,14 +57,20 @@ Each scored task has a reference animation (correct) and up to 10 broken copies.
 | S129 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed |
 | S133 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
 | S137 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | missed | caught | caught | caught | missed |
+| S138 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | missed (no split) | missed | caught | missed | missed | caught | missed (no split) | caught | missed (no split) |
+| S139 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | caught | caught | caught | caught | caught | caught | caught | caught | missed (no split) |
+| S140 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | caught | caught | caught | caught | caught | caught |
 | S141 | G1, G2, G2c, G3, G4, G5, G6 | G2b | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
+| S142 | G1, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | caught | caught | caught | caught | caught | caught |
+| S143 | G1, G2, G2b, G2c, G3, G4, G5, G6 | - | caught | caught | caught | caught | missed | caught | caught | caught | caught | missed |
+| S144 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
 | S145 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | missed | caught | caught | caught | missed |
 | S149 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | caught | caught | missed | caught | caught | caught | caught | caught |
 | S153 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | missed | caught | missed | caught | caught | missed (no split) | caught | missed |
 | S157 | G1, G2, G2b, G3, G4, G5, G6 | G2c | caught | missed (no split) | caught | caught | missed | caught | caught | missed (no split) | caught | missed |
 
-**Broken copies caught (where an intended check applies):** Whole image 40/40; Missed thumb 18/40; Hole left 28/40; Frozen 40/40; Center pivot 0/40; No loop 23/40; Wrong part 40/40; Detach small 17/40; Detach tip 39/40; Gap seam 4/40
+**Broken copies caught (where an intended check applies):** Whole image 64/64; Missed thumb 35/64; Hole left 45/64; Frozen 64/64; Center pivot 11/64; No loop 42/64; Wrong part 64/64; Detach small 33/64; Detach tip 59/64; Gap seam 8/64
 
-**Detachment copies caught, counting only copies where the part really comes apart:** Missed thumb 12/12; Detach small 16/18; Detach tip 39/40; Gap seam 4/40
+**Detachment copies caught, counting only copies where the part really comes apart:** Missed thumb 28/30; Detach small 32/37; Detach tip 59/64; Gap seam 5/47
 
-**Which intended check fired (a copy can trip several):** Whole image G1 40; Missed thumb G2 11, G2b 10, G2c 11; Hole left G3 28; Frozen G4 40; No loop G6 23; Wrong part G1 24, G4 31; Detach small G2b 14, G2c 9; Detach tip G2 26, G2b 33, G2c 1; Gap seam G2 2, G2b 2
+**Which intended check fired (a copy can trip several):** Whole image G1 64; Missed thumb G2 18, G2b 22, G2c 21; Hole left G3 45; Frozen G4 64; Center pivot G5 11; No loop G6 42; Wrong part G1 46, G4 50; Detach small G2b 26, G2c 20; Detach tip G2 40, G2b 47, G2c 2; Gap seam G2 2, G2b 3, G2c 3
